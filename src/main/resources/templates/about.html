@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>xMesseneger API</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css"/>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet"/>
+    <style>
+        body {
+            font: 20px Montserrat, sans-serif;
+            line-height: 1.8;
+            color: #f5f6f7;
+        }
+
+        p {
+            font-size: 16px;
+        }
+
+        .margin {
+            margin-bottom: 45px;
+        }
+
+        .bg-1 {
+            background-color: #1abc9c; /* Green */
+            color: #ffffff;
+        }
+
+        .bg-2 {
+            background-color: #474e5d; /* Dark Blue */
+            color: #ffffff;
+        }
+
+        .bg-3 {
+            background-color: #2f2f2f; /* Black Gray */
+            color: #fff;
+        }
+
+        .container-fluid {
+            padding-top: 40px;
+            padding-bottom: 40px;
+        }
+
+        /*Scrollbar*/
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid bg-1 text-center">
+    <h3 class="margin">What Am I?</h3>
+    <img src="pictures/xmessenger-logo.jpg" class="img-responsive img-circle margin"
+         style="display:inline" alt="Bird" width="350" height="350"/>
+    <h3>I'm <b>xMessenger</b> API server</h3>
+</div>
+
+<div class="container-fluid bg-2 text-center">
+    <h3 class="margin">Short description</h3>
+    <p>
+        Portfolio project written on <span class="badge badge-primary">ReactJS</span> and
+        <span class="badge badge-primary">Spring Boot</span> with <span class="badge badge-primary">SLDS</span>
+        (Salesforce Lightning Design System) applied.<br/>Also, it's a free cloud based browser messenger hosted on
+        <span class="badge badge-secondary">Heroku</span> platform.<br/>Currently you reside at API server side which is
+        core part of application ecosystem.
+    </p>
+    <a href="/error" class="btn btn-default btn-lg" target="_blank">
+        <span class="glyphicon glyphicon-share-alt"></span> Try out
+    </a>
+</div>
+
+<footer class="container-fluid bg-3 text-center">
+    <p>
+        <img src="pictures/github-logo.png" alt="GitHub logo" height="40"/>
+        <a href="https://github.com/awesomeandrey/xMessenger" target="_blank"
+           style="color: white; margin-left: 5px;">Fork on GitHub</a>
+    </p>
+</footer>
+
+</body>
+</html>
