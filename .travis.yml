@@ -1,0 +1,9 @@
+language: java
+jdk: oraclejdk8
+deploy:
+  provider: heroku
+  api_key:
+    secure: HR1fgI/pFdhfrkZBPZzDkJEyHdDYl6gu2bescHhUcl8hQyO1ia/7qMp6zlmk7eBzx7N4+7TecRkgmzs/qcZF9+wLrKIvL34u47EhNcvRsFtkssDBzM0cSBIds0V+fqky3ooZk/ciLnOfbHMla6dnnX8sqhORROLbktNJAlGBfWYxRBaz+3+/qGFw/r8tRXjOCXoFCAlpT+Bot9eHZmuiYIkNc86NqUqilDEPjuCaVqE30ErDAjKZE5fQNMZTrb7D4JXx7iWmW1E5YuoQABoKV+6c8sJZTTY0G15FGkHLla0jQIpqqe76G0F+M8CIi9pYqrZQgaX8LmXmj7/FcgtehVVuQnHwQzM61XrIN0ybkfWPoLsxY+MI2goFWFyaB5NIT+0GKWSGIc37XgZWxsOTtv8go/yR3KVWRrl2TDas13txe+mftOU4x9LJcYQ8id1ixWUr9ORIZLxs0hq2bYiyzc3do7djWJO3sKabOhlyzIqLKt7FmDG/OUfDxu5Zk25zr3Z7f3S+rQ+pLMhKzipjGkHpToGdJbv8mwB7zhN9mvgFMqMgy8aakbXCRb6kNt4mvZ59Sysh/j1vbsJCpi8P618OzCeFUoOw8BE7KJoQ1Z9/q+DSjT6LOpNbUVkHMP9Oetv7o5miSbgYVNu2y2+w1P6h7hQi3rRQnuogN5gJfRU=
+  app: api-xmessenger
+  on:
+    branch: master
