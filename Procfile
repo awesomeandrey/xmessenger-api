@@ -1,1 +1,1 @@
-web: ./mvnw spring-boot:run
+web: bash ./mvnw spring-boot:run
