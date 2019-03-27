@@ -1,1 +1,1 @@
-web: java -jar target/xmessenger-1.0.jar
+web: ./mvnw spring-boot:run
