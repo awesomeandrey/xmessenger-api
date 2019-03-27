@@ -1,11 +1,12 @@
-# xMessenger
+# xMessenger (API server)
 
-Portfolio project written on ReactJS and Spring Boot with Salesforce Lightning Design System applied.<br/>
-Also, it's free cloud based browser messenger hosted on <i>Heroku</i> platform.
+This project is part of <b>xMessenger</b> application ecosystem. Written on SpringBoot it provides
+both open & secure RESTful API for those who want to integrate with it. Also, it's free cloud based browser messenger 
+hosted on <i>Heroku</i> platform.
 
 ### Used technologies:
 
-`java`, `websockets`, `spring-boot`, `postgre_sql`, `travis`, `heroku`, `oauth`
+`java`, `websockets`, `spring-boot`, `postgre_sql`, `travis`, `heroku`, `oauth`, `cors`
 
 ### Sample data setup
 
@@ -19,7 +20,7 @@ In order to demo application with some set of data, make sure to go through next
 $ psql -U username dbname < sampledata.psql
 ```
 
-> Configure datasource in [application.properties](https://github.com/awesomeandrey/xMessenger/blob/master/src/main/resources/application.properties) to retrieve data from proper DB
+> Configure datasource in [application.properties](https://github.com/awesomeandrey/xmessenger-api/blob/master/src/main/resources/application.properties) to retrieve data from proper DB
 
 ### RDBMS & Dyno management
 
@@ -87,7 +88,7 @@ CLI commands. They contain app sensitive information (API keys, DB credentials).
 
 ### Versioning
 
-For the versions available, see the [tags on this repository](https://github.com/awesomeandrey/xMessenger/tags).
+For the versions available, see the [tags on this repository](https://github.com/awesomeandrey/xmessenger-api/tags).
 
 ### Authors
 
