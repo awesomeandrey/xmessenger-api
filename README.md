@@ -5,7 +5,7 @@ Also, it's free cloud based browser messenger hosted on <i>Heroku</i> platform.
 
 ### Used technologies:
 
-`java`, `websockets`, `reactjs`, `jsx`, `spring-boot`, `javascript`, `postgre_sql`, `slds`, `travis`, `heroku`, `oauth`
+`java`, `websockets`, `spring-boot`, `postgre_sql`, `travis`, `heroku`, `oauth`
 
 ### Sample data setup
 
@@ -80,8 +80,6 @@ CLI commands. They contain app sensitive information (API keys, DB credentials).
 * [IntelliJ IDEA Ultimate](https://www.jetbrains.com/idea/) - Integrated IDE
 * [SpringBoot](http://spring.io/) - The backend framework used
 * [Maven](https://maven.apache.org/) - Dependency Management
-* [ReactJS](https://reactjs.org/) - Library for Making Interactive Websites
-* [SLDS](https://www.lightningdesignsystem.com/getting-started/) - Lightning Design System
 * [TravisCI](https://travis-ci.com/) - CI and CD web utility
 * [Postgre SQL](https://www.postgresql.org/) - The world's most advanced open source relational database
 * [Heroku](https://www.heroku.com/) - Cloud platform that lets companies build, deliver, monitor and scale apps
