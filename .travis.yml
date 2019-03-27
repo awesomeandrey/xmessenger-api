@@ -1,8 +1,10 @@
 language: java
-sudo: true
 jdk: oraclejdk8
+
 before_install:
+  - mvn -N io.takari:maven:wrapper
   - chmod +x mvnw
+
 deploy:
   provider: heroku
   api_key:
