@@ -41,7 +41,8 @@ public class GmailAuthenticationController {
     }
 
     @RequestMapping(value = "/oauth/gmail/login", method = RequestMethod.POST)
-    public void authenticateUser(@RequestParam(name = "accessToken") String accessToken, HttpServletResponse response) throws Exception {
+    public void authenticateUser(@RequestBody String accessToken, HttpServletResponse response) throws Exception {
+        accessToken = accessToken.replaceAll("\"", "");
         String username = this.gmailAuthenticator.getUsername(accessToken);
         ApplicationUser user = this.userDAO.getUserByUsername(username);
         if (user == null) {
