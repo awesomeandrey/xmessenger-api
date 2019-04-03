@@ -11,6 +11,7 @@ public class Chat {
     private Relation relation;
     private ApplicationUser fellow;
     private Date latestMessageDate;
+    private ApplicationUser updatedBy;
 
     public Integer getId() {
         return this.relation.getId();
@@ -51,6 +52,14 @@ public class Chat {
         this.relation = relation;
     }
 
+    public ApplicationUser getUpdatedBy() {
+        return this.updatedBy;
+    }
+
+    public void setUpdatedBy(ApplicationUser updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
     public Chat() {
     }
 
@@ -65,10 +74,10 @@ public class Chat {
     @Override
     public String toString() {
         return "Chat{" +
-                "id=" + getId() +
+                "relation=" + relation +
                 ", fellow=" + fellow +
                 ", latestMessageDate=" + latestMessageDate +
-                ", relation=" + relation +
+                ", updatedBy=" + updatedBy +
                 '}';
     }
 }

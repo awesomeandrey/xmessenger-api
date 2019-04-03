@@ -54,14 +54,15 @@ public class ChattingController {
     public void clearChat(@PathVariable("chatId") Integer chatId) {
         ApplicationUser user = this.contextUserRetriever.getContextUser();
         Chat clearedChat = this.flowExecutor.clearChat(user, new Chat(chatId));
+        clearedChat.setUpdatedBy(user);
         this.publisher.publishEvent(new ChatClearEvent(this, clearedChat));
-
     }
 
     @RequestMapping(value = "/{chatId}/delete", method = RequestMethod.DELETE)
     public void deleteChat(@PathVariable("chatId") Integer chatId) {
         ApplicationUser user = this.contextUserRetriever.getContextUser();
         Chat deletedChat = this.flowExecutor.deleteChat(user, new Chat(chatId));
+        deletedChat.setUpdatedBy(user);
         this.publisher.publishEvent(new ChatDeleteEvent(this, deletedChat));
     }
 }
