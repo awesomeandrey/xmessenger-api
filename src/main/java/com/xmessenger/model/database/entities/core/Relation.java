@@ -1,4 +1,4 @@
-package com.xmessenger.model.database.entities;
+package com.xmessenger.model.database.entities.core;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @javax.persistence.Entity
-@Table(name = "`relation`")
+@Table(name = "xm_relation")
 public class Relation {
 
     @Id
@@ -17,12 +17,12 @@ public class Relation {
     @ManyToOne
     @JoinColumn(name = "userone")
     @JsonIgnore
-    private ApplicationUser userOne;
+    private AppUser userOne;
 
     @ManyToOne
     @JoinColumn(name = "usertwo")
     @JsonIgnore
-    private ApplicationUser userTwo;
+    private AppUser userTwo;
 
     public Integer getId() {
         return this.id;
@@ -32,31 +32,31 @@ public class Relation {
         this.id = recordId;
     }
 
-    public ApplicationUser getUserOne() {
+    public AppUser getUserOne() {
         return this.userOne;
     }
 
-    public void setUserOne(ApplicationUser userOne) {
+    public void setUserOne(AppUser userOne) {
         this.userOne = userOne;
     }
 
-    public ApplicationUser getUserTwo() {
+    public AppUser getUserTwo() {
         return this.userTwo;
     }
 
-    public void setUserTwo(ApplicationUser userTwo) {
+    public void setUserTwo(AppUser userTwo) {
         this.userTwo = userTwo;
     }
 
     public Relation() {
     }
 
-    public Relation(ApplicationUser userOne, ApplicationUser userTwo) {
+    public Relation(AppUser userOne, AppUser userTwo) {
         this.userOne = userOne;
         this.userTwo = userTwo;
     }
 
-    public boolean isUserRelated(ApplicationUser userToCheck) {
+    public boolean isUserRelated(AppUser userToCheck) {
         if (this.userOne.equals(userToCheck)) return true;
         if (this.userTwo.equals(userToCheck)) return true;
         return false;

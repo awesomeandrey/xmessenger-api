@@ -1,6 +1,6 @@
 package com.xmessenger.model.services.user.dao;
 
-import com.xmessenger.model.database.entities.ApplicationUser;
+import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.database.repositories.UserRepository;
 import com.xmessenger.model.util.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ public class UserDAO {
         this.userRepository = userRepository;
     }
 
-    public List<ApplicationUser> search(QueryParams params) {
+    public List<AppUser> search(QueryParams params) {
         if (Utility.isBlank(params.getNameOrLogin())) {
             return new ArrayList<>();
         }
@@ -29,21 +29,21 @@ public class UserDAO {
         }
     }
 
-    public ApplicationUser getUserById(Integer uid) {
+    public AppUser getUserById(Integer uid) {
         if (Utility.isBlank(uid)) return null;
         return this.userRepository.findOne(uid);
     }
 
-    public ApplicationUser getUserByUsername(String username) {
+    public AppUser getUserByUsername(String username) {
         if (Utility.isBlank(username)) return null;
         return this.userRepository.findByUsername(username);
     }
 
-    public ApplicationUser create(ApplicationUser userToSave) {
+    public AppUser create(AppUser userToSave) {
         return this.userRepository.save(userToSave);
     }
 
-    public ApplicationUser update(ApplicationUser userToUpdate) throws UserNotFoundException {
+    public AppUser update(AppUser userToUpdate) throws UserNotFoundException {
         Integer uid = userToUpdate.getId();
         if (this.userRepository.findOne(uid) == null) {
             throw new UserNotFoundException(uid);
@@ -53,7 +53,7 @@ public class UserDAO {
     }
 
     public byte[] getPicture(Integer uid) throws UserNotFoundException {
-        ApplicationUser user = this.userRepository.findOne(uid);
+        AppUser user = this.userRepository.findOne(uid);
         if (user == null) {
             throw new UserNotFoundException(uid);
         }

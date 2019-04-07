@@ -1,7 +1,7 @@
 package com.xmessenger.model.services.request.dao;
 
-import com.xmessenger.model.database.entities.Request;
-import com.xmessenger.model.database.entities.ApplicationUser;
+import com.xmessenger.model.database.entities.core.Request;
+import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.database.repositories.RequestRepository;
 import com.xmessenger.model.util.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ public class RequestDAO {
         this.requestRepository = requestRepository;
     }
 
-    public List<Request> retrieveRequestsForUser(ApplicationUser user) {
+    public List<Request> retrieveRequestsForUser(AppUser user) {
         return this.requestRepository.findByRecipientAndApprovedIsFalse(user);
     }
 
@@ -28,7 +28,7 @@ public class RequestDAO {
             foundRequest = this.requestRepository.findOne(request.getId());
         }
         if (foundRequest == null) {
-            ApplicationUser sender = request.getSender(), recipient = request.getRecipient();
+            AppUser sender = request.getSender(), recipient = request.getRecipient();
             foundRequest = this.requestRepository.findBySenderAndRecipient(sender, recipient);
         }
         return foundRequest;

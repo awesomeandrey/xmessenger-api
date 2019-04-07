@@ -1,11 +1,11 @@
-package com.xmessenger.model.database.entities;
+package com.xmessenger.model.database.entities.core;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Objects;
 
 @javax.persistence.Entity
-@Table(name = "`request`")
+@Table(name = "xm_request")
 public class Request {
 
     @Id
@@ -15,11 +15,11 @@ public class Request {
 
     @ManyToOne
     @JoinColumn(name = "sender")
-    private ApplicationUser sender;
+    private AppUser sender;
 
     @ManyToOne
     @JoinColumn(name = "recipient")
-    private ApplicationUser recipient;
+    private AppUser recipient;
 
     @Column(name = "is_approved")
     private Boolean approved;
@@ -35,19 +35,19 @@ public class Request {
         this.id = recordId;
     }
 
-    public ApplicationUser getSender() {
+    public AppUser getSender() {
         return this.sender;
     }
 
-    public void setSender(ApplicationUser sender) {
+    public void setSender(AppUser sender) {
         this.sender = sender;
     }
 
-    public ApplicationUser getRecipient() {
+    public AppUser getRecipient() {
         return this.recipient;
     }
 
-    public void setRecipient(ApplicationUser recipient) {
+    public void setRecipient(AppUser recipient) {
         this.recipient = recipient;
     }
 
@@ -71,7 +71,7 @@ public class Request {
         this.approved = false;
     }
 
-    public Request(ApplicationUser sender, ApplicationUser recipient) {
+    public Request(AppUser sender, AppUser recipient) {
         this();
         this.sender = sender;
         this.recipient = recipient;

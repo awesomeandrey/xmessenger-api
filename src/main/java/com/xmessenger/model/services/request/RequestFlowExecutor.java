@@ -1,7 +1,7 @@
 package com.xmessenger.model.services.request;
 
-import com.xmessenger.model.database.entities.Request;
-import com.xmessenger.model.database.entities.ApplicationUser;
+import com.xmessenger.model.database.entities.core.Request;
+import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.services.request.dao.RequestDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,11 +18,11 @@ public class RequestFlowExecutor {
         this.requestDAO = requestDAO;
     }
 
-    public List<Request> retrieveRequests(ApplicationUser user) {
+    public List<Request> retrieveRequests(AppUser user) {
         return this.requestDAO.retrieveRequestsForUser(user);
     }
 
-    public Request createRequest(ApplicationUser sender, ApplicationUser recipient) throws RequestFlowException {
+    public Request createRequest(AppUser sender, AppUser recipient) throws RequestFlowException {
         Request request = new Request(sender, recipient);
         if (sender.getId().equals(recipient.getId())) {
             throw new RequestFlowException("You cannot send friendship request to yourself.");
@@ -34,7 +34,7 @@ public class RequestFlowExecutor {
         return this.requestDAO.createRequest(request);
     }
 
-    public Request processRequest(Request requestToProcess, ApplicationUser intendedRecipient) throws Exception {
+    public Request processRequest(Request requestToProcess, AppUser intendedRecipient) throws Exception {
         Request foundRequest = this.requestDAO.lookupRequest(requestToProcess);
         if (foundRequest == null) {
             throw new RequestFlowException("Friendship request cannot be found.");

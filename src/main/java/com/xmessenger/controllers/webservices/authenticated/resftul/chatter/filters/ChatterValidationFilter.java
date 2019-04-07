@@ -1,7 +1,7 @@
 package com.xmessenger.controllers.webservices.authenticated.resftul.chatter.filters;
 
 import com.xmessenger.controllers.security.user.ContextUserRetriever;
-import com.xmessenger.model.database.entities.ApplicationUser;
+import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.services.chatter.ChatterFlowExecutor;
 import com.xmessenger.model.services.chatter.decorators.Chat;
 import com.xmessenger.model.util.Utility;
@@ -33,7 +33,7 @@ public class ChatterValidationFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         Integer chatId = this.getChatIdFromRequestUri(request.getRequestURI());
-        ApplicationUser user = this.contextUserRetriever.getContextUser();
+        AppUser user = this.contextUserRetriever.getContextUser();
         if (chatId == null || this.flowExecutor.hasAuthorityToOperateWithChat(user, new Chat(chatId))) {
             filterChain.doFilter(servletRequest, servletResponse);
         } else {

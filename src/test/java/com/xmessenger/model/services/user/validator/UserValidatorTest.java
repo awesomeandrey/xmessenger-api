@@ -1,6 +1,6 @@
 package com.xmessenger.model.services.user.validator;
 
-import com.xmessenger.model.database.entities.ApplicationUser;
+import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.services.user.security.CredentialsService;
 import com.xmessenger.model.services.user.security.RawCredentials;
 import com.xmessenger.model.services.user.dao.UserDAO;
@@ -27,11 +27,11 @@ public class UserValidatorTest {
 
     @Test
     public void isUsernameUnique() {
-        ApplicationUser testUser1 = UserDataFactory.generateSuccessUser();
+        AppUser testUser1 = UserDataFactory.generateSuccessUser();
         Mockito.when(this.userDAO.getUserByUsername(testUser1.getUsername())).thenReturn(null);
         UserValidationResult validationResult1 = this.userValidator.isUsernameUnique(testUser1.getUsername());
         assertTrue(validationResult1.isValid());
-        ApplicationUser testUser2 = UserDataFactory.generateFailureUser();
+        AppUser testUser2 = UserDataFactory.generateFailureUser();
         Mockito.when(this.userDAO.getUserByUsername(testUser2.getUsername())).thenReturn(testUser2);
         UserValidationResult validationResult2 = this.userValidator.isUsernameUnique(testUser2.getUsername());
         assertTrue(!validationResult2.isValid());
@@ -39,7 +39,7 @@ public class UserValidatorTest {
 
     @Test
     public void validateOnRegistration() {
-        ApplicationUser testUser = UserDataFactory.generateSuccessUser();
+        AppUser testUser = UserDataFactory.generateSuccessUser();
         Mockito.when(this.userDAO.getUserByUsername(testUser.getUsername())).thenReturn(null);
         UserValidationResult validationResult1 = this.userValidator.validateOnRegistration(testUser);
         assertTrue(validationResult1.isValid());
@@ -50,7 +50,7 @@ public class UserValidatorTest {
 
     @Test
     public void validateOnPasswordChange() {
-        ApplicationUser testUser = UserDataFactory.generateSuccessUser();
+        AppUser testUser = UserDataFactory.generateSuccessUser();
         RawCredentials rawCredentials = UserDataFactory.composeRawCredentials(testUser);
         rawCredentials.setNewPassword("77");
         // Invalid password;
@@ -75,7 +75,7 @@ public class UserValidatorTest {
 
     @Test
     public void validateOnProfileChange() {
-        ApplicationUser testUser = UserDataFactory.generateSuccessUser();
+        AppUser testUser = UserDataFactory.generateSuccessUser();
         testUser.setId(0);
         // Invalid User ID;
         UserValidationResult validationResult = this.userValidator.validateOnProfileChange(testUser);

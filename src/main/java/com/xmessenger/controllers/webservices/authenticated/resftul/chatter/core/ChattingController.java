@@ -4,8 +4,8 @@ import com.xmessenger.configs.WebSecurityConfig;
 import com.xmessenger.controllers.security.user.ContextUserRetriever;
 import com.xmessenger.model.services.chatter.ChatterFlowExecutor;
 import com.xmessenger.model.services.chatter.decorators.Chat;
-import com.xmessenger.model.database.entities.Message;
-import com.xmessenger.model.database.entities.ApplicationUser;
+import com.xmessenger.model.database.entities.core.Message;
+import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.controllers.webservices.open.websockets.events.ChatClearEvent;
 import com.xmessenger.controllers.webservices.open.websockets.events.ChatDeleteEvent;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class ChattingController {
 
     @RequestMapping(method = RequestMethod.GET)
     public List<Chat> retrieveChats() {
-        ApplicationUser user = this.contextUserRetriever.getContextUser();
+        AppUser user = this.contextUserRetriever.getContextUser();
         return new ArrayList<>(this.flowExecutor.retrieveChats(user).values());
     }
 
@@ -52,7 +52,7 @@ public class ChattingController {
 
     @RequestMapping(value = "/{chatId}/clear", method = RequestMethod.DELETE)
     public void clearChat(@PathVariable("chatId") Integer chatId) {
-        ApplicationUser user = this.contextUserRetriever.getContextUser();
+        AppUser user = this.contextUserRetriever.getContextUser();
         Chat clearedChat = this.flowExecutor.clearChat(user, new Chat(chatId));
         clearedChat.setUpdatedBy(user);
         this.publisher.publishEvent(new ChatClearEvent(this, clearedChat));
@@ -60,7 +60,7 @@ public class ChattingController {
 
     @RequestMapping(value = "/{chatId}/delete", method = RequestMethod.DELETE)
     public void deleteChat(@PathVariable("chatId") Integer chatId) {
-        ApplicationUser user = this.contextUserRetriever.getContextUser();
+        AppUser user = this.contextUserRetriever.getContextUser();
         Chat deletedChat = this.flowExecutor.deleteChat(user, new Chat(chatId));
         deletedChat.setUpdatedBy(user);
         this.publisher.publishEvent(new ChatDeleteEvent(this, deletedChat));

@@ -1,6 +1,6 @@
 package com.xmessenger.model.services.user.dao;
 
-import com.xmessenger.model.database.entities.ApplicationUser;
+import com.xmessenger.model.database.entities.core.AppUser;
 
 public class UserBuilder {
     private String name;
@@ -65,8 +65,8 @@ public class UserBuilder {
         return this;
     }
 
-    public ApplicationUser build() {
-        ApplicationUser user = new ApplicationUser();
+    public AppUser build() {
+        AppUser user = new AppUser();
         user.setName(this.name);
         user.setUsername(this.username);
         user.setPassword(this.password);

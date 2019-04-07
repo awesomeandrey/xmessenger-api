@@ -1,11 +1,11 @@
-package com.xmessenger.model.database.entities;
+package com.xmessenger.model.database.entities.core;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Objects;
 
 @javax.persistence.Entity
-@Table(name = "`message`")
+@Table(name = "xm_message")
 public class Message {
 
     @Id
@@ -15,7 +15,7 @@ public class Message {
 
     @ManyToOne
     @JoinColumn(name = "author")
-    private ApplicationUser author;
+    private AppUser author;
 
     @ManyToOne
     @JoinColumn(name = "relation")
@@ -35,11 +35,11 @@ public class Message {
         this.id = recordId;
     }
 
-    public ApplicationUser getAuthor() {
+    public AppUser getAuthor() {
         return this.author;
     }
 
-    public void setAuthor(ApplicationUser author) {
+    public void setAuthor(AppUser author) {
         this.author = author;
     }
 
@@ -71,7 +71,7 @@ public class Message {
         this.relation = new Relation();
     }
 
-    public Message(ApplicationUser author) {
+    public Message(AppUser author) {
         this();
         this.author = author;
     }

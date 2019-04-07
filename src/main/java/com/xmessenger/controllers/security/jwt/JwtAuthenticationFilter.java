@@ -2,7 +2,7 @@ package com.xmessenger.controllers.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xmessenger.configs.WebSecurityConfig;
-import com.xmessenger.model.database.entities.ApplicationUser;
+import com.xmessenger.model.database.entities.core.AppUser;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -33,7 +33,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     public Authentication attemptAuthentication(HttpServletRequest req, HttpServletResponse res) throws AuthenticationException {
         try {
-            ApplicationUser user = new ObjectMapper().readValue(req.getInputStream(), ApplicationUser.class);
+            AppUser user = new ObjectMapper().readValue(req.getInputStream(), AppUser.class);
             return authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
             );

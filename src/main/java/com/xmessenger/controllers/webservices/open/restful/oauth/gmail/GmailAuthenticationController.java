@@ -2,7 +2,7 @@ package com.xmessenger.controllers.webservices.open.restful.oauth.gmail;
 
 import com.xmessenger.controllers.security.jwt.JwtConfig;
 import com.xmessenger.controllers.webservices.open.config.OpenResource;
-import com.xmessenger.model.database.entities.ApplicationUser;
+import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.services.user.UserFlowExecutor;
 import com.xmessenger.model.services.user.dao.UserDAO;
 import com.xmessenger.model.services.user.oauth.gmail.GmailAuthenticator;
@@ -44,7 +44,7 @@ public class GmailAuthenticationController {
     public void authenticateUser(@RequestBody String accessToken, HttpServletResponse response) throws Exception {
         accessToken = accessToken.replaceAll("\"", "");
         String username = this.gmailAuthenticator.getUsername(accessToken);
-        ApplicationUser user = this.userDAO.getUserByUsername(username);
+        AppUser user = this.userDAO.getUserByUsername(username);
         if (user == null) {
             user = this.gmailAuthenticator.composeUser(username, accessToken);
             user = this.userFlowExecutor.registerUser(user);

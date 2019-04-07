@@ -1,29 +1,41 @@
-package com.xmessenger.model.database.entities;
+package com.xmessenger.model.database.entities.core;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.xmessenger.model.database.converters.RoleCodeConverter;
+import com.xmessenger.model.database.entities.Role;
 
 import javax.persistence.*;
 import java.util.Objects;
 
 @javax.persistence.Entity
-@Table(name = "`user`")
-public class ApplicationUser {
+@Table(name = "xm_user")
+public class AppUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "uid")
     private Integer id;
+
     private String name;
+
     private byte[] picture;
+
     private String username;
+
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
+
     @Column(name = "is_logged_externally")
     private Boolean loggedExternally;
+
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(name = "is_active")
     private Boolean active;
+
+    @Column(name = "role_code")
+    @Convert(converter = RoleCodeConverter.class)
+    private Role role;
 
     public Integer getId() {
         return this.id;
@@ -86,7 +98,15 @@ public class ApplicationUser {
         this.loggedExternally = loggedExternally;
     }
 
-    public ApplicationUser() {
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public AppUser() {
         this.active = true;
         this.loggedExternally = false;
     }
@@ -111,7 +131,7 @@ public class ApplicationUser {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ApplicationUser user = (ApplicationUser) o;
+        AppUser user = (AppUser) o;
         return id.equals(user.id);
     }
 

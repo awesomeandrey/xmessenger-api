@@ -1,6 +1,6 @@
 package com.xmessenger.controllers.security.user;
 
-import com.xmessenger.model.database.entities.ApplicationUser;
+import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.services.user.dao.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
@@ -22,10 +22,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        ApplicationUser applicationUser = this.userDAO.getUserByUsername(username);
-        if (applicationUser == null || !applicationUser.isActive()) {
+        AppUser appUser = this.userDAO.getUserByUsername(username);
+        if (appUser == null || !appUser.isActive()) {
             throw new UsernameNotFoundException(username);
         }
-        return new User(applicationUser.getUsername(), applicationUser.getPassword(), emptyList());
+        return new User(appUser.getUsername(), appUser.getPassword(), emptyList());
     }
 }

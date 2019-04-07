@@ -1,7 +1,7 @@
 package com.xmessenger.model.database.repositories;
 
-import com.xmessenger.model.database.entities.Message;
-import com.xmessenger.model.database.entities.Relation;
+import com.xmessenger.model.database.entities.core.Message;
+import com.xmessenger.model.database.entities.core.Relation;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;

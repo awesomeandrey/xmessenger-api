@@ -1,7 +1,7 @@
 package com.xmessenger.model.services.chatter.core;
 
-import com.xmessenger.model.database.entities.Relation;
-import com.xmessenger.model.database.entities.ApplicationUser;
+import com.xmessenger.model.database.entities.core.Relation;
+import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.database.repositories.RelationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ public class RelationService {
         this.relationRepository = relationRepository;
     }
 
-    public Map<Integer, Relation> getUserRelations(ApplicationUser user) {
+    public Map<Integer, Relation> getUserRelations(AppUser user) {
         Map<Integer, Relation> relationsMap = new HashMap<>();
         this.relationRepository.findAllByUserOneOrUserTwo(user, user).forEach((Relation rel) -> {
             relationsMap.put(rel.getId(), rel);
@@ -30,7 +30,7 @@ public class RelationService {
         return this.relationRepository.findOne(relationId);
     }
 
-    public Relation createRelation(ApplicationUser user1, ApplicationUser user2) throws RelationException {
+    public Relation createRelation(AppUser user1, AppUser user2) throws RelationException {
         Relation relation = new Relation(user1, user2);
         if (!this.isValid(relation)) {
             throw new RelationException("Relation entity isn't valid.");
@@ -41,7 +41,7 @@ public class RelationService {
         return this.relationRepository.save(relation);
     }
 
-    public boolean hasRelation(ApplicationUser user1, ApplicationUser user2) {
+    public boolean hasRelation(AppUser user1, AppUser user2) {
         return this.relationRepository.getRelationByUserReferences(user1.getId(), user2.getId()) != null;
     }
 

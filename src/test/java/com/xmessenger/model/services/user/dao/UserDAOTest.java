@@ -1,6 +1,6 @@
 package com.xmessenger.model.services.user.dao;
 
-import com.xmessenger.model.database.entities.ApplicationUser;
+import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.database.repositories.UserRepository;
 import data.factories.UserDataFactory;
 import org.junit.Test;
@@ -25,8 +25,8 @@ public class UserDAOTest {
 
     @Test
     public void search() {
-        List<ApplicationUser> testUsers = UserDataFactory.generateTestUsers();
-        ApplicationUser user1 = testUsers.get(UserDataFactory.SUCCESS_USER_INDEX);
+        List<AppUser> testUsers = UserDataFactory.generateTestUsers();
+        AppUser user1 = testUsers.get(UserDataFactory.SUCCESS_USER_INDEX);
         // Incorrect parameters;
         QueryParams params = new QueryParams("", true);
         assertTrue(this.userDAO.search(params).isEmpty());
@@ -43,16 +43,16 @@ public class UserDAOTest {
 
     @Test
     public void getUserById() {
-        ApplicationUser testUser = UserDataFactory.generateSuccessUser();
+        AppUser testUser = UserDataFactory.generateSuccessUser();
         Mockito.when(this.userRepository.findOne(testUser.getId())).thenReturn(testUser);
-        ApplicationUser foundUser = this.userDAO.getUserById(testUser.getId());
+        AppUser foundUser = this.userDAO.getUserById(testUser.getId());
         assertEquals(testUser.getId(), foundUser.getId());
     }
 
     @Test
     public void getUserByUsername() {
-        ApplicationUser testUser = UserDataFactory.generateSuccessUser();
-        ApplicationUser foundUser = this.userDAO.getUserByUsername("");
+        AppUser testUser = UserDataFactory.generateSuccessUser();
+        AppUser foundUser = this.userDAO.getUserByUsername("");
         assertNull(foundUser);
         Mockito.when(this.userRepository.findByUsername(testUser.getUsername())).thenReturn(testUser);
         foundUser = this.userDAO.getUserByUsername(testUser.getUsername());
@@ -61,14 +61,14 @@ public class UserDAOTest {
 
     @Test
     public void create() {
-        ApplicationUser testUser = UserDataFactory.generateSuccessUser();
+        AppUser testUser = UserDataFactory.generateSuccessUser();
         Mockito.when(this.userRepository.save(testUser)).thenReturn(testUser);
         assertEquals(testUser, this.userDAO.create(testUser));
     }
 
     @Test
     public void update() {
-        ApplicationUser updatedUser = null, testUser = UserDataFactory.generateSuccessUser();
+        AppUser updatedUser = null, testUser = UserDataFactory.generateSuccessUser();
         Mockito.when(this.userRepository.findOne(testUser.getId())).thenReturn(null);
         try {
             updatedUser = this.userDAO.update(testUser);
@@ -93,7 +93,7 @@ public class UserDAOTest {
         } catch (Exception e) {
             assertNull(picture);
         }
-        ApplicationUser testUser = UserDataFactory.generateSuccessUser();
+        AppUser testUser = UserDataFactory.generateSuccessUser();
         Mockito.when(this.userRepository.findOne(testUser.getId())).thenReturn(testUser);
         try {
             picture = this.userDAO.getPicture(testUser.getId());

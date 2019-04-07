@@ -1,7 +1,7 @@
 package com.xmessenger.controllers.webservices.open.restful.core;
 
 import com.xmessenger.controllers.webservices.open.config.OpenResource;
-import com.xmessenger.model.database.entities.ApplicationUser;
+import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.services.user.UserFlowExecutor;
 import com.xmessenger.model.services.user.validator.UserValidationResult;
 import com.xmessenger.model.services.user.validator.UserValidator;
@@ -22,7 +22,7 @@ public class RegistrationController {
     }
 
     @RequestMapping(value = "/sign-up", method = RequestMethod.POST)
-    public ApplicationUser signUp(@RequestBody ApplicationUser user) throws UserFlowExecutor.UserException {
+    public AppUser signUp(@RequestBody AppUser user) throws UserFlowExecutor.UserException {
         return this.flowExecutor.registerUser(user);
     }
 

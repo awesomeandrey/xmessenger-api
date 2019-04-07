@@ -1,17 +1,17 @@
 package com.xmessenger.model.services.chatter.decorators;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.xmessenger.model.database.entities.Relation;
-import com.xmessenger.model.database.entities.ApplicationUser;
+import com.xmessenger.model.database.entities.core.Relation;
+import com.xmessenger.model.database.entities.core.AppUser;
 
 import java.util.Date;
 
 public class Chat {
     @JsonIgnore
     private Relation relation;
-    private ApplicationUser fellow;
+    private AppUser fellow;
     private Date latestMessageDate;
-    private ApplicationUser updatedBy;
+    private AppUser updatedBy;
 
     public Integer getId() {
         return this.relation.getId();
@@ -24,15 +24,15 @@ public class Chat {
         this.relation.setId(id);
     }
 
-    public ApplicationUser getFellow() {
+    public AppUser getFellow() {
         return this.fellow;
     }
 
-    public void setFellow(ApplicationUser fellow) {
+    public void setFellow(AppUser fellow) {
         this.fellow = fellow;
     }
 
-    public ApplicationUser getStartedBy() {
+    public AppUser getStartedBy() {
         return this.relation.getUserOne();
     }
 
@@ -52,11 +52,11 @@ public class Chat {
         this.relation = relation;
     }
 
-    public ApplicationUser getUpdatedBy() {
+    public AppUser getUpdatedBy() {
         return this.updatedBy;
     }
 
-    public void setUpdatedBy(ApplicationUser updatedBy) {
+    public void setUpdatedBy(AppUser updatedBy) {
         this.updatedBy = updatedBy;
     }
 
