@@ -19,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public final static String API_BASE_PATH = "/api";
+    public final static String API_BASE_PATH_PATTERN = API_BASE_PATH.concat("/**");
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -38,13 +39,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http
                 .authorizeRequests()
-                .antMatchers(API_BASE_PATH.concat("/**"))
+                .anyRequest().permitAll()
+                .antMatchers(API_BASE_PATH_PATTERN)
                 .authenticated()
                 .and()
                 .addFilter(new JwtAuthenticationFilter(authenticationManager(), this.tokenProvider()))
-                .addFilter(new JwtAuthorizationFilter(authenticationManager(), this.tokenProvider()))
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                .addFilter(new JwtAuthorizationFilter(authenticationManager(), this.tokenProvider()));
         http
                 .csrf()
                 .disable()
