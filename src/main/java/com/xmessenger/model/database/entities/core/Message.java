@@ -10,15 +10,15 @@ public class Message {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "mid")
+    @Column(name = "message_id")
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "author")
+    @JoinColumn(name = "author_id")
     private AppUser author;
 
     @ManyToOne
-    @JoinColumn(name = "relation")
+    @JoinColumn(name = "relation_id")
     private Relation relation;
 
     @Column(name = "body")

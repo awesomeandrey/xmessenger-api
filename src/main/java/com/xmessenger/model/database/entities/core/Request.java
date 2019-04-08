@@ -10,15 +10,15 @@ public class Request {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "frid")
+    @Column(name = "request_id")
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "sender")
+    @JoinColumn(name = "sender_id")
     private AppUser sender;
 
     @ManyToOne
-    @JoinColumn(name = "recipient")
+    @JoinColumn(name = "recipient_id")
     private AppUser recipient;
 
     @Column(name = "is_approved")

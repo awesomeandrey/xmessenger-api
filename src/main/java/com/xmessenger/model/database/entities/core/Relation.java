@@ -11,16 +11,16 @@ public class Relation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "rid")
+    @Column(name = "relation_id")
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "userone")
+    @JoinColumn(name = "user_one_id")
     @JsonIgnore
     private AppUser userOne;
 
     @ManyToOne
-    @JoinColumn(name = "usertwo")
+    @JoinColumn(name = "user_two_id")
     @JsonIgnore
     private AppUser userTwo;
 
