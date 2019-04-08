@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
@@ -61,7 +62,7 @@ public class TokenProvider {
      * @param authUser - authenticated user with specific authorities;
      * @return JWT token.
      */
-    public String generateToken(User authUser) {
+    public String generateToken(UserDetails authUser) {
         final String[] authorities = authUser.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority).toArray(String[]::new);
         return JWT.create()

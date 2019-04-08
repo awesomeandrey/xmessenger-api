@@ -8,6 +8,8 @@ import com.xmessenger.model.services.user.dao.UserDAO;
 import com.xmessenger.model.services.user.oauth.gmail.GmailAuthenticator;
 import com.xmessenger.model.services.user.oauth.gmail.UrlBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -25,6 +27,9 @@ public class GmailAuthenticationController {
     private final UserDAO userDAO;
     private final UrlBuilder urlBuilder;
     private final TokenProvider tokenProvider;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
 
     @Autowired
     public GmailAuthenticationController(GmailAuthenticator gmailAuthenticator, UserFlowExecutor userFlowExecutor, UserDAO userDAO, UrlBuilder urlBuilder, TokenProvider tokenProvider) {
@@ -47,12 +52,14 @@ public class GmailAuthenticationController {
         AppUser user = this.userDAO.getUserByUsername(username);
         if (user == null) {
             user = this.gmailAuthenticator.composeUser(username, accessToken);
-            user = this.userFlowExecutor.registerUser(user);
+            this.userFlowExecutor.registerUser(user);
         } else if (!user.isActive()) {
             user.setActive(true);
-            user = this.userFlowExecutor.changeProfileInfo(user);
+            this.userFlowExecutor.changeProfileInfo(user);
         }
-        String token = this.tokenProvider.composeToken(user.getUsername());
+        // Provide JWT for "external" user;
+        UserDetails authUser = this.userDetailsService.loadUserByUsername(username);
+        String token = this.tokenProvider.generateToken(authUser);
         this.tokenProvider.addTokenToResponse(response, token);
     }
 }
