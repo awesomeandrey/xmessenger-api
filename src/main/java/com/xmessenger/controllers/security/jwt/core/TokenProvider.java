@@ -35,9 +35,9 @@ public class TokenProvider {
     private String secret;
 
     /**
-     * Generates JWT token based on authenticated user.
+     * Generates JWT token based on secure user.
      *
-     * @param authUser - authenticated user with specific authorities;
+     * @param authUser - secure user with specific authorities;
      * @return JWT token.
      */
     public String generateToken(UserDetails authUser) {

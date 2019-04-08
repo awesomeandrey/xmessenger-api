@@ -16,17 +16,6 @@ public enum Role implements GrantedAuthority {
         return this.code;
     }
 
-    public static Role fromCode(int code) {
-        switch (code) {
-            case 1:
-                return Role.ROLE_USER;
-            case 2:
-                return Role.ROLE_ADMIN;
-            default:
-                return Role.ROLE_USER;
-        }
-    }
-
     @Override
     public String getAuthority() {
         return name();

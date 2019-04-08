@@ -1,4 +1,4 @@
-package com.xmessenger.controllers.security.jwt.filter;
+package com.xmessenger.controllers.security.jwt.filters;
 
 import com.xmessenger.configs.WebSecurityConfig;
 import com.xmessenger.controllers.security.jwt.core.TokenProvider;

@@ -1,7 +1,7 @@
-package com.xmessenger.controllers.webservices.authenticated.resftul.requests;
+package com.xmessenger.controllers.webservices.secure.resftul.requests;
 
 import com.xmessenger.configs.WebSecurityConfig;
-import com.xmessenger.controllers.security.user.ContextUserRetriever;
+import com.xmessenger.controllers.security.user.details.ContextUserRetriever;
 import com.xmessenger.model.database.entities.core.Request;
 import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.services.chatter.ChatterFlowExecutor;

@@ -1,7 +1,7 @@
-package com.xmessenger.controllers.webservices.authenticated.config;
+package com.xmessenger.controllers.webservices.secure.config;
 
 import com.xmessenger.configs.WebSecurityConfig;
-import com.xmessenger.controllers.webservices.authenticated.resftul.chatter.filters.ChatterValidationFilter;
+import com.xmessenger.controllers.webservices.secure.resftul.chatter.filters.ChatterValidationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;

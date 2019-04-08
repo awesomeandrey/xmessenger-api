@@ -1,9 +1,9 @@
 package com.xmessenger.configs;
 
-import com.xmessenger.controllers.security.jwt.filter.JwtAuthenticationFilter;
-import com.xmessenger.controllers.security.jwt.filter.JwtAuthorizationFilter;
+import com.xmessenger.controllers.security.jwt.filters.JwtAuthenticationFilter;
+import com.xmessenger.controllers.security.jwt.filters.JwtAuthorizationFilter;
 import com.xmessenger.controllers.security.jwt.core.TokenProvider;
-import com.xmessenger.controllers.security.user.UserDetailsServiceImpl;
+import com.xmessenger.controllers.security.user.details.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -43,7 +43,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http
                 .authorizeRequests()
-                .anyRequest().permitAll()
                 .antMatchers(API_BASE_PATH_PATTERN)
                 .authenticated()
                 .and()

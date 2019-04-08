@@ -1,9 +1,9 @@
-package com.xmessenger.controllers.security.jwt.filter;
+package com.xmessenger.controllers.security.jwt.filters;
 
 import com.google.gson.Gson;
 import com.xmessenger.configs.WebSecurityConfig;
 import com.xmessenger.controllers.security.jwt.core.TokenProvider;
-import com.xmessenger.controllers.security.user.Credentials;
+import com.xmessenger.model.services.user.security.RawCredentials;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -38,9 +38,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         try {
             String rawPayload = request.getReader().lines().collect(Collectors.joining());
-            Credentials credentials = this.gson.fromJson(rawPayload, Credentials.class);
+            RawCredentials rawCredentials = this.gson.fromJson(rawPayload, RawCredentials.class);
             return authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(credentials.getUsername(), credentials.getPassword())
+                    new UsernamePasswordAuthenticationToken(rawCredentials.getUsername(), rawCredentials.getPassword())
             );
         } catch (IOException e) {
             throw new RuntimeException(e);
