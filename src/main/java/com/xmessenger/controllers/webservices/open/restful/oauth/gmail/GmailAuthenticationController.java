@@ -1,6 +1,6 @@
 package com.xmessenger.controllers.webservices.open.restful.oauth.gmail;
 
-import com.xmessenger.controllers.security.jwt.JwtConfig;
+import com.xmessenger.controllers.security.jwt.core.TokenProvider;
 import com.xmessenger.controllers.webservices.open.config.OpenResource;
 import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.services.user.UserFlowExecutor;
@@ -24,15 +24,15 @@ public class GmailAuthenticationController {
     private final UserFlowExecutor userFlowExecutor;
     private final UserDAO userDAO;
     private final UrlBuilder urlBuilder;
-    private final JwtConfig jwtConfig;
+    private final TokenProvider tokenProvider;
 
     @Autowired
-    public GmailAuthenticationController(GmailAuthenticator gmailAuthenticator, UserFlowExecutor userFlowExecutor, UserDAO userDAO, UrlBuilder urlBuilder, JwtConfig jwtConfig) {
+    public GmailAuthenticationController(GmailAuthenticator gmailAuthenticator, UserFlowExecutor userFlowExecutor, UserDAO userDAO, UrlBuilder urlBuilder, TokenProvider tokenProvider) {
         this.gmailAuthenticator = gmailAuthenticator;
         this.userFlowExecutor = userFlowExecutor;
         this.userDAO = userDAO;
         this.urlBuilder = urlBuilder;
-        this.jwtConfig = jwtConfig;
+        this.tokenProvider = tokenProvider;
     }
 
     @RequestMapping(value = "/oauth/gmail/composeTokenUrl")
@@ -52,7 +52,7 @@ public class GmailAuthenticationController {
             user.setActive(true);
             user = this.userFlowExecutor.changeProfileInfo(user);
         }
-        String token = this.jwtConfig.composeToken(user.getUsername());
-        response.addHeader(this.jwtConfig.getHeader(), this.jwtConfig.getPrefix() + token);
+        String token = this.tokenProvider.composeToken(user.getUsername());
+        this.tokenProvider.addTokenToResponse(response, token);
     }
 }

@@ -1,8 +1,9 @@
-package com.xmessenger.controllers.security.jwt;
+package com.xmessenger.controllers.security.jwt.filter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import com.xmessenger.configs.WebSecurityConfig;
-import com.xmessenger.model.database.entities.core.AppUser;
+import com.xmessenger.controllers.security.jwt.core.TokenProvider;
+import com.xmessenger.controllers.security.user.Credentials;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -14,6 +15,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 /**
  * This filter registers itself responsible for {"/api/login"} endpoint with POST method.
@@ -22,20 +24,27 @@ import java.io.IOException;
  */
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
-    private final JwtConfig jwtConfig;
+    private final TokenProvider tokenProvider;
 
-    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, JwtConfig jwtConfig) {
+    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, TokenProvider tokenProvider) {
         this.authenticationManager = authenticationManager;
         super.setFilterProcessesUrl(WebSecurityConfig.API_BASE_PATH.concat("/login"));
-        this.jwtConfig = jwtConfig;
+        this.tokenProvider = tokenProvider;
     }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest req, HttpServletResponse res) throws AuthenticationException {
+        System.out.println(">>> attemptAuthentication()");
+
         try {
-            AppUser user = new ObjectMapper().readValue(req.getInputStream(), AppUser.class);
+            String rawPayload = req.getReader().lines().collect(Collectors.joining());
+            System.out.println("Raw payload: " + rawPayload.toString());
+
+            Credentials credentials = new Gson().fromJson(rawPayload, Credentials.class);
+            System.out.println("Credentials: " + credentials.toString());
+
             return authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
+                    new UsernamePasswordAuthenticationToken(credentials.getUsername(), credentials.getPassword())
             );
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -44,7 +53,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     protected void successfulAuthentication(HttpServletRequest req, HttpServletResponse response, FilterChain chain, Authentication auth) {
-        String tokenSubject = ((User) auth.getPrincipal()).getUsername(), token = this.jwtConfig.composeToken(tokenSubject);
-        response.addHeader(this.jwtConfig.getHeader(), this.jwtConfig.getPrefix() + token);
+        System.out.println(">>> successfulAuthentication()");
+
+        User authenticatedUser = (User) auth.getPrincipal();
+        System.out.println("authenticatedUser: " + authenticatedUser.toString());
+
+        String token = this.tokenProvider.generateToken(authenticatedUser);
+        this.tokenProvider.addTokenToResponse(response, token);
     }
 }

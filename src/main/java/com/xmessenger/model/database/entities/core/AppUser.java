@@ -7,6 +7,7 @@ import com.xmessenger.model.database.entities.Role;
 
 import javax.persistence.*;
 import java.util.Objects;
+import java.util.Set;
 
 @javax.persistence.Entity
 @Table(name = "xm_user")
@@ -35,7 +36,7 @@ public class AppUser {
 
     @Column(name = "role_code")
     @Convert(converter = RoleCodeConverter.class)
-    private Role role;
+    private Set<Role> roles;
 
     public Integer getId() {
         return this.id;
@@ -98,12 +99,12 @@ public class AppUser {
         this.loggedExternally = loggedExternally;
     }
 
-    public Role getRole() {
-        return role;
+    public Set<Role> getRoles() {
+        return roles;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 
     public AppUser() {

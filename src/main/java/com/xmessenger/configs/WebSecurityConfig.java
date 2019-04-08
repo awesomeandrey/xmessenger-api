@@ -1,23 +1,25 @@
 package com.xmessenger.configs;
 
-import com.xmessenger.controllers.security.jwt.JwtAuthenticationFilter;
-import com.xmessenger.controllers.security.jwt.JwtAuthorizationFilter;
-import com.xmessenger.controllers.security.jwt.JwtConfig;
+import com.xmessenger.controllers.security.jwt.filter.JwtAuthenticationFilter;
+import com.xmessenger.controllers.security.jwt.filter.JwtAuthorizationFilter;
+import com.xmessenger.controllers.security.jwt.core.TokenProvider;
 import com.xmessenger.controllers.security.user.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public final static String API_BASE_PATH = "/api";
-    private final UserDetailsServiceImpl userDetailsService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -25,13 +27,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public JwtConfig jwtConfig() {
-        return new JwtConfig();
+    public TokenProvider tokenProvider() {
+        return new TokenProvider();
     }
 
-    @Autowired
-    public WebSecurityConfig(UserDetailsServiceImpl userDetailsService) {
-        this.userDetailsService = userDetailsService;
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return new UserDetailsServiceImpl();
     }
 
     @Override
@@ -41,8 +43,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(API_BASE_PATH.concat("/**"))
                 .authenticated()
                 .and()
-                .addFilter(new JwtAuthenticationFilter(authenticationManager(), this.jwtConfig()))
-                .addFilter(new JwtAuthorizationFilter(authenticationManager(), this.jwtConfig()))
+                .addFilter(new JwtAuthenticationFilter(authenticationManager(), this.tokenProvider()))
+                .addFilter(new JwtAuthorizationFilter(authenticationManager(), this.tokenProvider()))
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http
                 .csrf()
@@ -57,7 +59,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
-                .userDetailsService(this.userDetailsService)
+                .userDetailsService(this.userDetailsService())
                 .passwordEncoder(this.passwordEncoder());
     }
 }

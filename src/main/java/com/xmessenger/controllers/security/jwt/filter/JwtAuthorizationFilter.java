@@ -1,5 +1,6 @@
-package com.xmessenger.controllers.security.jwt;
+package com.xmessenger.controllers.security.jwt.filter;
 
+import com.xmessenger.controllers.security.jwt.core.TokenProvider;
 import com.xmessenger.model.util.Utility;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,30 +16,27 @@ import java.io.IOException;
 import static java.util.Collections.emptyList;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
-    private final JwtConfig jwtConfig;
+    private final TokenProvider tokenProvider;
 
-    public JwtAuthorizationFilter(AuthenticationManager authManager, JwtConfig jwtConfig) {
+    public JwtAuthorizationFilter(AuthenticationManager authManager, TokenProvider tokenProvider) {
         super(authManager);
-        this.jwtConfig = jwtConfig;
+        this.tokenProvider = tokenProvider;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
-        String header = req.getHeader(this.jwtConfig.getHeader());
-        if (header == null || !header.startsWith(this.jwtConfig.getPrefix())) {
+        String token = this.tokenProvider.extractTokenFromRequest(req);
+        if (token == null) {
             chain.doFilter(req, res);
             return;
         }
-        UsernamePasswordAuthenticationToken authentication = this.getAuthentication(req);
+        UsernamePasswordAuthenticationToken authentication = this.getAuthentication(token);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         chain.doFilter(req, res);
     }
 
-    private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
-        String token = request.getHeader(this.jwtConfig.getHeader());
-        if (Utility.isBlank(token)) return null;
-        token = token.replace(this.jwtConfig.getPrefix(), "");
-        String username = this.jwtConfig.retrieveSubjectFromToken(token);
+    private UsernamePasswordAuthenticationToken getAuthentication(String token) {
+        String username = this.tokenProvider.retrieveSubjectFromToken(token);
         if (Utility.isBlank(username)) return null;
         // Implicitly set 'authenticated' flag to true;
         return new UsernamePasswordAuthenticationToken(username, null, emptyList());
