@@ -1,4 +1,4 @@
-package com.xmessenger.controllers.webservices.secure.resftul.chatter.filters;
+package com.xmessenger.controllers.webservices.secured.resftul.chatter.filters;
 
 import com.xmessenger.controllers.security.user.details.ContextUserRetriever;
 import com.xmessenger.model.database.entities.core.AppUser;

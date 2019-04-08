@@ -1,4 +1,4 @@
-package com.xmessenger.controllers.webservices.secure.resftul.administration;
+package com.xmessenger.controllers.webservices.secured.resftul.administration;
 
 import com.xmessenger.configs.WebSecurityConfig;
 import org.springframework.security.access.prepost.PreAuthorize;

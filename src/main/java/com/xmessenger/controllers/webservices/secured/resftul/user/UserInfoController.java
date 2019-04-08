@@ -1,4 +1,4 @@
-package com.xmessenger.controllers.webservices.secure.resftul.user;
+package com.xmessenger.controllers.webservices.secured.resftul.user;
 
 import com.xmessenger.configs.WebSecurityConfig;
 import com.xmessenger.controllers.security.user.details.ContextUserRetriever;

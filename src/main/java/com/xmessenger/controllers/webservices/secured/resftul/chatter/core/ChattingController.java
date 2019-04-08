@@ -1,4 +1,4 @@
-package com.xmessenger.controllers.webservices.secure.resftul.chatter.core;
+package com.xmessenger.controllers.webservices.secured.resftul.chatter.core;
 
 import com.xmessenger.configs.WebSecurityConfig;
 import com.xmessenger.controllers.security.user.details.ContextUserRetriever;

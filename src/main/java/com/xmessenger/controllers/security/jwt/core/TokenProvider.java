@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.xmessenger.model.database.entities.Role;
+import com.xmessenger.model.database.entities.core.AppUser;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -35,20 +36,27 @@ public class TokenProvider {
     private String secret;
 
     /**
-     * Generates JWT token based on secure user.
+     * Generates JWT token based on secured user.
      *
-     * @param authUser - secure user with specific authorities;
+     * @param authUser - secured user with specific authorities;
      * @return JWT token.
      */
     public String generateToken(UserDetails authUser) {
         final String[] authorities = authUser.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority).toArray(String[]::new);
-        return JWT.create()
-                .withSubject(authUser.getUsername())
-                .withArrayClaim(this.AUTHORITIES_KEY, authorities)
-                .withIssuedAt(new Date(System.currentTimeMillis()))
-                .withExpiresAt(new Date(System.currentTimeMillis() + this.expiration * 1000))
-                .sign(HMAC512(this.secret.getBytes()));
+        return this.generateToken(authUser.getUsername(), authorities);
+    }
+
+    /**
+     * Generates JWT token based on database entity.
+     *
+     * @param appUser - AppUser DAO entity;
+     * @return JWT token.
+     */
+    public String generateToken(AppUser appUser) {
+        final String[] authorities = appUser.getRoles().stream()
+                .map(GrantedAuthority::getAuthority).toArray(String[]::new);
+        return this.generateToken(appUser.getUsername(), authorities);
     }
 
     public String getUsernameFromToken(String token) {
@@ -84,6 +92,15 @@ public class TokenProvider {
         String header = request.getHeader(this.header);
         if (header == null || !header.startsWith(this.prefix)) return null;
         return header.replace(this.prefix, "");
+    }
+
+    private String generateToken(String subject, String[] authorities) {
+        return JWT.create()
+                .withSubject(subject)
+                .withArrayClaim(this.AUTHORITIES_KEY, authorities)
+                .withIssuedAt(new Date(System.currentTimeMillis()))
+                .withExpiresAt(new Date(System.currentTimeMillis() + this.expiration * 1000))
+                .sign(HMAC512(this.secret.getBytes()));
     }
 
     private DecodedJWT decodeJWT(String token) {

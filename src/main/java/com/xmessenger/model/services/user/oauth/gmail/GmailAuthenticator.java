@@ -25,6 +25,10 @@ public class GmailAuthenticator {
         this.parser = new GsonJsonParser();
     }
 
+    public UrlBuilder urlBuilder() {
+        return this.urlBuilder;
+    }
+
     public String getUsername(String accessToken) throws Exception {
         final URL requestUsernameUrl = this.urlBuilder.requestUsername(accessToken);
         RestTemplate restTemplate = new RestTemplate();
