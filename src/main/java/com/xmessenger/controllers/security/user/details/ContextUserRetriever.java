@@ -1,6 +1,6 @@
-package com.xmessenger.controllers.security.user;
+package com.xmessenger.controllers.security.user.details;
 
-import com.xmessenger.model.database.entities.ApplicationUser;
+import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.services.user.dao.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -16,7 +16,7 @@ public class ContextUserRetriever {
         this.userDAO = userDAO;
     }
 
-    public ApplicationUser getContextUser() {
+    public AppUser getContextUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = (String) auth.getPrincipal();
         return this.userDAO.getUserByUsername(username);

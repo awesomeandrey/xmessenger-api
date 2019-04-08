@@ -1,6 +1,6 @@
 package com.xmessenger.model.services.user.security;
 
-import com.xmessenger.model.database.entities.ApplicationUser;
+import com.xmessenger.model.database.entities.core.AppUser;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -23,7 +23,7 @@ public class CredentialsServiceTest {
 
     @Test
     public void encodePassword() {
-        ApplicationUser testUser = UserDataFactory.generateSuccessUser();
+        AppUser testUser = UserDataFactory.generateSuccessUser();
         String rawPassword = testUser.getPassword();
         Mockito.when(this.passwordEncoder.encode(testUser.getPassword())).thenReturn("SUPER_ENCODED_STRING");
         this.credentialsService.encodePassword(testUser);
@@ -32,7 +32,7 @@ public class CredentialsServiceTest {
 
     @Test
     public void matchesPassword() {
-        ApplicationUser testUser = UserDataFactory.generateSuccessUser();
+        AppUser testUser = UserDataFactory.generateSuccessUser();
         Mockito.when(this.passwordEncoder.matches("raw", testUser.getPassword())).thenReturn(true);
         assertTrue(this.credentialsService.matchesPassword("raw", testUser));
     }

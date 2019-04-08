@@ -1,8 +1,8 @@
 package com.xmessenger.model.services.chatter;
 
-import com.xmessenger.model.database.entities.Message;
-import com.xmessenger.model.database.entities.Relation;
-import com.xmessenger.model.database.entities.ApplicationUser;
+import com.xmessenger.model.database.entities.core.Message;
+import com.xmessenger.model.database.entities.core.Relation;
+import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.services.chatter.decorators.Chat;
 import com.xmessenger.model.services.chatter.core.MessageService;
 import com.xmessenger.model.services.chatter.core.RelationService;
@@ -24,28 +24,28 @@ public class ChatterFlowExecutor {
         this.messageService = messageService;
     }
 
-    public boolean hasAuthorityToOperateWithChat(ApplicationUser authorizedUser, Chat chat) {
+    public boolean hasAuthorityToOperateWithChat(AppUser authorizedUser, Chat chat) {
         Relation relation = this.relationService.lookupRelation(chat.getId());
         return relation != null && relation.isUserRelated(authorizedUser);
     }
 
-    public Chat createChat(ApplicationUser user1, ApplicationUser user2) throws Exception {
+    public Chat createChat(AppUser user1, AppUser user2) throws Exception {
         Relation relation = this.relationService.createRelation(user1, user2);
         return new Chat(relation);
     }
 
-    public Chat clearChat(ApplicationUser runningUser, Chat chatToClear) {
+    public Chat clearChat(AppUser runningUser, Chat chatToClear) {
         this.messageService.deleteMessagesByRelation(chatToClear.getRelation());
         return this.retrieveChat(runningUser, chatToClear.getId());
     }
 
-    public Chat deleteChat(ApplicationUser runningUser, Chat chatToDelete) {
+    public Chat deleteChat(AppUser runningUser, Chat chatToDelete) {
         chatToDelete = this.clearChat(runningUser, chatToDelete);
         this.relationService.deleteRelation(chatToDelete.getRelation());
         return chatToDelete;
     }
 
-    public Map<Integer, Chat> retrieveChats(ApplicationUser runningUser) {
+    public Map<Integer, Chat> retrieveChats(AppUser runningUser) {
         Map<Integer, Relation> relationsMap = this.relationService.getUserRelations(runningUser);
         Map<Integer, Date> latestMessageDateByRelation = this.messageService.groupLastMessageDateByRelations(relationsMap.values());
         Map<Integer, Chat> chatsMap = new HashMap<>();
@@ -69,18 +69,18 @@ public class ChatterFlowExecutor {
         return this.messageService.getMessagesByRelation(relation);
     }
 
-    public boolean isFellow(ApplicationUser user1, ApplicationUser user2) {
+    public boolean isFellow(AppUser user1, AppUser user2) {
         return this.relationService.hasRelation(user1, user2);
     }
 
     //******************************************************************************************************************
 
-    private ApplicationUser getFellowFromRelation(ApplicationUser runningUser, Relation relation) {
-        ApplicationUser user1 = relation.getUserOne(), user2 = relation.getUserTwo();
+    private AppUser getFellowFromRelation(AppUser runningUser, Relation relation) {
+        AppUser user1 = relation.getUserOne(), user2 = relation.getUserTwo();
         return user1.getId().equals(runningUser.getId()) ? user2 : user1;
     }
 
-    private Chat retrieveChat(ApplicationUser runningUser, Integer chatId) {
+    private Chat retrieveChat(AppUser runningUser, Integer chatId) {
         Relation relation = this.relationService.lookupRelation(chatId);
         Chat chat = new Chat(relation);
         chat.setFellow(this.getFellowFromRelation(runningUser, relation));

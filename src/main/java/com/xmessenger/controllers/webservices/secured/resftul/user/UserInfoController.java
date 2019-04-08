@@ -1,8 +1,8 @@
-package com.xmessenger.controllers.webservices.authenticated.resftul.user;
+package com.xmessenger.controllers.webservices.secured.resftul.user;
 
 import com.xmessenger.configs.WebSecurityConfig;
-import com.xmessenger.controllers.security.user.ContextUserRetriever;
-import com.xmessenger.model.database.entities.ApplicationUser;
+import com.xmessenger.controllers.security.user.details.ContextUserRetriever;
+import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.services.user.UserFlowExecutor;
 import com.xmessenger.model.services.user.dao.QueryParams;
 import com.xmessenger.model.services.user.dao.UserDAO;
@@ -28,18 +28,18 @@ public class UserInfoController {
     }
 
     @RequestMapping(value = "/info", method = RequestMethod.GET)
-    public ApplicationUser getCurrentUser() {
+    public AppUser getCurrentUser() {
         return this.contextUserRetriever.getContextUser();
     }
 
     @RequestMapping(value = "/info", method = RequestMethod.PUT)
-    public ApplicationUser changeProfileInfo(@RequestBody ApplicationUser userToUpdate) throws Exception {
+    public AppUser changeProfileInfo(@RequestBody AppUser userToUpdate) throws Exception {
         userToUpdate.setId(this.contextUserRetriever.getContextUserId());
         return this.flowExecutor.changeProfileInfo(userToUpdate);
     }
 
     @RequestMapping(value = "/search", method = RequestMethod.GET)
-    public List<ApplicationUser> findPeople(String nameOrLogin, boolean searchByLogin) {
+    public List<AppUser> findPeople(String nameOrLogin, boolean searchByLogin) {
         QueryParams params = new QueryParams();
         params.setNameOrLogin(nameOrLogin);
         params.setSearchByLogin(searchByLogin);
@@ -47,14 +47,14 @@ public class UserInfoController {
     }
 
     @RequestMapping(value = "/picture", method = RequestMethod.POST)
-    public ApplicationUser setProfilePicture(@RequestParam("file") MultipartFile file) throws Exception {
-        ApplicationUser user = this.getCurrentUser();
+    public AppUser setProfilePicture(@RequestParam("file") MultipartFile file) throws Exception {
+        AppUser user = this.getCurrentUser();
         user.setPicture(file.getBytes());
         return this.changeProfileInfo(user);
     }
 
     @RequestMapping(value = "/password", method = RequestMethod.PUT)
-    public ApplicationUser changePassword(@RequestBody RawCredentials rawCredentials) throws Exception {
+    public AppUser changePassword(@RequestBody RawCredentials rawCredentials) throws Exception {
         return this.flowExecutor.changePassword(this.getCurrentUser(), rawCredentials);
     }
 }

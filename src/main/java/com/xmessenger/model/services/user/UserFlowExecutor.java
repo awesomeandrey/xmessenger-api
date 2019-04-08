@@ -1,6 +1,6 @@
 package com.xmessenger.model.services.user;
 
-import com.xmessenger.model.database.entities.ApplicationUser;
+import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.services.user.security.CredentialsService;
 import com.xmessenger.model.services.user.security.RawCredentials;
 import com.xmessenger.model.services.user.dao.UserDAO;
@@ -23,15 +23,15 @@ public class UserFlowExecutor {
         this.credentialsService = credentialsService;
     }
 
-    public ApplicationUser lookupUser(RawCredentials rawCredentials) throws UserException {
-        ApplicationUser foundUser = this.userDAO.getUserByUsername(rawCredentials.getUsername());
+    public AppUser lookupUser(RawCredentials rawCredentials) throws UserException {
+        AppUser foundUser = this.userDAO.getUserByUsername(rawCredentials.getUsername());
         if (foundUser == null || !foundUser.isActive() || !this.credentialsService.matchesPassword(rawCredentials.getPassword(), foundUser)) {
             throw new UserException("User with such credentials was not found.");
         }
         return foundUser;
     }
 
-    public ApplicationUser registerUser(ApplicationUser userToRegister) throws UserException {
+    public AppUser registerUser(AppUser userToRegister) throws UserException {
         UserValidationResult validationResult = this.userValidator.validateOnRegistration(userToRegister);
         if (!validationResult.isValid()) {
             throw new UserException(validationResult.getErrorMessage());
@@ -48,22 +48,22 @@ public class UserFlowExecutor {
      * @throws UserException
      * @throws UserDAO.UserNotFoundException
      */
-    public ApplicationUser changeProfileInfo(ApplicationUser updatedUser) throws UserException, UserDAO.UserNotFoundException {
+    public AppUser changeProfileInfo(AppUser updatedUser) throws UserException, UserDAO.UserNotFoundException {
         UserValidationResult validationResult = this.userValidator.validateOnProfileChange(updatedUser);
         if (!validationResult.isValid()) {
             throw new UserException(validationResult.getErrorMessage());
         }
-        ApplicationUser persistedUser = this.userDAO.getUserById(updatedUser.getId());
+        AppUser persistedUser = this.userDAO.getUserById(updatedUser.getId());
         this.mergeProperties(persistedUser, updatedUser);
         return this.userDAO.update(persistedUser);
     }
 
-    public ApplicationUser changePassword(ApplicationUser user, RawCredentials rawCredentials) throws UserException, UserDAO.UserNotFoundException {
+    public AppUser changePassword(AppUser user, RawCredentials rawCredentials) throws UserException, UserDAO.UserNotFoundException {
         UserValidationResult validationResult = this.userValidator.validateOnPasswordChange(user, rawCredentials);
         if (!validationResult.isValid()) {
             throw new UserException(validationResult.getErrorMessage());
         }
-        ApplicationUser persistedUser = this.userDAO.getUserById(user.getId());
+        AppUser persistedUser = this.userDAO.getUserById(user.getId());
         persistedUser.setPassword(rawCredentials.getNewPassword());
         this.credentialsService.encodePassword(persistedUser);
         return this.userDAO.update(persistedUser);
@@ -71,7 +71,7 @@ public class UserFlowExecutor {
 
     //******************************************************************************************************************
 
-    private void mergeProperties(ApplicationUser persistedUser, ApplicationUser updatedUser) {
+    private void mergeProperties(AppUser persistedUser, AppUser updatedUser) {
         if (Utility.isNotBlank(updatedUser.getName())) {
             persistedUser.setName(updatedUser.getName());
         }

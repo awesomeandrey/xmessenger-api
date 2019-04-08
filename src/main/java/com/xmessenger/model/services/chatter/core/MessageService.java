@@ -1,7 +1,7 @@
 package com.xmessenger.model.services.chatter.core;
 
-import com.xmessenger.model.database.entities.Message;
-import com.xmessenger.model.database.entities.Relation;
+import com.xmessenger.model.database.entities.core.Message;
+import com.xmessenger.model.database.entities.core.Relation;
 import com.xmessenger.model.database.repositories.MessageRepository;
 import com.xmessenger.model.util.Utility;
 import org.springframework.beans.factory.annotation.Autowired;

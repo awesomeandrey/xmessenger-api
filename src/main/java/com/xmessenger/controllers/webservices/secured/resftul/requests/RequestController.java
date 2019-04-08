@@ -1,9 +1,9 @@
-package com.xmessenger.controllers.webservices.authenticated.resftul.requests;
+package com.xmessenger.controllers.webservices.secured.resftul.requests;
 
 import com.xmessenger.configs.WebSecurityConfig;
-import com.xmessenger.controllers.security.user.ContextUserRetriever;
-import com.xmessenger.model.database.entities.Request;
-import com.xmessenger.model.database.entities.ApplicationUser;
+import com.xmessenger.controllers.security.user.details.ContextUserRetriever;
+import com.xmessenger.model.database.entities.core.Request;
+import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.services.chatter.ChatterFlowExecutor;
 import com.xmessenger.model.services.request.RequestFlowExecutor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,13 +35,13 @@ public class RequestController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public List<Request> getRequests() {
-        ApplicationUser user = this.contextUserRetriever.getContextUser();
+        AppUser user = this.contextUserRetriever.getContextUser();
         return this.requestFlowExecutor.retrieveRequests(user);
     }
 
     @RequestMapping(value = "/process", method = RequestMethod.PUT)
     public Request processRequest(@RequestBody Request requestToProcess) throws Exception {
-        ApplicationUser user = this.contextUserRetriever.getContextUser();
+        AppUser user = this.contextUserRetriever.getContextUser();
         Request processedRequest = this.requestFlowExecutor.processRequest(requestToProcess, user);
         if (processedRequest.getApproved()) {
             this.chatterFlowExecutor.createChat(processedRequest.getSender(), processedRequest.getRecipient());
@@ -52,7 +52,7 @@ public class RequestController {
 
     @RequestMapping(value = "/send", method = RequestMethod.POST)
     public Request sendRequest(@RequestBody Request requestToCreate) throws Exception {
-        ApplicationUser recipient = requestToCreate.getRecipient(), sender = this.contextUserRetriever.getContextUser();
+        AppUser recipient = requestToCreate.getRecipient(), sender = this.contextUserRetriever.getContextUser();
         if (this.chatterFlowExecutor.isFellow(sender, recipient)) {
             throw new RequestFlowExecutor.RequestFlowException("The request recipient is already your friend.");
         }

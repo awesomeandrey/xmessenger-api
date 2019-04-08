@@ -1,6 +1,6 @@
 package com.xmessenger.model.services.user.oauth.gmail;
 
-import com.xmessenger.model.database.entities.ApplicationUser;
+import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.services.user.dao.UserBuilder;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +25,10 @@ public class GmailAuthenticator {
         this.parser = new GsonJsonParser();
     }
 
+    public UrlBuilder urlBuilder() {
+        return this.urlBuilder;
+    }
+
     public String getUsername(String accessToken) throws Exception {
         final URL requestUsernameUrl = this.urlBuilder.requestUsername(accessToken);
         RestTemplate restTemplate = new RestTemplate();
@@ -38,7 +42,7 @@ public class GmailAuthenticator {
         }
     }
 
-    public ApplicationUser composeUser(String username, String accessToken) throws Exception {
+    public AppUser composeUser(String username, String accessToken) throws Exception {
         final URL requestUserInfoUrl = this.urlBuilder.requestUserInfo(accessToken);
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> responseEntity = restTemplate.exchange(requestUserInfoUrl.toString(), HttpMethod.GET, null, String.class);

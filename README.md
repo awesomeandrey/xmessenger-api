@@ -19,12 +19,12 @@ $ psql -U username dbname < sampledata.psql
 Commands for maintaining DB on Heroku:
 > Push database:<br/>
 ```shell
-$ heroku pg:reset --app xmessenger-app
-$ heroku pg:push mylocaldb DATABASE_URL --app xmessenger-app
+$ heroku pg:reset --app api-xmessenger
+$ heroku pg:push [local DB name] DATABASE_URL --app api-xmessenger
 ```
 > Pull database:<br/>
 ```shell
-$ heroku pg:pull DATABASE_URL mylocaldb --app xmessenger-app
+$ heroku pg:pull DATABASE_URL [local DB name] --app api-xmessenger
 ```
 In order to run command on *Heroku* environment, use following syntax:<br/>
 ```shell
@@ -36,7 +36,7 @@ The workaround is to restart container:
 $ heroku restart
 ```
 If providing a Postgres user or password for your local DB is necessary, use the appropriate environment variables like this:<br/>
-`PGUSER=username PGPASSWORD=password heroku pg:pull DATABASE_URL mylocaldb --app xmessenger-app`
+`PGUSER=username PGPASSWORD=password heroku pg:pull DATABASE_URL [local DB name] --app api-xmessenger`
 
 **On Windows 10 you're supposed to run commands through Git Bash terminal.**
 **Heroku CLI works stably only in Unix environment**

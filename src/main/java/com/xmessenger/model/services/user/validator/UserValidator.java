@@ -1,6 +1,6 @@
 package com.xmessenger.model.services.user.validator;
 
-import com.xmessenger.model.database.entities.ApplicationUser;
+import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.services.user.security.CredentialsService;
 import com.xmessenger.model.services.user.security.RawCredentials;
 import com.xmessenger.model.services.user.dao.UserDAO;
@@ -19,7 +19,7 @@ public class UserValidator {
         this.credentialsService = credentialsService;
     }
 
-    public UserValidationResult validateOnRegistration(ApplicationUser userToValidate) {
+    public UserValidationResult validateOnRegistration(AppUser userToValidate) {
         UserValidationResult validationResult = this.checkRequiredProperties(userToValidate);
         if (!validationResult.isValid()) {
             return validationResult;
@@ -31,7 +31,7 @@ public class UserValidator {
         return new UserValidationResult(true);
     }
 
-    public UserValidationResult validateOnProfileChange(ApplicationUser userToValidate) {
+    public UserValidationResult validateOnProfileChange(AppUser userToValidate) {
         if (Utility.isBlank(userToValidate.getId())) {
             return new UserValidationResult(false, "No User ID provided.");
         }
@@ -42,7 +42,7 @@ public class UserValidator {
         return new UserValidationResult(true);
     }
 
-    public UserValidationResult validateOnPasswordChange(ApplicationUser userToValidate, RawCredentials rawCredentials) {
+    public UserValidationResult validateOnPasswordChange(AppUser userToValidate, RawCredentials rawCredentials) {
         final String oldRawPassword = rawCredentials.getPassword(), newRawPassword = rawCredentials.getNewPassword();
         if (!this.isRawPasswordCorrect(newRawPassword)) {
             return new UserValidationResult(false, "Invalid 'Password' field value.");
@@ -63,7 +63,7 @@ public class UserValidator {
         return new UserValidationResult(true);
     }
 
-    private UserValidationResult checkRequiredProperties(ApplicationUser userToCheck) {
+    private UserValidationResult checkRequiredProperties(AppUser userToCheck) {
         UserValidationResult validationResult = new UserValidationResult(true);
         if (!this.isNameCorrect(userToCheck.getName())
                 || !this.isUsernameCorrect(userToCheck.getUsername())

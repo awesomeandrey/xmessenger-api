@@ -1,6 +1,6 @@
 package com.xmessenger.controllers.webservices.open.websockets.handlers;
 
-import com.xmessenger.model.database.entities.Request;
+import com.xmessenger.model.database.entities.core.Request;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.*;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
