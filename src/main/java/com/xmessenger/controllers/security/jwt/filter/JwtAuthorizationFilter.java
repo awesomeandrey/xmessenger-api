@@ -1,7 +1,7 @@
 package com.xmessenger.controllers.security.jwt.filter;
 
 import com.xmessenger.controllers.security.jwt.core.TokenProvider;
-import com.xmessenger.model.util.Utility;
+import com.xmessenger.model.database.entities.Role;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,8 +12,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-
-import static java.util.Collections.emptyList;
+import java.util.Set;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     private final TokenProvider tokenProvider;
@@ -24,21 +23,25 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
-        String token = this.tokenProvider.extractTokenFromRequest(req);
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+        String token = this.tokenProvider.extractTokenFromRequest(request);
         if (token == null) {
-            chain.doFilter(req, res);
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Json Web Token required.");
             return;
         }
-        UsernamePasswordAuthenticationToken authentication = this.getAuthentication(token);
+        String username = null;
+        Set<Role> roles = null;
+        try {
+            username = this.tokenProvider.getUsernameFromToken(token);
+            roles = this.tokenProvider.getClaimsFromToken(token);
+        } catch (Exception ex) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
+            return;
+        }
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                username, null, roles
+        );
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        chain.doFilter(req, res);
-    }
-
-    private UsernamePasswordAuthenticationToken getAuthentication(String token) {
-        String username = this.tokenProvider.retrieveSubjectFromToken(token);
-        if (Utility.isBlank(username)) return null;
-        // Implicitly set 'authenticated' flag to true;
-        return new UsernamePasswordAuthenticationToken(username, null, emptyList());
+        chain.doFilter(request, response);
     }
 }

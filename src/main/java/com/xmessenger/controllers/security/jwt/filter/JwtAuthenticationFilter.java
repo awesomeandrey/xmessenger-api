@@ -25,24 +25,20 @@ import java.util.stream.Collectors;
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     private final TokenProvider tokenProvider;
+    private final Gson gson;
 
     public JwtAuthenticationFilter(AuthenticationManager authenticationManager, TokenProvider tokenProvider) {
-        this.authenticationManager = authenticationManager;
         super.setFilterProcessesUrl(WebSecurityConfig.API_BASE_PATH.concat("/login"));
+        this.authenticationManager = authenticationManager;
         this.tokenProvider = tokenProvider;
+        this.gson = new Gson();
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest req, HttpServletResponse res) throws AuthenticationException {
-        System.out.println(">>> attemptAuthentication()");
-
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         try {
-            String rawPayload = req.getReader().lines().collect(Collectors.joining());
-            System.out.println("Raw payload: " + rawPayload.toString());
-
-            Credentials credentials = new Gson().fromJson(rawPayload, Credentials.class);
-            System.out.println("Credentials: " + credentials.toString());
-
+            String rawPayload = request.getReader().lines().collect(Collectors.joining());
+            Credentials credentials = this.gson.fromJson(rawPayload, Credentials.class);
             return authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(credentials.getUsername(), credentials.getPassword())
             );
@@ -52,12 +48,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest req, HttpServletResponse response, FilterChain chain, Authentication auth) {
-        System.out.println(">>> successfulAuthentication()");
-
-        User authenticatedUser = (User) auth.getPrincipal();
-        System.out.println("authenticatedUser: " + authenticatedUser.toString());
-
+    protected void successfulAuthentication(HttpServletRequest req, HttpServletResponse response, FilterChain chain, Authentication authentication) {
+        User authenticatedUser = (User) authentication.getPrincipal();
         String token = this.tokenProvider.generateToken(authenticatedUser);
         this.tokenProvider.addTokenToResponse(response, token);
     }

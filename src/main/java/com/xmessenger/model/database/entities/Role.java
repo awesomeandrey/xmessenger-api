@@ -1,8 +1,10 @@
 package com.xmessenger.model.database.entities;
 
-public enum Role {
+import org.springframework.security.core.GrantedAuthority;
 
-    USER(1), ADMIN(2);
+public enum Role implements GrantedAuthority {
+
+    ROLE_USER(1), ROLE_ADMIN(2);
 
     private int code;
 
@@ -17,11 +19,21 @@ public enum Role {
     public static Role fromCode(int code) {
         switch (code) {
             case 1:
-                return Role.USER;
+                return Role.ROLE_USER;
             case 2:
-                return Role.ADMIN;
+                return Role.ROLE_ADMIN;
             default:
-                return Role.USER;
+                return Role.ROLE_USER;
         }
+    }
+
+    @Override
+    public String getAuthority() {
+        return name();
+    }
+
+    @Override
+    public String toString() {
+        return "Role{code=" + this.code + "; name=" + this.name() + "}";
     }
 }

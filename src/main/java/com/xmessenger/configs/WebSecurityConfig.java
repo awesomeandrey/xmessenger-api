@@ -4,7 +4,6 @@ import com.xmessenger.controllers.security.jwt.filter.JwtAuthenticationFilter;
 import com.xmessenger.controllers.security.jwt.filter.JwtAuthorizationFilter;
 import com.xmessenger.controllers.security.jwt.core.TokenProvider;
 import com.xmessenger.controllers.security.user.UserDetailsServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
