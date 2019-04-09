@@ -6,6 +6,7 @@ import com.xmessenger.model.database.converters.RoleCodeConverter;
 import com.xmessenger.model.database.entities.Role;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -109,6 +110,8 @@ public class AppUser {
 
     public AppUser() {
         this.active = true;
+        this.roles = new HashSet<>();
+        this.roles.add(Role.ROLE_USER);
         this.loggedExternally = false;
     }
 
