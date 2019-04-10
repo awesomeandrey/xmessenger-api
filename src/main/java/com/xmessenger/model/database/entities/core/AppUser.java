@@ -21,6 +21,7 @@ public class AppUser {
 
     private String name;
 
+    @JsonIgnore
     private byte[] picture;
 
     private String username;
@@ -29,6 +30,7 @@ public class AppUser {
     private String password;
 
     @Column(name = "is_logged_externally")
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Boolean loggedExternally;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -37,6 +39,7 @@ public class AppUser {
 
     @Column(name = "role_code")
     @Convert(converter = RoleCodeConverter.class)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Set<Role> roles;
 
     public Integer getId() {
@@ -55,7 +58,6 @@ public class AppUser {
         this.name = name;
     }
 
-    @JsonIgnore
     public byte[] getPicture() {
         return picture;
     }
@@ -74,7 +76,6 @@ public class AppUser {
         this.username = username;
     }
 
-    @JsonIgnore
     public String getPassword() {
         return this.password;
     }
@@ -83,7 +84,6 @@ public class AppUser {
         this.password = password;
     }
 
-    @JsonIgnore
     public Boolean isActive() {
         return active;
     }
@@ -113,10 +113,6 @@ public class AppUser {
         this.roles = new HashSet<>();
         this.roles.add(Role.ROLE_USER);
         this.loggedExternally = false;
-    }
-
-    public boolean isHasPicture() {
-        return this.picture != null;
     }
 
     @Override
