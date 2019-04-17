@@ -23,15 +23,13 @@ public class RequestDAO {
     }
 
     public Request lookupRequest(Request request) {
-        Request foundRequest = null;
         if (Utility.isNotBlank(request.getId())) {
-            foundRequest = this.requestRepository.findOne(request.getId());
+            return this.requestRepository.findOne(request.getId());
         }
-        if (foundRequest == null) {
-            AppUser sender = request.getSender(), recipient = request.getRecipient();
-            foundRequest = this.requestRepository.findBySenderAndRecipient(sender, recipient);
-        }
-        return foundRequest;
+        AppUser user1 = request.getSender(), user2 = request.getRecipient();
+        Request foundRequest = this.requestRepository.findBySenderAndRecipient(user1, user2);
+        if (foundRequest != null) return foundRequest;
+        return this.requestRepository.findByRecipientAndSender(user1, user2);
     }
 
     public Request createRequest(Request request) {

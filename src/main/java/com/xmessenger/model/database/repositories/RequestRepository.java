@@ -12,5 +12,7 @@ public interface RequestRepository extends CrudRepository<Request, Integer> {
 
     Request findBySenderAndRecipient(AppUser sender, AppUser recipient);
 
+    Request findByRecipientAndSender(AppUser recipient, AppUser sender);
+
     List<Request> findByRecipientAndApprovedIsFalse(AppUser user);
 }
