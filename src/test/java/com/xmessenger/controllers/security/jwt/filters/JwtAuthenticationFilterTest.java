@@ -1,6 +1,6 @@
 package com.xmessenger.controllers.security.jwt.filters;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xmessenger.configs.WebSecurityConfig;
 import com.xmessenger.controllers.security.jwt.core.TokenProvider;
 import com.xmessenger.model.database.entities.core.AppUser;
@@ -33,6 +33,8 @@ import static org.junit.Assert.*;
 @SpringBootTest
 @WebAppConfiguration
 public class JwtAuthenticationFilterTest {
+    private final String CONTROLLER_PATH = WebSecurityConfig.API_BASE_PATH + "/login";
+
     @Autowired
     private Filter springSecurityFilterChain;
 
@@ -45,14 +47,11 @@ public class JwtAuthenticationFilterTest {
     @MockBean
     private UserDAO userDAO;
 
-    private final String CONTROLLER_PATH = WebSecurityConfig.API_BASE_PATH + "/login";
     private MockMvc mockMvc;
-    private Gson gson;
 
     @Before
     public void before() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.context).addFilters(this.springSecurityFilterChain).build();
-        this.gson = new Gson();
         AppUser testUser = UserDataFactory.generateSuccessUser();
         testUser.setPassword(this.encoder.encode(testUser.getPassword()));
         Mockito.when(this.userDAO.getUserByUsername(testUser.getUsername())).thenReturn(testUser);
@@ -63,7 +62,7 @@ public class JwtAuthenticationFilterTest {
         AppUser testUser = UserDataFactory.generateSuccessUser();
         RawCredentials rawCredentials = UserDataFactory.composeRawCredentials(testUser);
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post(this.CONTROLLER_PATH)
-                .content(this.gson.toJson(rawCredentials));
+                .content(new ObjectMapper().writeValueAsString(rawCredentials));
         MockHttpServletResponse response = this.mockMvc.perform(requestBuilder)
                 .andExpect(MockMvcResultMatchers.status().isOk()).andReturn().getResponse();
         assertTrue(response.containsHeader(TokenProvider.HEADER_NAME));
@@ -75,7 +74,7 @@ public class JwtAuthenticationFilterTest {
         AppUser failureUser = UserDataFactory.generateFailureUser();
         RawCredentials rawCredentials = UserDataFactory.composeRawCredentials(failureUser);
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post(this.CONTROLLER_PATH)
-                .content(this.gson.toJson(rawCredentials));
+                .content(new ObjectMapper().writeValueAsString(rawCredentials));
         this.mockMvc.perform(requestBuilder).andExpect(MockMvcResultMatchers.status().isUnauthorized());
     }
 
