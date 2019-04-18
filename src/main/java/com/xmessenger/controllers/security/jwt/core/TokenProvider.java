@@ -23,11 +23,8 @@ import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 public class TokenProvider {
     private final String AUTHORITIES_KEY = "scopes";
 
-    @Value("${security.jwt.header:Authorization}")
-    private String header;
-
-    @Value("${security.jwt.prefix:Bearer }")
-    private String prefix;
+    public static final String HEADER_NAME = "Authorization";
+    public static final String HEADER_PREFIX = "Bearer ";
 
     @Value("${security.jwt.expiration}")
     private int expiration;
@@ -73,13 +70,13 @@ public class TokenProvider {
     }
 
     /**
-     * Adds specific header for JWT authentication flow;
+     * Adds specific HEADER_NAME for JWT authentication flow;
      *
      * @param response - outgoing HttpServletResponse;
      * @param token    - JWT token.
      */
     public void addTokenToResponse(HttpServletResponse response, String token) {
-        response.addHeader(this.header, this.prefix.concat(token));
+        response.addHeader(HEADER_NAME, HEADER_PREFIX.concat(token));
     }
 
     /**
@@ -89,9 +86,9 @@ public class TokenProvider {
      * @return JWT token.
      */
     public String extractTokenFromRequest(HttpServletRequest request) {
-        String header = request.getHeader(this.header);
-        if (header == null || !header.startsWith(this.prefix)) return null;
-        return header.replace(this.prefix, "");
+        String header = request.getHeader(HEADER_NAME);
+        if (header == null || !header.startsWith(HEADER_PREFIX)) return null;
+        return header.replace(HEADER_PREFIX, "");
     }
 
     private String generateToken(String subject, String[] authorities) {
