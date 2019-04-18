@@ -117,13 +117,14 @@ public class AppUser {
 
     @Override
     public String toString() {
-        return "User{" +
+        return "AppUser{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", loggedExternally=" + loggedExternally +
                 ", active=" + active +
+                ", roles=" + roles +
                 '}';
     }
 

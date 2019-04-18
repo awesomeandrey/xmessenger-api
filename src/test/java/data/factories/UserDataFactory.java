@@ -38,15 +38,6 @@ public class UserDataFactory {
         return users;
     }
 
-    public static <Entity> List<Entity> castToCollection(Entity entity) {
-        if (entity == null) {
-            return new ArrayList<Entity>();
-        }
-        List<Entity> userList = new ArrayList<>();
-        userList.add(entity);
-        return userList;
-    }
-
     public static Map<Integer, AppUser> generateTestUsersMap() {
         Map<Integer, AppUser> userMap = new HashMap<>();
         for (int i = 0; i < FELLOWS_AMOUNT; i++) {
