@@ -78,4 +78,11 @@ public class JwtAuthenticationFilterTest {
                 .content(this.gson.toJson(rawCredentials));
         this.mockMvc.perform(requestBuilder).andExpect(MockMvcResultMatchers.status().isUnauthorized());
     }
+
+    @Test
+    public void unsuccessfulAuthentication_invalidPayload() throws Exception {
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post(this.CONTROLLER_PATH)
+                .content("[invalid payload]");
+        this.mockMvc.perform(requestBuilder).andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
 }

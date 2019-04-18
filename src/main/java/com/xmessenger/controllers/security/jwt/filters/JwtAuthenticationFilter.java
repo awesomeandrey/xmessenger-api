@@ -36,15 +36,21 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+        RawCredentials rawCredentials = null;
         try {
             String rawPayload = request.getReader().lines().collect(Collectors.joining());
-            RawCredentials rawCredentials = this.gson.fromJson(rawPayload, RawCredentials.class);
-            return authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(rawCredentials.getUsername(), rawCredentials.getPassword())
-            );
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            rawCredentials = this.gson.fromJson(rawPayload, RawCredentials.class);
+        } catch (Exception ex) {
+            try {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getLocalizedMessage());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
         }
+        return authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(rawCredentials.getUsername(), rawCredentials.getPassword())
+        );
     }
 
     @Override
