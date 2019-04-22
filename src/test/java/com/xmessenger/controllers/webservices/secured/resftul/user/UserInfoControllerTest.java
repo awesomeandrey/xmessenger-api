@@ -106,7 +106,7 @@ public class UserInfoControllerTest {
     public void setProfilePicture() throws Exception {
         AppUser testUser = UserDataFactory.generateSuccessUser();
         String token = this.generateToken(testUser);
-        MockMultipartFile sampleFile = new MockMultipartFile("picture", "New user picture".getBytes());
+        MockMultipartFile sampleFile = new MockMultipartFile("file", "New user picture".getBytes());
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.fileUpload(this.CONTROLLER_PATH + "/picture")
                 .file(sampleFile)
                 .header(TokenProvider.HEADER_NAME, TokenProvider.HEADER_PREFIX + token);

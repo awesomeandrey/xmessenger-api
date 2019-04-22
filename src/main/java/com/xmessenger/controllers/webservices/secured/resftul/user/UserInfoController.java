@@ -47,7 +47,7 @@ public class UserInfoController {
     }
 
     @RequestMapping(value = "/picture", method = RequestMethod.POST)
-    public AppUser setProfilePicture(MultipartFile picture) throws Exception {
+    public AppUser setProfilePicture(@RequestParam("file") MultipartFile picture) throws Exception {
         AppUser user = this.getCurrentUser();
         user.setPicture(picture.getBytes());
         return this.changeProfileInfo(user);
