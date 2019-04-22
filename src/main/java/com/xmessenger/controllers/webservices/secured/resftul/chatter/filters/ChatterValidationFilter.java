@@ -12,7 +12,6 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 @Component
 public class ChatterValidationFilter implements Filter {
@@ -38,9 +37,7 @@ public class ChatterValidationFilter implements Filter {
             filterChain.doFilter(servletRequest, servletResponse);
         } else {
             HttpServletResponse response = (HttpServletResponse) servletResponse;
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            PrintWriter writer = response.getWriter();
-            writer.println("Cross-relation operation type detected!");
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Cross-relation operation type detected!");
         }
     }
 
