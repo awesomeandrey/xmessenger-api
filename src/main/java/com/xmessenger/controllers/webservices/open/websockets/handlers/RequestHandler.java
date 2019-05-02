@@ -6,7 +6,7 @@ import org.springframework.data.rest.core.annotation.*;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
-import static com.xmessenger.controllers.webservices.open.websockets.config.WebSocketConfig.MESSAGE_PREFIX;
+import static com.xmessenger.controllers.webservices.open.websockets.config.WebSocketConfig.TOPICS_PREFIX;
 
 @Component
 @RepositoryEventHandler(Request.class)
@@ -21,14 +21,14 @@ public class RequestHandler {
     @HandleAfterCreate
     public void sendRequest(Request request) {
         this.websocket.convertAndSend(
-                MESSAGE_PREFIX + "/request/send", request
+                TOPICS_PREFIX + "/request/send", request
         );
     }
 
     @HandleAfterDelete
     public void processRequest(Request request) {
         this.websocket.convertAndSend(
-                MESSAGE_PREFIX + "/request/process", request
+                TOPICS_PREFIX + "/request/process", request
         );
     }
 }

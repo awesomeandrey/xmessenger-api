@@ -7,7 +7,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
-import static com.xmessenger.controllers.webservices.open.websockets.config.WebSocketConfig.MESSAGE_PREFIX;
+import static com.xmessenger.controllers.webservices.open.websockets.config.WebSocketConfig.TOPICS_PREFIX;
 
 @Component
 public class ChatClearHandler implements ApplicationListener<ChatClearEvent> {
@@ -22,7 +22,7 @@ public class ChatClearHandler implements ApplicationListener<ChatClearEvent> {
     public void onApplicationEvent(ChatClearEvent chatClearEvent) {
         Chat chat = chatClearEvent.getChat();
         this.websocket.convertAndSend(
-                MESSAGE_PREFIX + "/chat/clear", chat
+                TOPICS_PREFIX + "/chat/clear", chat
         );
     }
 }
