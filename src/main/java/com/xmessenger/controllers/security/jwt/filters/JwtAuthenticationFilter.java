@@ -3,12 +3,14 @@ package com.xmessenger.controllers.security.jwt.filters;
 import com.google.gson.Gson;
 import com.xmessenger.configs.WebSecurityConfig;
 import com.xmessenger.controllers.security.jwt.core.TokenProvider;
+import com.xmessenger.controllers.security.user.details.UserDetailsServiceImpl;
 import com.xmessenger.model.services.user.security.RawCredentials;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
@@ -25,12 +27,14 @@ import java.util.stream.Collectors;
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     private final TokenProvider tokenProvider;
+    private final UserDetailsServiceImpl userDetailsService;
     private final Gson gson;
 
-    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, TokenProvider tokenProvider) {
+    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, TokenProvider tokenProvider, UserDetailsService userDetailsService) {
         super.setFilterProcessesUrl(WebSecurityConfig.API_BASE_PATH.concat("/login"));
         this.authenticationManager = authenticationManager;
         this.tokenProvider = tokenProvider;
+        this.userDetailsService = (UserDetailsServiceImpl) userDetailsService;
         this.gson = new Gson();
     }
 
@@ -56,6 +60,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void successfulAuthentication(HttpServletRequest req, HttpServletResponse response, FilterChain chain, Authentication authentication) {
         User authenticatedUser = (User) authentication.getPrincipal();
+        this.userDetailsService.refreshLastLogin(authenticatedUser.getUsername());
         String token = this.tokenProvider.generateToken(authenticatedUser);
         this.tokenProvider.addTokenToResponse(response, token);
     }
