@@ -6,6 +6,8 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
+import java.util.Date;
+
 @Controller
 public class UserIndicatorController {
     private static final String API_PATH = "/indicator-change";
@@ -13,6 +15,7 @@ public class UserIndicatorController {
     @MessageMapping(API_PATH)
     @SendTo(WebSocketConfig.TOPICS_PREFIX + API_PATH)
     public Indicator switchStatus(Indicator indicator) {
+        System.out.println("Switching indicator: " + indicator.toString());
         return indicator;
     }
 
@@ -23,6 +26,7 @@ public class UserIndicatorController {
     public static class Indicator {
         private AppUser user;
         private boolean loggedIn;
+        private Date dateStamp;
 
         public AppUser getUser() {
             return user;
@@ -40,6 +44,14 @@ public class UserIndicatorController {
             this.loggedIn = loggedIn;
         }
 
+        public Date getDateStamp() {
+            return dateStamp;
+        }
+
+        public void setDateStamp(Date dateStamp) {
+            this.dateStamp = dateStamp;
+        }
+
         public Indicator() {
             this.loggedIn = false;
         }
@@ -47,8 +59,9 @@ public class UserIndicatorController {
         @Override
         public String toString() {
             return "Indicator{" +
-                    "user=" + user +
-                    ", loggedIn=" + loggedIn +
+                    "user=[" + user.getId() + ":" + user.getName() +
+                    "], loggedIn=" + loggedIn +
+                    ", dateStamp=" + dateStamp +
                     '}';
         }
     }
