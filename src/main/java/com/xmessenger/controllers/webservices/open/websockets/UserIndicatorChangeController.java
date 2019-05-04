@@ -1,4 +1,4 @@
-package com.xmessenger.controllers.webservices.secured.resftul.user;
+package com.xmessenger.controllers.webservices.open.websockets;
 
 import com.xmessenger.controllers.webservices.open.websockets.config.WebSocketConfig;
 import com.xmessenger.model.database.entities.core.AppUser;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Controller;
 import java.util.Date;
 
 @Controller
-public class UserIndicatorController {
+public class UserIndicatorChangeController {
     private static final String API_PATH = "/indicator-change";
 
     @MessageMapping(API_PATH)
