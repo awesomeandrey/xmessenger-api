@@ -9,7 +9,7 @@ import org.springframework.stereotype.Controller;
 import java.util.Date;
 
 @Controller
-public class UserIndicatorChangeController {
+public class IndicatorController {
     private static final String API_PATH = "/indicator-change";
 
     @MessageMapping(API_PATH)
@@ -54,6 +54,7 @@ public class UserIndicatorChangeController {
 
         public Indicator() {
             this.loggedIn = false;
+            this.dateStamp = new Date();
         }
 
         @Override
