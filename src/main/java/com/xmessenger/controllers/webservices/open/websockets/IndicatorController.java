@@ -1,69 +1,28 @@
 package com.xmessenger.controllers.webservices.open.websockets;
 
 import com.xmessenger.controllers.webservices.open.websockets.config.WebSocketConfig;
-import com.xmessenger.model.database.entities.core.AppUser;
+import com.xmessenger.model.database.entities.AppUserIndicator;
+import com.xmessenger.model.database.repositories.IndicatorRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
-
-import java.util.Date;
 
 @Controller
 public class IndicatorController {
     private static final String API_PATH = "/indicator-change";
 
-    @MessageMapping(API_PATH)
-    @SendTo(WebSocketConfig.TOPICS_PREFIX + API_PATH)
-    public Indicator switchStatus(Indicator indicator) {
-        System.out.println("Switching indicator: " + indicator.toString());
-        return indicator;
+    private final IndicatorRepository indicatorRepository;
+
+    @Autowired
+    public IndicatorController(IndicatorRepository indicatorRepository) {
+        this.indicatorRepository = indicatorRepository;
     }
 
-    /**
-     * This inner class cannot be a non-static inner class.
-     * It boils down to the way Java added inner classes means they don't have the default constructor that Jackson requires.
-     */
-    public static class Indicator {
-        private AppUser user;
-        private boolean loggedIn;
-        private Date dateStamp;
-
-        public AppUser getUser() {
-            return user;
-        }
-
-        public void setUser(AppUser user) {
-            this.user = user;
-        }
-
-        public boolean isLoggedIn() {
-            return loggedIn;
-        }
-
-        public void setLoggedIn(boolean loggedIn) {
-            this.loggedIn = loggedIn;
-        }
-
-        public Date getDateStamp() {
-            return dateStamp;
-        }
-
-        public void setDateStamp(Date dateStamp) {
-            this.dateStamp = dateStamp;
-        }
-
-        public Indicator() {
-            this.loggedIn = false;
-            this.dateStamp = new Date();
-        }
-
-        @Override
-        public String toString() {
-            return "Indicator{" +
-                    "user=[" + user.getId() + ":" + user.getName() +
-                    "], loggedIn=" + loggedIn +
-                    ", dateStamp=" + dateStamp +
-                    '}';
-        }
+    @MessageMapping(API_PATH)
+    @SendTo(WebSocketConfig.TOPICS_PREFIX + API_PATH)
+    public AppUserIndicator switchStatus(AppUserIndicator indicator) {
+        System.out.println(">>> Switching indicator: " + indicator);
+        return this.indicatorRepository.save(indicator);
     }
 }

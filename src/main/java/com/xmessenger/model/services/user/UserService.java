@@ -1,6 +1,8 @@
 package com.xmessenger.model.services.user;
 
 import com.xmessenger.model.database.entities.core.AppUser;
+import com.xmessenger.model.services.chatter.core.RelationService;
+import com.xmessenger.model.services.user.dao.QueryParams;
 import com.xmessenger.model.services.user.security.CredentialsService;
 import com.xmessenger.model.services.user.security.RawCredentials;
 import com.xmessenger.model.services.user.dao.UserDAO;
@@ -10,17 +12,23 @@ import com.xmessenger.model.util.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @Service
-public class UserFlowExecutor {
+public class UserService {
     private final UserDAO userDAO;
     private final UserValidator userValidator;
     private final CredentialsService credentialsService;
+    private final RelationService relationService;
 
     @Autowired
-    public UserFlowExecutor(UserDAO userDAO, UserValidator userValidator, CredentialsService credentialsService) {
+    public UserService(UserDAO userDAO, UserValidator userValidator, CredentialsService credentialsService, RelationService relationService) {
         this.userDAO = userDAO;
         this.userValidator = userValidator;
         this.credentialsService = credentialsService;
+        this.relationService = relationService;
     }
 
     public AppUser lookupUser(RawCredentials rawCredentials) throws UserException {
@@ -29,6 +37,19 @@ public class UserFlowExecutor {
             throw new UserException("User with such credentials was not found.");
         }
         return foundUser;
+    }
+
+    public List<AppUser> lookupUsers(QueryParams queryParams) {
+        return this.userDAO.search(queryParams);
+    }
+
+    public Map<Integer, AppUser> findFellows(AppUser user) {
+        Map<Integer, AppUser> fellowsMap = new HashMap<>();
+        this.relationService.getUserRelations(user).values().forEach(relation -> {
+            AppUser fellow = this.relationService.getFellowFromRelation(user, relation);
+            fellowsMap.put(fellow.getId(), fellow);
+        });
+        return fellowsMap;
     }
 
     public AppUser registerUser(AppUser userToRegister) throws UserException {

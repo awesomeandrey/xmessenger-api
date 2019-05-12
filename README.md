@@ -6,7 +6,7 @@ hosted on <i>Heroku</i> platform.
 
 ### Used technologies
 
-`java8`, `websockets`, `spring-boot`, `postgre_sql`, `travis`, `heroku`, `oauth`, `cors`, `rest-api`
+`java8`, `websockets`, `spring-boot`, `postgre_sql`, `travis`, `heroku`, `oauth`, `cors`, `rest-api`, `redis`
 
 ### Built With
 

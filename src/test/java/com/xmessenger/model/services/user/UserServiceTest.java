@@ -1,6 +1,7 @@
 package com.xmessenger.model.services.user;
 
 import com.xmessenger.model.database.entities.core.AppUser;
+import com.xmessenger.model.services.chatter.core.RelationService;
 import com.xmessenger.model.services.user.security.CredentialsService;
 import com.xmessenger.model.services.user.security.RawCredentials;
 import com.xmessenger.model.services.user.dao.UserDAO;
@@ -18,17 +19,19 @@ import data.factories.UserDataFactory;
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = UserFlowExecutor.class)
-public class UserFlowExecutorTest {
+@SpringBootTest(classes = UserService.class)
+public class UserServiceTest {
     @MockBean
     private UserDAO userDAO;
     @MockBean
     private UserValidator userValidator;
     @MockBean
     private CredentialsService credentialsService;
+    @MockBean
+    private RelationService relationService;
 
     @Autowired
-    private UserFlowExecutor userFlowExecutor;
+    private UserService userService;
 
     @Test
     public void lookup() throws Exception {
@@ -36,7 +39,7 @@ public class UserFlowExecutorTest {
         RawCredentials rawCredentials = UserDataFactory.composeRawCredentials(testUser);
         Mockito.when(this.userDAO.getUserByUsername(testUser.getUsername())).thenReturn(testUser);
         Mockito.when(this.credentialsService.matchesPassword(rawCredentials.getPassword(), testUser)).thenReturn(true);
-        AppUser foundUser = this.userFlowExecutor.lookupUser(rawCredentials);
+        AppUser foundUser = this.userService.lookupUser(rawCredentials);
         assertEquals(testUser.getId(), foundUser.getId());
     }
 
@@ -47,7 +50,7 @@ public class UserFlowExecutorTest {
         AppUser foundUser = null;
         try {
             RawCredentials rawCredentials = UserDataFactory.composeRawCredentials(testUser);
-            foundUser = this.userFlowExecutor.lookupUser(rawCredentials);
+            foundUser = this.userService.lookupUser(rawCredentials);
         } catch (Exception e) {
             assertNull(foundUser);
         }
@@ -59,7 +62,7 @@ public class UserFlowExecutorTest {
         UserValidationResult validationResult = new UserValidationResult(true);
         Mockito.when(this.userValidator.validateOnRegistration(testUser)).thenReturn(validationResult);
         Mockito.when(this.userDAO.create(testUser)).thenReturn(testUser);
-        AppUser registeredUser = this.userFlowExecutor.registerUser(testUser);
+        AppUser registeredUser = this.userService.registerUser(testUser);
         assertNotNull(registeredUser);
         assertEquals(testUser.getUsername(), registeredUser.getUsername());
     }
@@ -71,7 +74,7 @@ public class UserFlowExecutorTest {
         Mockito.when(this.userValidator.validateOnRegistration(testUser)).thenReturn(validationResult);
         AppUser registeredUser = null;
         try {
-            registeredUser = this.userFlowExecutor.registerUser(testUser);
+            registeredUser = this.userService.registerUser(testUser);
         } catch (Exception e) {
             assertNull(registeredUser);
         }
@@ -85,7 +88,7 @@ public class UserFlowExecutorTest {
         Mockito.when(this.userValidator.validateOnProfileChange(testUser)).thenReturn(new UserValidationResult(true));
         Mockito.when(this.userDAO.getUserById(testUser.getId())).thenReturn(testUser);
         Mockito.when(this.userDAO.update(testUser)).thenReturn(testUser);
-        AppUser updatedUser = this.userFlowExecutor.changeProfileInfo(testUser);
+        AppUser updatedUser = this.userService.changeProfileInfo(testUser);
         assertEquals(testUser.getId(), updatedUser.getId());
         assertNotEquals(oldName, testUser.getName());
     }
@@ -97,7 +100,7 @@ public class UserFlowExecutorTest {
         Mockito.when(this.userValidator.validateOnProfileChange(testUser)).thenReturn(new UserValidationResult(false));
         AppUser updatedUser = null;
         try {
-            updatedUser = this.userFlowExecutor.changeProfileInfo(testUser);
+            updatedUser = this.userService.changeProfileInfo(testUser);
         } catch (Exception ignored) {
             assertNull(updatedUser);
         }
@@ -111,7 +114,7 @@ public class UserFlowExecutorTest {
         Mockito.when(this.userValidator.validateOnPasswordChange(testUser, rawCredentials)).thenReturn(new UserValidationResult(true));
         Mockito.when(this.userDAO.getUserById(testUser.getId())).thenReturn(testUser);
         Mockito.when(this.userDAO.update(testUser)).thenReturn(testUser);
-        AppUser foundUser = this.userFlowExecutor.changePassword(testUser, rawCredentials);
+        AppUser foundUser = this.userService.changePassword(testUser, rawCredentials);
         assertEquals(testUser.getId(), foundUser.getId());
         assertNotEquals(rawCredentials.getPassword(), foundUser.getPassword());
     }
@@ -124,7 +127,7 @@ public class UserFlowExecutorTest {
         Mockito.when(this.userValidator.validateOnPasswordChange(testUser, rawCredentials)).thenReturn(new UserValidationResult(false));
         AppUser updatedUser = null;
         try {
-            updatedUser = this.userFlowExecutor.changePassword(testUser, rawCredentials);
+            updatedUser = this.userService.changePassword(testUser, rawCredentials);
         } catch (Exception e) {
             assertNull(updatedUser);
         }

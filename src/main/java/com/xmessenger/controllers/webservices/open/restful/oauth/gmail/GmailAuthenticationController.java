@@ -3,7 +3,7 @@ package com.xmessenger.controllers.webservices.open.restful.oauth.gmail;
 import com.xmessenger.controllers.security.jwt.core.TokenProvider;
 import com.xmessenger.controllers.webservices.open.config.OpenResource;
 import com.xmessenger.model.database.entities.core.AppUser;
-import com.xmessenger.model.services.user.UserFlowExecutor;
+import com.xmessenger.model.services.user.UserService;
 import com.xmessenger.model.services.user.dao.UserDAO;
 import com.xmessenger.model.services.user.oauth.gmail.GmailAuthenticator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +20,14 @@ import java.net.URL;
 @OpenResource
 public class GmailAuthenticationController {
     private final GmailAuthenticator gmailAuthenticator;
-    private final UserFlowExecutor userFlowExecutor;
+    private final UserService userService;
     private final UserDAO userDAO;
     private final TokenProvider tokenProvider;
 
     @Autowired
-    public GmailAuthenticationController(GmailAuthenticator gmailAuthenticator, UserFlowExecutor userFlowExecutor, UserDAO userDAO, TokenProvider tokenProvider) {
+    public GmailAuthenticationController(GmailAuthenticator gmailAuthenticator, UserService userService, UserDAO userDAO, TokenProvider tokenProvider) {
         this.gmailAuthenticator = gmailAuthenticator;
-        this.userFlowExecutor = userFlowExecutor;
+        this.userService = userService;
         this.userDAO = userDAO;
         this.tokenProvider = tokenProvider;
     }
@@ -52,10 +52,10 @@ public class GmailAuthenticationController {
         AppUser user = this.userDAO.getUserByUsername(username);
         if (user == null) {
             user = this.gmailAuthenticator.composeUser(username, accessToken);
-            this.userFlowExecutor.registerUser(user);
+            this.userService.registerUser(user);
         } else if (!user.isActive()) {
             user.setActive(true);
-            this.userFlowExecutor.changeProfileInfo(user);
+            this.userService.changeProfileInfo(user);
         }
         return user;
     }

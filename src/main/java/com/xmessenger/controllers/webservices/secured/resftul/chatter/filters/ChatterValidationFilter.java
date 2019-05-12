@@ -2,7 +2,7 @@ package com.xmessenger.controllers.webservices.secured.resftul.chatter.filters;
 
 import com.xmessenger.controllers.security.user.details.ContextUserRetriever;
 import com.xmessenger.model.database.entities.core.AppUser;
-import com.xmessenger.model.services.chatter.ChatterFlowExecutor;
+import com.xmessenger.model.services.chatter.ChattingService;
 import com.xmessenger.model.services.chatter.decorators.Chat;
 import com.xmessenger.model.util.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +16,12 @@ import java.io.IOException;
 @Component
 public class ChatterValidationFilter implements Filter {
     private final ContextUserRetriever contextUserRetriever;
-    private final ChatterFlowExecutor flowExecutor;
+    private final ChattingService chattingService;
 
     @Autowired
-    public ChatterValidationFilter(ContextUserRetriever contextUserRetriever, ChatterFlowExecutor flowExecutor) {
+    public ChatterValidationFilter(ContextUserRetriever contextUserRetriever, ChattingService chattingService) {
         this.contextUserRetriever = contextUserRetriever;
-        this.flowExecutor = flowExecutor;
+        this.chattingService = chattingService;
     }
 
     @Override
@@ -33,7 +33,7 @@ public class ChatterValidationFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         Integer chatId = this.getChatIdFromRequestUri(request.getRequestURI());
         AppUser user = this.contextUserRetriever.getContextUser();
-        if (chatId == null || this.flowExecutor.hasAuthorityToOperateWithChat(user, new Chat(chatId))) {
+        if (chatId == null || this.chattingService.hasAuthorityToOperateWithChat(user, new Chat(chatId))) {
             filterChain.doFilter(servletRequest, servletResponse);
         } else {
             HttpServletResponse response = (HttpServletResponse) servletResponse;
