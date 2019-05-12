@@ -44,7 +44,7 @@ public class AppUser {
     private Set<Role> roles;
 
     @Column(name = "last_login")
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Date lastLogin;
 
     public Integer getId() {
