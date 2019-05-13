@@ -22,7 +22,6 @@ public class IndicatorController {
     @MessageMapping(API_PATH)
     @SendTo(WebSocketConfig.TOPICS_PREFIX + API_PATH)
     public AppUserIndicator switchStatus(AppUserIndicator indicator) {
-        System.out.println(">>> Switching indicator: " + indicator);
         return this.indicatorRepository.save(indicator);
     }
 }
