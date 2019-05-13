@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xmessenger.configs.WebSecurityConfig;
 import com.xmessenger.controllers.security.jwt.core.TokenProvider;
 import com.xmessenger.model.database.entities.core.AppUser;
-import com.xmessenger.model.services.user.dao.UserDAO;
+import com.xmessenger.model.services.user.UserService;
 import com.xmessenger.model.services.user.security.RawCredentials;
 import data.factories.UserDataFactory;
 import org.junit.Before;
@@ -45,7 +45,7 @@ public class JwtAuthenticationFilterTest {
     private PasswordEncoder encoder;
 
     @MockBean
-    private UserDAO userDAO;
+    private UserService userService;
 
     private MockMvc mockMvc;
 
@@ -54,7 +54,7 @@ public class JwtAuthenticationFilterTest {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.context).addFilters(this.springSecurityFilterChain).build();
         AppUser testUser = UserDataFactory.generateSuccessUser();
         testUser.setPassword(this.encoder.encode(testUser.getPassword()));
-        Mockito.when(this.userDAO.getUserByUsername(testUser.getUsername())).thenReturn(testUser);
+        Mockito.when(this.userService.lookupUser(testUser.getUsername())).thenReturn(testUser);
     }
 
     @Test
