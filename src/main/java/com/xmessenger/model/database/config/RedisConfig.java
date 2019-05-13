@@ -12,11 +12,11 @@ import redis.clients.jedis.JedisPoolConfig;
 @Configuration
 @EnableRedisRepositories
 public class RedisConfig {
-//    @Value("${spring.redis.host}")
-//    private String redisHost;
-//
-//    @Value("${spring.redis.port}")
-//    private int redisPort;
+    @Value("${spring.redis.host:localhost}")
+    private String redisHost;
+
+    @Value("${spring.redis.port:6379}")
+    private int redisPort;
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
@@ -27,10 +27,13 @@ public class RedisConfig {
         poolConfig.setTestOnReturn(true);
         poolConfig.setTestWhileIdle(true);
         JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory(poolConfig);
-        jedisConnectionFactory.setHostName(System.getenv("REDIS_URL"));
 
-        System.out.println(">>> Redis host name: " + System.getenv("REDIS_URL"));
+        System.out.println(">>> REDIS HOST: " + this.redisHost);
+        System.out.println(">>> REDIS PORT: " + this.redisPort);
 
+        jedisConnectionFactory.setHostName(this.redisHost);
+        jedisConnectionFactory.setPort(this.redisPort);
+        jedisConnectionFactory.setUsePool(true);
         return jedisConnectionFactory;
     }
 
