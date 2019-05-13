@@ -1,7 +1,6 @@
 package com.xmessenger.controllers.webservices.open.restful.oauth.gmail;
 
 import com.xmessenger.controllers.security.jwt.core.TokenProvider;
-import com.xmessenger.controllers.security.user.details.UserDetailsServiceImpl;
 import com.xmessenger.controllers.webservices.open.config.OpenResource;
 import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.services.user.UserService;
@@ -22,14 +21,12 @@ public class GmailAuthenticationController {
     private final GmailAuthenticator gmailAuthenticator;
     private final UserService userService;
     private final TokenProvider tokenProvider;
-    private final UserDetailsServiceImpl userDetailsService;
 
     @Autowired
-    public GmailAuthenticationController(GmailAuthenticator gmailAuthenticator, UserService userService, TokenProvider tokenProvider, UserDetailsServiceImpl userDetailsService) {
+    public GmailAuthenticationController(GmailAuthenticator gmailAuthenticator, UserService userService, TokenProvider tokenProvider) {
         this.gmailAuthenticator = gmailAuthenticator;
         this.userService = userService;
         this.tokenProvider = tokenProvider;
-        this.userDetailsService = userDetailsService;
     }
 
     @RequestMapping(value = "/oauth/gmail/composeTokenUrl")
@@ -52,12 +49,13 @@ public class GmailAuthenticationController {
         AppUser user = this.userService.lookupUser(username);
         if (user == null) {
             user = this.gmailAuthenticator.composeUser(username, accessToken);
+            user.renewLastLoginDate();
             this.userService.registerUser(user);
         } else if (!user.isActive()) {
             user.setActive(true);
+            user.renewLastLoginDate();
             this.userService.changeProfileInfo(user);
         }
-        this.userDetailsService.refreshLastLogin(user);
         return user;
     }
 }
