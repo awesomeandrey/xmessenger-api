@@ -39,6 +39,10 @@ public class UserService {
         return foundUser;
     }
 
+    public AppUser lookupUser(String username) {
+        return this.userDAO.getUserByUsername(username);
+    }
+
     public List<AppUser> lookupUsers(QueryParams queryParams) {
         return this.userDAO.search(queryParams);
     }
@@ -101,6 +105,9 @@ public class UserService {
         }
         if (updatedUser.isActive() != null) {
             persistedUser.setActive(updatedUser.isActive());
+        }
+        if (updatedUser.getLastLogin() != null) {
+            persistedUser.setLastLogin(updatedUser.getLastLogin());
         }
     }
 

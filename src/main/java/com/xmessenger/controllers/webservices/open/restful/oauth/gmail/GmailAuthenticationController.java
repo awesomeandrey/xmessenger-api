@@ -1,10 +1,10 @@
 package com.xmessenger.controllers.webservices.open.restful.oauth.gmail;
 
 import com.xmessenger.controllers.security.jwt.core.TokenProvider;
+import com.xmessenger.controllers.security.user.details.UserDetailsServiceImpl;
 import com.xmessenger.controllers.webservices.open.config.OpenResource;
 import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.services.user.UserService;
-import com.xmessenger.model.services.user.dao.UserDAO;
 import com.xmessenger.model.services.user.oauth.gmail.GmailAuthenticator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,15 +21,15 @@ import java.net.URL;
 public class GmailAuthenticationController {
     private final GmailAuthenticator gmailAuthenticator;
     private final UserService userService;
-    private final UserDAO userDAO;
     private final TokenProvider tokenProvider;
+    private final UserDetailsServiceImpl userDetailsService;
 
     @Autowired
-    public GmailAuthenticationController(GmailAuthenticator gmailAuthenticator, UserService userService, UserDAO userDAO, TokenProvider tokenProvider) {
+    public GmailAuthenticationController(GmailAuthenticator gmailAuthenticator, UserService userService, TokenProvider tokenProvider, UserDetailsServiceImpl userDetailsService) {
         this.gmailAuthenticator = gmailAuthenticator;
         this.userService = userService;
-        this.userDAO = userDAO;
         this.tokenProvider = tokenProvider;
+        this.userDetailsService = userDetailsService;
     }
 
     @RequestMapping(value = "/oauth/gmail/composeTokenUrl")
@@ -49,7 +49,7 @@ public class GmailAuthenticationController {
 
     private AppUser authenticateUser(String accessToken) throws Exception {
         String username = this.gmailAuthenticator.getUsername(accessToken);
-        AppUser user = this.userDAO.getUserByUsername(username);
+        AppUser user = this.userService.lookupUser(username);
         if (user == null) {
             user = this.gmailAuthenticator.composeUser(username, accessToken);
             this.userService.registerUser(user);
@@ -57,6 +57,7 @@ public class GmailAuthenticationController {
             user.setActive(true);
             this.userService.changeProfileInfo(user);
         }
+        this.userDetailsService.refreshLastLogin(user);
         return user;
     }
 }
