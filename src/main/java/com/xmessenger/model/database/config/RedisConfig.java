@@ -12,13 +12,13 @@ import redis.clients.jedis.JedisPoolConfig;
 @Configuration
 @EnableRedisRepositories
 public class RedisConfig {
-    @Value("${spring.redis.host:localhost}")
+    @Value("${spring.redis.host}")
     private String redisHost;
 
-    @Value("${spring.redis.port:6379}")
+    @Value("${spring.redis.port}")
     private int redisPort;
 
-    @Value("${spring.redis.password:samplepwd}")
+    @Value("${spring.redis.password}")
     private String redisPassword;
 
     @Bean
