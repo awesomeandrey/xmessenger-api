@@ -28,12 +28,12 @@ public class RedisConfig {
         poolConfig.setTestWhileIdle(true);
         JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory(poolConfig);
 
-        System.out.println(">>> REDIS HOST: " + this.redisHost);
-        System.out.println(">>> REDIS PORT: " + this.redisPort);
-
-        jedisConnectionFactory.setHostName(this.redisHost);
-        jedisConnectionFactory.setPort(this.redisPort);
-        jedisConnectionFactory.setUsePool(true);
+//        System.out.println(">>> REDIS HOST: " + this.redisHost);
+//        System.out.println(">>> REDIS PORT: " + this.redisPort);
+//
+//        jedisConnectionFactory.setHostName(this.redisHost);
+//        jedisConnectionFactory.setPort(this.redisPort);
+//        jedisConnectionFactory.setUsePool(true);
         return jedisConnectionFactory;
     }
 
