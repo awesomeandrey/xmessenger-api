@@ -4,8 +4,8 @@ import com.xmessenger.configs.WebSecurityConfig;
 import com.xmessenger.controllers.security.user.details.ContextUserRetriever;
 import com.xmessenger.model.database.entities.core.Request;
 import com.xmessenger.model.database.entities.core.AppUser;
-import com.xmessenger.model.services.chatter.ChatterFlowExecutor;
-import com.xmessenger.model.services.request.RequestFlowExecutor;
+import com.xmessenger.model.services.chatter.ChattingService;
+import com.xmessenger.model.services.request.RequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.rest.core.event.AfterCreateEvent;
@@ -22,29 +22,29 @@ import java.util.List;
 public class RequestController {
     private final ContextUserRetriever contextUserRetriever;
     private final ApplicationEventPublisher publisher;
-    private final RequestFlowExecutor requestFlowExecutor;
-    private final ChatterFlowExecutor chatterFlowExecutor;
+    private final RequestService requestService;
+    private final ChattingService chattingService;
 
     @Autowired
-    public RequestController(ContextUserRetriever contextUserRetriever, ApplicationEventPublisher publisher, RequestFlowExecutor requestFlowExecutor, ChatterFlowExecutor chatterFlowExecutor) {
+    public RequestController(ContextUserRetriever contextUserRetriever, ApplicationEventPublisher publisher, RequestService requestService, ChattingService chattingService) {
         this.contextUserRetriever = contextUserRetriever;
         this.publisher = publisher;
-        this.requestFlowExecutor = requestFlowExecutor;
-        this.chatterFlowExecutor = chatterFlowExecutor;
+        this.requestService = requestService;
+        this.chattingService = chattingService;
     }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public List<Request> getRequests() {
         AppUser user = this.contextUserRetriever.getContextUser();
-        return this.requestFlowExecutor.retrieveRequests(user);
+        return this.requestService.retrieveRequests(user);
     }
 
     @RequestMapping(value = "/process", method = RequestMethod.PUT)
     public Request processRequest(@RequestBody Request requestToProcess) throws Exception {
         AppUser user = this.contextUserRetriever.getContextUser();
-        Request processedRequest = this.requestFlowExecutor.processRequest(requestToProcess, user);
+        Request processedRequest = this.requestService.processRequest(requestToProcess, user);
         if (processedRequest.getApproved()) {
-            this.chatterFlowExecutor.createChat(processedRequest.getSender(), processedRequest.getRecipient());
+            this.chattingService.createChat(processedRequest.getSender(), processedRequest.getRecipient());
         }
         this.publisher.publishEvent(new AfterDeleteEvent(processedRequest));
         return processedRequest;
@@ -53,10 +53,10 @@ public class RequestController {
     @RequestMapping(value = "/send", method = RequestMethod.POST)
     public Request sendRequest(@RequestBody Request requestToCreate) throws Exception {
         AppUser recipient = requestToCreate.getRecipient(), sender = this.contextUserRetriever.getContextUser();
-        if (this.chatterFlowExecutor.isFellow(sender, recipient)) {
-            throw new RequestFlowExecutor.RequestFlowException("The request recipient is already your friend.");
+        if (this.chattingService.isFellow(sender, recipient)) {
+            throw new RequestService.RequestFlowException("The request recipient is already your friend.");
         }
-        Request request = this.requestFlowExecutor.createRequest(sender, recipient);
+        Request request = this.requestService.createRequest(sender, recipient);
         this.publisher.publishEvent(new AfterCreateEvent(request));
         return request;
     }

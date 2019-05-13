@@ -1,10 +1,10 @@
 package com.xmessenger.controllers.webservices.open.restful.oauth.gmail;
 
 import com.xmessenger.controllers.security.jwt.core.TokenProvider;
+import com.xmessenger.controllers.security.user.details.UserDetailsServiceImpl;
 import com.xmessenger.controllers.webservices.open.config.OpenResource;
 import com.xmessenger.model.database.entities.core.AppUser;
-import com.xmessenger.model.services.user.UserFlowExecutor;
-import com.xmessenger.model.services.user.dao.UserDAO;
+import com.xmessenger.model.services.user.UserService;
 import com.xmessenger.model.services.user.oauth.gmail.GmailAuthenticator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,16 +20,16 @@ import java.net.URL;
 @OpenResource
 public class GmailAuthenticationController {
     private final GmailAuthenticator gmailAuthenticator;
-    private final UserFlowExecutor userFlowExecutor;
-    private final UserDAO userDAO;
+    private final UserService userService;
     private final TokenProvider tokenProvider;
+    private final UserDetailsServiceImpl userDetailsService;
 
     @Autowired
-    public GmailAuthenticationController(GmailAuthenticator gmailAuthenticator, UserFlowExecutor userFlowExecutor, UserDAO userDAO, TokenProvider tokenProvider) {
+    public GmailAuthenticationController(GmailAuthenticator gmailAuthenticator, UserService userService, TokenProvider tokenProvider, UserDetailsServiceImpl userDetailsService) {
         this.gmailAuthenticator = gmailAuthenticator;
-        this.userFlowExecutor = userFlowExecutor;
-        this.userDAO = userDAO;
+        this.userService = userService;
         this.tokenProvider = tokenProvider;
+        this.userDetailsService = userDetailsService;
     }
 
     @RequestMapping(value = "/oauth/gmail/composeTokenUrl")
@@ -49,14 +49,15 @@ public class GmailAuthenticationController {
 
     private AppUser authenticateUser(String accessToken) throws Exception {
         String username = this.gmailAuthenticator.getUsername(accessToken);
-        AppUser user = this.userDAO.getUserByUsername(username);
+        AppUser user = this.userService.lookupUser(username);
         if (user == null) {
             user = this.gmailAuthenticator.composeUser(username, accessToken);
-            this.userFlowExecutor.registerUser(user);
+            this.userService.registerUser(user);
         } else if (!user.isActive()) {
             user.setActive(true);
-            this.userFlowExecutor.changeProfileInfo(user);
+            this.userService.changeProfileInfo(user);
         }
+        this.userDetailsService.refreshLastLogin(user);
         return user;
     }
 }

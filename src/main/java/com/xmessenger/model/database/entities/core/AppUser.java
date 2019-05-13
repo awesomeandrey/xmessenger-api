@@ -6,6 +6,7 @@ import com.xmessenger.model.database.converters.RoleCodeConverter;
 import com.xmessenger.model.database.entities.Role;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -41,6 +42,10 @@ public class AppUser {
     @Convert(converter = RoleCodeConverter.class)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Set<Role> roles;
+
+    @Column(name = "last_login")
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private Date lastLogin;
 
     public Integer getId() {
         return this.id;
@@ -108,6 +113,14 @@ public class AppUser {
         this.roles = roles;
     }
 
+    public Date getLastLogin() {
+        return lastLogin;
+    }
+
+    public void setLastLogin(Date lastLogin) {
+        this.lastLogin = lastLogin;
+    }
+
     public AppUser() {
         this.active = true;
         this.roles = new HashSet<>();
@@ -121,10 +134,10 @@ public class AppUser {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
                 ", loggedExternally=" + loggedExternally +
                 ", active=" + active +
                 ", roles=" + roles +
+                ", lastLogin=" + lastLogin +
                 '}';
     }
 

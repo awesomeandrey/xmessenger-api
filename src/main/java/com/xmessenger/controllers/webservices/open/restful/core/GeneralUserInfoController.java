@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 @OpenResource
-public class UserController {
+public class GeneralUserInfoController {
     private final UserDAO userDAO;
 
     private static byte[] DEFAULT_USER_PICTURE;
@@ -30,7 +30,7 @@ public class UserController {
     }
 
     @Autowired
-    public UserController(UserDAO userDAO) {
+    public GeneralUserInfoController(UserDAO userDAO) {
         this.userDAO = userDAO;
     }
 

@@ -3,6 +3,7 @@ package com.xmessenger.controllers.security.jwt.filters;
 import com.xmessenger.configs.WebSecurityConfig;
 import com.xmessenger.controllers.security.jwt.core.TokenProvider;
 import com.xmessenger.model.database.entities.Role;
+import com.xmessenger.model.util.Utility;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,7 +31,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             return;
         }
         String token = this.tokenProvider.extractTokenFromRequest(request);
-        if (token == null) {
+        if (Utility.isBlank(token)) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Json Web Token required.");
             return;
         }

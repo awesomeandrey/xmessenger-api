@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xmessenger.configs.WebSecurityConfig;
 import com.xmessenger.controllers.security.jwt.core.TokenProvider;
 import com.xmessenger.model.database.entities.core.AppUser;
-import com.xmessenger.model.services.user.UserFlowExecutor;
+import com.xmessenger.model.services.user.UserService;
 import com.xmessenger.model.services.user.dao.UserDAO;
 import data.factories.UserDataFactory;
 import org.junit.Before;
@@ -27,8 +27,6 @@ import org.springframework.web.context.WebApplicationContext;
 
 import javax.servlet.Filter;
 
-import java.util.ArrayList;
-
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -48,7 +46,7 @@ public class UserInfoControllerTest {
     private TokenProvider tokenProvider;
 
     @MockBean
-    private UserFlowExecutor flowExecutor;
+    private UserService flowExecutor;
 
     @MockBean
     private UserDAO userDAO;

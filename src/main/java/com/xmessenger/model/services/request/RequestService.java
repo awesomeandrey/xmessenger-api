@@ -10,11 +10,11 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class RequestFlowExecutor {
+public class RequestService {
     private final RequestDAO requestDAO;
 
     @Autowired
-    public RequestFlowExecutor(RequestDAO requestDAO) {
+    public RequestService(RequestDAO requestDAO) {
         this.requestDAO = requestDAO;
     }
 

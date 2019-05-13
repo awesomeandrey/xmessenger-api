@@ -11,8 +11,9 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
-    public static final String MESSAGE_PREFIX = "/topic";
+    public static final String TOPICS_PREFIX = "/topic";
 
+    private static final String MESSAGE_PREFIX = "/message";
     private final CorsBuilder corsBuilder;
 
     @Autowired
@@ -30,6 +31,7 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.enableSimpleBroker(MESSAGE_PREFIX);
+        registry.enableSimpleBroker(TOPICS_PREFIX);
+        registry.setApplicationDestinationPrefixes(MESSAGE_PREFIX);
     }
 }

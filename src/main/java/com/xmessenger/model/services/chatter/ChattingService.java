@@ -14,12 +14,12 @@ import java.util.*;
 
 @Service
 @Transactional
-public class ChatterFlowExecutor {
+public class ChattingService {
     private final RelationService relationService;
     private final MessageService messageService;
 
     @Autowired
-    public ChatterFlowExecutor(RelationService relationService, MessageService messageService) {
+    public ChattingService(RelationService relationService, MessageService messageService) {
         this.relationService = relationService;
         this.messageService = messageService;
     }
@@ -51,7 +51,7 @@ public class ChatterFlowExecutor {
         Map<Integer, Chat> chatsMap = new HashMap<>();
         relationsMap.values().forEach((relation) -> {
             Chat chatEntity = new Chat(relation);
-            chatEntity.setFellow(this.getFellowFromRelation(runningUser, relation));
+            chatEntity.setFellow(this.relationService.getFellowFromRelation(runningUser, relation));
             if (latestMessageDateByRelation.containsKey(relation.getId())) {
                 chatEntity.setLatestMessageDate(latestMessageDateByRelation.get(relation.getId()));
             }
@@ -75,15 +75,10 @@ public class ChatterFlowExecutor {
 
     //******************************************************************************************************************
 
-    private AppUser getFellowFromRelation(AppUser runningUser, Relation relation) {
-        AppUser user1 = relation.getUserOne(), user2 = relation.getUserTwo();
-        return user1.getId().equals(runningUser.getId()) ? user2 : user1;
-    }
-
     private Chat retrieveChat(AppUser runningUser, Integer chatId) {
         Relation relation = this.relationService.lookupRelation(chatId);
         Chat chat = new Chat(relation);
-        chat.setFellow(this.getFellowFromRelation(runningUser, relation));
+        chat.setFellow(this.relationService.getFellowFromRelation(runningUser, relation));
         return chat;
     }
 }

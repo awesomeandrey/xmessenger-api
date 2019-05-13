@@ -49,6 +49,11 @@ public class RelationService {
         this.relationRepository.delete(relation);
     }
 
+    public AppUser getFellowFromRelation(AppUser runningUser, Relation relation) {
+        AppUser user1 = relation.getUserOne(), user2 = relation.getUserTwo();
+        return user1.getId().equals(runningUser.getId()) ? user2 : user1;
+    }
+
     //******************************************************************************************************************
 
     private boolean isValid(Relation relation) {
