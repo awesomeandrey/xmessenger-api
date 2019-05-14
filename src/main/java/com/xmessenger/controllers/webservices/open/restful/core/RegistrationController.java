@@ -2,9 +2,9 @@ package com.xmessenger.controllers.webservices.open.restful.core;
 
 import com.xmessenger.controllers.webservices.open.config.OpenResource;
 import com.xmessenger.model.database.entities.core.AppUser;
-import com.xmessenger.model.services.user.UserService;
-import com.xmessenger.model.services.user.validator.UserValidationResult;
-import com.xmessenger.model.services.user.validator.UserValidator;
+import com.xmessenger.model.services.core.user.UserService;
+import com.xmessenger.model.services.core.user.validator.UserValidationResult;
+import com.xmessenger.model.services.core.user.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -1,7 +1,7 @@
 package com.xmessenger.controllers.webservices.open.restful.core;
 
 import com.xmessenger.controllers.webservices.open.config.OpenResource;
-import com.xmessenger.model.services.user.dao.UserDAO;
+import com.xmessenger.model.services.core.user.dao.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.bind.annotation.PathVariable;

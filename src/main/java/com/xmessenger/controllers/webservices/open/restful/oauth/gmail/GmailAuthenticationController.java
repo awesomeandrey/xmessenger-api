@@ -4,8 +4,8 @@ import com.xmessenger.controllers.security.jwt.core.TokenProvider;
 import com.xmessenger.controllers.webservices.open.config.OpenResource;
 import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.services.async.AsynchronousService;
-import com.xmessenger.model.services.user.UserService;
-import com.xmessenger.model.services.user.oauth.gmail.GmailAuthenticator;
+import com.xmessenger.model.services.core.user.UserService;
+import com.xmessenger.model.services.core.user.oauth.gmail.GmailAuthenticator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

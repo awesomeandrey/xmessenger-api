@@ -52,6 +52,10 @@ public class AppUserIndicator {
         this.dateStamp = new Date();
     }
 
+    public AppUserIndicator(AppUser user) {
+        this.setUser(user);
+    }
+
     @Override
     public String toString() {
         return "Indicator{" +

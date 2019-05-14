@@ -13,7 +13,7 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
     public static final String TOPICS_PREFIX = "/topic";
 
-    private static final String MESSAGE_PREFIX = "/message";
+    private final String MESSAGE_PREFIX = "/message";
     private final CorsBuilder corsBuilder;
 
     @Autowired

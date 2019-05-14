@@ -10,7 +10,7 @@ import org.springframework.stereotype.Controller;
 
 @Controller
 public class IndicatorController {
-    private static final String API_PATH = "/indicator-change";
+    public static final String API_PATH = "/indicator-change";
 
     private final IndicatorRepository indicatorRepository;
 
