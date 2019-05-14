@@ -62,6 +62,7 @@ public class UserService {
             throw new UserException(validationResult.getErrorMessage());
         }
         this.credentialsService.encodePassword(userToRegister);
+        userToRegister.renewLastLoginDate();
         return this.userDAO.create(userToRegister);
     }
 
@@ -99,8 +100,7 @@ public class UserService {
             appUser.renewLastLoginDate();
             this.changeProfileInfo(appUser);
         } catch (UserService.UserException | UserDAO.UserNotFoundException e) {
-            System.err.println(">>> Could not set 'last_login'.");
-            e.printStackTrace();
+            System.err.println(">>> Could not set 'last_login'. " + e.getMessage());
         }
     }
 

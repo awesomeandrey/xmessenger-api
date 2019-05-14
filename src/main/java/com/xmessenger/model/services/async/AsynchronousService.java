@@ -24,7 +24,6 @@ public class AsynchronousService {
         this.taskExecutor.execute(new Runnable() {
             @Override
             public void run() {
-                System.out.println(">>> Async service...");
                 AppUser appUser = userService.lookupUser(username);
                 userService.renewLastLogin(appUser);
             }

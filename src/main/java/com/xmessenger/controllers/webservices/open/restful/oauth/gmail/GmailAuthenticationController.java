@@ -50,19 +50,10 @@ public class GmailAuthenticationController {
     private AppUser authenticateUser(String accessToken) throws Exception {
         String username = this.gmailAuthenticator.getUsername(accessToken);
         AppUser user = this.userService.lookupUser(username);
-
-        System.out.println(">>> GC -> Looked-up user: " + user);
-
         if (user == null) {
-
-            System.out.println(">>> GC -> Creating user...");
-
             user = this.gmailAuthenticator.composeUser(username, accessToken);
             this.userService.registerUser(user);
         } else if (!user.isActive()) {
-
-            System.out.println(">>> GC -> Re-activating user...");
-
             user.setActive(true);
             this.userService.changeProfileInfo(user);
         }
