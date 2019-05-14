@@ -40,6 +40,9 @@ public class UserDAO {
     }
 
     public AppUser create(AppUser userToSave) {
+
+        System.out.println(">>> Creating user: " + userToSave);
+
         return this.userRepository.save(userToSave);
     }
 
@@ -48,6 +51,9 @@ public class UserDAO {
         if (this.userRepository.findOne(uid) == null) {
             throw new UserNotFoundException(uid);
         } else {
+
+            System.out.println(">>> Updating/saving user: " + userToUpdate);
+
             return this.userRepository.save(userToUpdate);
         }
     }

@@ -1,5 +1,6 @@
 package com.xmessenger.model.services.async;
 
+import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.services.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -23,7 +24,9 @@ public class AsynchronousService {
         this.taskExecutor.execute(new Runnable() {
             @Override
             public void run() {
-                userService.renewLastLogin(username);
+                System.out.println(">>> Async service...");
+                AppUser appUser = userService.lookupUser(username);
+                userService.renewLastLogin(appUser);
             }
         });
     }

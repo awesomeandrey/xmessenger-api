@@ -94,9 +94,8 @@ public class UserService {
         return this.userDAO.update(persistedUser);
     }
 
-    public void renewLastLogin(String username) {
+    public void renewLastLogin(AppUser appUser) {
         try {
-            AppUser appUser = this.lookupUser(username);
             appUser.renewLastLoginDate();
             this.changeProfileInfo(appUser);
         } catch (UserService.UserException | UserDAO.UserNotFoundException e) {
