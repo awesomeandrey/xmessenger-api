@@ -9,8 +9,7 @@ import java.util.Date;
 @RedisHash("indicators")
 public class AppUserIndicator {
     @Id
-    private Integer id;
-    private AppUser user;
+    private Integer id; // AppUser ID;
     private boolean loggedIn;
     private Date dateStamp;
 
@@ -20,15 +19,6 @@ public class AppUserIndicator {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public AppUser getUser() {
-        return user;
-    }
-
-    public void setUser(AppUser user) {
-        this.user = user;
-        this.setId(user.getId());
     }
 
     public boolean isLoggedIn() {
@@ -53,7 +43,8 @@ public class AppUserIndicator {
     }
 
     public AppUserIndicator(AppUser user) {
-        this.setUser(user);
+        this();
+        this.id = user.getId();
     }
 
     @Override
