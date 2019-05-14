@@ -4,7 +4,7 @@ import com.xmessenger.configs.WebSecurityConfig;
 import com.xmessenger.controllers.security.user.details.ContextUserRetriever;
 import com.xmessenger.model.database.entities.AppUserIndicator;
 import com.xmessenger.model.database.entities.core.AppUser;
-import com.xmessenger.model.database.repositories.IndicatorRepository;
+import com.xmessenger.model.services.IndicatorService;
 import com.xmessenger.model.services.core.user.UserService;
 import com.xmessenger.model.services.core.user.dao.QueryParams;
 import com.xmessenger.model.services.core.user.security.RawCredentials;
@@ -20,13 +20,13 @@ import java.util.Map;
 public class UserInfoController {
     private final ContextUserRetriever contextUserRetriever;
     private final UserService userService;
-    private final IndicatorRepository indicatorRepository;
+    private final IndicatorService indicatorService;
 
     @Autowired
-    public UserInfoController(ContextUserRetriever contextUserRetriever, UserService userService, IndicatorRepository indicatorRepository) {
+    public UserInfoController(ContextUserRetriever contextUserRetriever, UserService userService, IndicatorService indicatorService) {
         this.contextUserRetriever = contextUserRetriever;
         this.userService = userService;
-        this.indicatorRepository = indicatorRepository;
+        this.indicatorService = indicatorService;
     }
 
     @RequestMapping(value = "/info", method = RequestMethod.GET)
@@ -50,8 +50,8 @@ public class UserInfoController {
 
     @RequestMapping(value = "/indicators", method = RequestMethod.GET)
     public List<AppUserIndicator> getIndicators() {
-        Map<Integer, AppUser> fellows = this.userService.findFellows(this.contextUserRetriever.getContextUser());
-        return (List<AppUserIndicator>) this.indicatorRepository.findAll(fellows.keySet());
+        Map<Integer, AppUser> fellows = this.userService.findFellows(this.getCurrentUser());
+        return this.indicatorService.getIndicators(fellows.keySet());
     }
 
     @RequestMapping(value = "/picture", method = RequestMethod.POST)
@@ -64,5 +64,11 @@ public class UserInfoController {
     @RequestMapping(value = "/password", method = RequestMethod.PUT)
     public AppUser changePassword(@RequestBody RawCredentials rawCredentials) throws Exception {
         return this.userService.changePassword(this.getCurrentUser(), rawCredentials);
+    }
+
+    @RequestMapping(value = "/logout", method = RequestMethod.POST)
+    public void logout() throws Exception {
+        AppUser appUser = this.getCurrentUser();
+        this.indicatorService.switchUserIndicator(appUser, false);
     }
 }
