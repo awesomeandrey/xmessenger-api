@@ -4,7 +4,10 @@ import com.xmessenger.controllers.security.jwt.filters.JwtAuthenticationFilter;
 import com.xmessenger.controllers.security.jwt.filters.JwtAuthorizationFilter;
 import com.xmessenger.controllers.security.jwt.core.TokenProvider;
 import com.xmessenger.controllers.security.user.details.UserDetailsServiceImpl;
+import com.xmessenger.model.services.async.AsynchronousService;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.task.TaskExecutor;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -37,6 +40,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new UserDetailsServiceImpl();
     }
 
+    @Bean
+    public AsynchronousService asynchronousService() {
+        return new AsynchronousService();
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -47,7 +55,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(API_BASE_PATH_PATTERN)
                 .authenticated()
                 .and()
-                .addFilter(new JwtAuthenticationFilter(authenticationManager(), this.tokenProvider(), this.userDetailsService()))
+                .addFilter(new JwtAuthenticationFilter(authenticationManager(), this.tokenProvider(), this.asynchronousService()))
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(), this.tokenProvider()));
         http
                 .csrf()
@@ -64,5 +72,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         auth
                 .userDetailsService(this.userDetailsService())
                 .passwordEncoder(this.passwordEncoder());
+    }
+
+    @Bean
+    public TaskExecutor asyncService() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(4);
+        executor.setMaxPoolSize(4);
+        executor.setThreadNamePrefix("async_service_thread");
+        executor.initialize();
+        return executor;
     }
 }

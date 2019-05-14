@@ -94,6 +94,17 @@ public class UserService {
         return this.userDAO.update(persistedUser);
     }
 
+    public void renewLastLogin(String username) {
+        try {
+            AppUser appUser = this.lookupUser(username);
+            appUser.renewLastLoginDate();
+            this.changeProfileInfo(appUser);
+        } catch (UserService.UserException | UserDAO.UserNotFoundException e) {
+            System.err.println(">>> Could not set 'last_login'.");
+            e.printStackTrace();
+        }
+    }
+
     //******************************************************************************************************************
 
     private void mergeProperties(AppUser persistedUser, AppUser updatedUser) {

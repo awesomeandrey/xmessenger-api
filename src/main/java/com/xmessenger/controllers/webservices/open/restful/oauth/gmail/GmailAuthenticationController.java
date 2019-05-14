@@ -3,6 +3,7 @@ package com.xmessenger.controllers.webservices.open.restful.oauth.gmail;
 import com.xmessenger.controllers.security.jwt.core.TokenProvider;
 import com.xmessenger.controllers.webservices.open.config.OpenResource;
 import com.xmessenger.model.database.entities.core.AppUser;
+import com.xmessenger.model.services.async.AsynchronousService;
 import com.xmessenger.model.services.user.UserService;
 import com.xmessenger.model.services.user.oauth.gmail.GmailAuthenticator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +22,14 @@ public class GmailAuthenticationController {
     private final GmailAuthenticator gmailAuthenticator;
     private final UserService userService;
     private final TokenProvider tokenProvider;
+    private final AsynchronousService asynchronousService;
 
     @Autowired
-    public GmailAuthenticationController(GmailAuthenticator gmailAuthenticator, UserService userService, TokenProvider tokenProvider) {
+    public GmailAuthenticationController(GmailAuthenticator gmailAuthenticator, UserService userService, TokenProvider tokenProvider, AsynchronousService asynchronousService) {
         this.gmailAuthenticator = gmailAuthenticator;
         this.userService = userService;
         this.tokenProvider = tokenProvider;
+        this.asynchronousService = asynchronousService;
     }
 
     @RequestMapping(value = "/oauth/gmail/composeTokenUrl")
@@ -49,13 +52,12 @@ public class GmailAuthenticationController {
         AppUser user = this.userService.lookupUser(username);
         if (user == null) {
             user = this.gmailAuthenticator.composeUser(username, accessToken);
-            user.renewLastLoginDate();
             this.userService.registerUser(user);
         } else if (!user.isActive()) {
             user.setActive(true);
-            user.renewLastLoginDate();
             this.userService.changeProfileInfo(user);
         }
+        this.asynchronousService.renewLastLoginByUsername(username);
         return user;
     }
 }
