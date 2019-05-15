@@ -27,6 +27,7 @@ public class IndicatorService {
         indicator.setLoggedIn(loggedIn);
         indicator = this.indicatorRepository.save(indicator);
         this.publisher.publishEvent(new AfterSaveEvent(indicator));
+        // System.out.println("Switching indicator: " + indicator.getId() + "=" + indicator.isLoggedIn());
     }
 
     public List<AppUserIndicator> getIndicators(Set<Integer> userIds) {

@@ -43,8 +43,10 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
             return;
         }
-        String username = (String) authentication.getPrincipal();
-        this.asynchronousService.switchAppUserIndicator(username, true);
+        if (!request.getRequestURI().contains("logout")) {
+            String username = (String) authentication.getPrincipal();
+            this.asynchronousService.switchAppUserIndicator(username, true);
+        }
     }
 
     private Authentication getAuthentication(HttpServletRequest request) {
