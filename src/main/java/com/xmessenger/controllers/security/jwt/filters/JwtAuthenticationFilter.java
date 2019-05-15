@@ -61,7 +61,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         User authenticatedUser = (User) authentication.getPrincipal();
         String token = this.tokenProvider.generateToken(authenticatedUser);
         this.tokenProvider.addTokenToResponse(response, token);
-        // Executed in separate thread;
         this.asynchronousService.renewLastLoginByUsername(authenticatedUser.getUsername());
     }
 }

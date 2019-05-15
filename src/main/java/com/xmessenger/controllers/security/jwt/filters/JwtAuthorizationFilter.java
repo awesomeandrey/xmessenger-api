@@ -38,11 +38,12 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         try {
             authentication = this.getAuthentication(request);
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            chain.doFilter(request, response);
         } catch (Exception ex) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ex.getMessage());
             return;
         }
+        // Authenticated request propagates to target webservice endpoint;
+        chain.doFilter(request, response);
         if (!request.getRequestURI().contains("logout")) {
             String username = (String) authentication.getPrincipal();
             this.asynchronousService.switchAppUserIndicator(username, true);
