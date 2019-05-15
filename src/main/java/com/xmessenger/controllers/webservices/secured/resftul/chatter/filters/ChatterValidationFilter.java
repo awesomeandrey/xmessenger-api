@@ -2,7 +2,6 @@ package com.xmessenger.controllers.webservices.secured.resftul.chatter.filters;
 
 import com.xmessenger.controllers.security.user.details.ContextUserRetriever;
 import com.xmessenger.model.database.entities.core.AppUser;
-import com.xmessenger.model.services.async.AsynchronousService;
 import com.xmessenger.model.services.core.chatter.ChattingService;
 import com.xmessenger.model.services.core.chatter.decorators.Chat;
 import com.xmessenger.model.util.Utility;
@@ -18,13 +17,11 @@ import java.io.IOException;
 public class ChatterValidationFilter implements Filter {
     private final ContextUserRetriever contextUserRetriever;
     private final ChattingService chattingService;
-    private final AsynchronousService asynchronousService;
 
     @Autowired
-    public ChatterValidationFilter(ContextUserRetriever contextUserRetriever, ChattingService chattingService, AsynchronousService asynchronousService) {
+    public ChatterValidationFilter(ContextUserRetriever contextUserRetriever, ChattingService chattingService) {
         this.contextUserRetriever = contextUserRetriever;
         this.chattingService = chattingService;
-        this.asynchronousService = asynchronousService;
     }
 
     @Override
@@ -38,7 +35,6 @@ public class ChatterValidationFilter implements Filter {
         AppUser user = this.contextUserRetriever.getContextUser();
         if (chatId == null || this.chattingService.hasAuthorityToOperateWithChat(user, new Chat(chatId))) {
             filterChain.doFilter(servletRequest, servletResponse);
-            this.asynchronousService.switchAppUserIndicator(user, true);
         } else {
             HttpServletResponse response = (HttpServletResponse) servletResponse;
             response.sendError(HttpServletResponse.SC_FORBIDDEN, "Cross-relation operation type detected!");

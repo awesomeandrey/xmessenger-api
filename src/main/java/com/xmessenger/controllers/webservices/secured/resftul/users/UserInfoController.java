@@ -67,7 +67,7 @@ public class UserInfoController {
     }
 
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
-    public void logout() throws Exception {
+    public void logout() {
         AppUser appUser = this.getCurrentUser();
         this.indicatorService.switchUserIndicator(appUser, false);
     }

@@ -25,7 +25,7 @@ public class IndicatorService {
     public void switchUserIndicator(AppUser appUser, boolean loggedIn) {
         AppUserIndicator indicator = new AppUserIndicator(appUser);
         indicator.setLoggedIn(loggedIn);
-        this.indicatorRepository.save(indicator);
+        indicator = this.indicatorRepository.save(indicator);
         this.publisher.publishEvent(new AfterSaveEvent(indicator));
     }
 

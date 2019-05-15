@@ -15,7 +15,7 @@ public class ScheduledTasks {
     }
 
     @Scheduled(fixedRate = 1000 * 60 * 10)
-    public void reset() {
+    public void resetIndicators() {
         this.indicatorService.flushIndicators();
     }
 }

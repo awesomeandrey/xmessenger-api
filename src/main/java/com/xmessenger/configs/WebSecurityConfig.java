@@ -56,7 +56,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticated()
                 .and()
                 .addFilter(new JwtAuthenticationFilter(authenticationManager(), this.tokenProvider(), this.asynchronousService()))
-                .addFilter(new JwtAuthorizationFilter(authenticationManager(), this.tokenProvider()));
+                .addFilter(new JwtAuthorizationFilter(authenticationManager(), this.tokenProvider(), this.asynchronousService()));
         http
                 .csrf()
                 .disable()

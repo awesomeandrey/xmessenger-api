@@ -3,9 +3,11 @@ package com.xmessenger.controllers.security.jwt.filters;
 import com.xmessenger.configs.WebSecurityConfig;
 import com.xmessenger.controllers.security.jwt.core.TokenProvider;
 import com.xmessenger.model.database.entities.Role;
+import com.xmessenger.model.services.async.AsynchronousService;
 import com.xmessenger.model.util.Utility;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
@@ -18,10 +20,12 @@ import java.util.Set;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     private final TokenProvider tokenProvider;
+    private final AsynchronousService asynchronousService;
 
-    public JwtAuthorizationFilter(AuthenticationManager authManager, TokenProvider tokenProvider) {
+    public JwtAuthorizationFilter(AuthenticationManager authManager, TokenProvider tokenProvider, AsynchronousService asynchronousService) {
         super(authManager);
         this.tokenProvider = tokenProvider;
+        this.asynchronousService = asynchronousService;
     }
 
     @Override
@@ -30,24 +34,33 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             chain.doFilter(request, response);
             return;
         }
-        String token = this.tokenProvider.extractTokenFromRequest(request);
-        if (Utility.isBlank(token)) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Json Web Token required.");
-            return;
-        }
-        String username = null;
-        Set<Role> roles = null;
+        Authentication authentication = null;
         try {
-            username = this.tokenProvider.getUsernameFromToken(token);
-            roles = this.tokenProvider.getClaimsFromToken(token);
+            authentication = this.getAuthentication(request);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            chain.doFilter(request, response);
         } catch (Exception ex) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
             return;
         }
-        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+        String username = (String) authentication.getPrincipal();
+        this.asynchronousService.switchAppUserIndicator(username, true);
+    }
+
+    private Authentication getAuthentication(HttpServletRequest request) {
+        String token = this.extractToken(request);
+        String username = this.tokenProvider.getUsernameFromToken(token);
+        Set<Role> roles = this.tokenProvider.getClaimsFromToken(token);
+        return new UsernamePasswordAuthenticationToken(
                 username, null, roles
         );
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        chain.doFilter(request, response);
+    }
+
+    private String extractToken(HttpServletRequest request) {
+        String token = this.tokenProvider.extractTokenFromRequest(request);
+        if (Utility.isBlank(token)) {
+            throw new IllegalArgumentException("Json Web Token required.");
+        }
+        return token;
     }
 }
