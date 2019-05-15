@@ -5,6 +5,7 @@ import org.springframework.data.redis.core.RedisHash;
 
 import javax.persistence.Id;
 import java.util.Date;
+import java.util.Objects;
 
 @RedisHash("indicators")
 public class AppUserIndicator {
@@ -52,7 +53,19 @@ public class AppUserIndicator {
         return "Indicator{" +
                 "User ID=" + id +
                 ", loggedIn=" + loggedIn +
-                ", dateStamp=" + dateStamp +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AppUserIndicator indicator = (AppUserIndicator) o;
+        return Objects.equals(id, indicator.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

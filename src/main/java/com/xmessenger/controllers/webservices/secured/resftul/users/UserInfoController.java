@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping(WebSecurityConfig.API_BASE_PATH + "/user")
@@ -49,9 +50,9 @@ public class UserInfoController {
     }
 
     @RequestMapping(value = "/indicators", method = RequestMethod.GET)
-    public List<AppUserIndicator> getIndicators() {
-        Map<Integer, AppUser> fellows = this.userService.findFellows(this.getCurrentUser());
-        return this.indicatorService.getIndicators(fellows.keySet());
+    public Set<AppUserIndicator> getFellowsIndicators() {
+        Map<Integer, AppUser> fellowsMap = this.userService.findFellows(this.getCurrentUser());
+        return this.indicatorService.getIndicators(fellowsMap);
     }
 
     @RequestMapping(value = "/picture", method = RequestMethod.POST)

@@ -8,8 +8,9 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.rest.core.event.AfterSaveEvent;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+
+import static java.util.stream.Collectors.toSet;
 
 @Service
 public class IndicatorService {
@@ -27,11 +28,14 @@ public class IndicatorService {
         indicator.setLoggedIn(loggedIn);
         indicator = this.indicatorRepository.save(indicator);
         this.publisher.publishEvent(new AfterSaveEvent(indicator));
-        // System.out.println("Switching indicator: " + indicator.getId() + "=" + indicator.isLoggedIn());
     }
 
-    public List<AppUserIndicator> getIndicators(Set<Integer> userIds) {
-        return (List<AppUserIndicator>) this.indicatorRepository.findAll(userIds);
+    public Set<AppUserIndicator> getIndicators(Map<Integer, AppUser> usersMap) {
+        Set<AppUserIndicator> defaultIndicators = usersMap.values().stream()
+                .map(AppUserIndicator::new).collect(toSet());
+        Set<AppUserIndicator> indicators = new HashSet<>(((List<AppUserIndicator>) this.indicatorRepository.findAll(usersMap.keySet())));
+        indicators.addAll(defaultIndicators);
+        return indicators;
     }
 
     public void flushIndicators() {
