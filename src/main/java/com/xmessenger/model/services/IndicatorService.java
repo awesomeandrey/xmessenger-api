@@ -30,6 +30,10 @@ public class IndicatorService {
         this.publisher.publishEvent(new AfterSaveEvent(indicator));
     }
 
+    public Set<AppUserIndicator> getIndicators() {
+        return new HashSet<>((List<AppUserIndicator>) this.indicatorRepository.findAll());
+    }
+
     public Set<AppUserIndicator> getIndicators(Map<Integer, AppUser> usersMap) {
         Set<AppUserIndicator> defaultIndicators = usersMap.values().stream()
                 .map(AppUserIndicator::new).collect(toSet());
