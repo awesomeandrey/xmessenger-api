@@ -22,6 +22,10 @@ public class RequestDAO {
         return this.requestRepository.findByRecipientAndApprovedIsFalse(user);
     }
 
+    public List<Request> retrieveRequestsForUserAll(AppUser user) {
+        return this.requestRepository.findByRecipientOrSender(user, user);
+    }
+
     public Request lookupRequest(Request request) {
         if (Utility.isNotBlank(request.getId())) {
             return this.requestRepository.findOne(request.getId());
@@ -42,5 +46,9 @@ public class RequestDAO {
 
     public void deleteRequest(Request request) {
         this.requestRepository.delete(request);
+    }
+
+    public void deleteRequests(List<Request> requestsToDelete) {
+        this.requestRepository.delete(requestsToDelete);
     }
 }

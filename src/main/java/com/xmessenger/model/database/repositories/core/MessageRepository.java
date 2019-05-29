@@ -15,7 +15,7 @@ public interface MessageRepository extends CrudRepository<Message, Integer> {
 
     List<Message> findTop20ByRelationOrderByDateDesc(Relation relation);
 
-    void deleteMessagesByRelation(Relation relation);
+    void deleteMessagesByRelation(List<Relation> relations);
 
     @Query(value = "SELECT message.relation.id, MAX(message.date) " +
             "FROM Message message " +

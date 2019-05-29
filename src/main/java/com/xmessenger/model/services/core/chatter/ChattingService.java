@@ -45,6 +45,13 @@ public class ChattingService {
         return chatToDelete;
     }
 
+    public void deleteChatsAll(AppUser appUser) {
+        Map<Integer, Relation> relationsMap = this.relationService.getUserRelations(appUser);
+        List<Relation> relations = new ArrayList<>(relationsMap.values());
+        this.messageService.deleteMessagesByRelations(relations);
+        this.relationService.deleteRelations(relations);
+    }
+
     public Map<Integer, Chat> retrieveChats(AppUser runningUser) {
         Map<Integer, Relation> relationsMap = this.relationService.getUserRelations(runningUser);
         Map<Integer, Date> latestMessageDateByRelation = this.messageService.groupLastMessageDateByRelations(relationsMap.values());

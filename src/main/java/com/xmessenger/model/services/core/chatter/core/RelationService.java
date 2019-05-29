@@ -46,7 +46,13 @@ public class RelationService {
     }
 
     public void deleteRelation(Relation relation) {
-        this.relationRepository.delete(relation);
+        List<Relation> relationsToDelete = new ArrayList<>();
+        relationsToDelete.add(relation);
+        this.deleteRelations(relationsToDelete);
+    }
+
+    public void deleteRelations(List<Relation> relationsToDelete) {
+        this.relationRepository.delete(relationsToDelete);
     }
 
     public AppUser getFellowFromRelation(AppUser runningUser, Relation relation) {

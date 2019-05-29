@@ -32,7 +32,7 @@ public class UserService {
     }
 
     public AppUser lookupUser(RawCredentials rawCredentials) throws UserException {
-        AppUser foundUser = this.userDAO.getUserByUsername(rawCredentials.getUsername());
+        AppUser foundUser = this.lookupUser(rawCredentials.getUsername());
         if (foundUser == null || !foundUser.isActive() || !this.credentialsService.matchesPassword(rawCredentials.getPassword(), foundUser)) {
             throw new UserException("User with such credentials was not found.");
         }
@@ -41,6 +41,17 @@ public class UserService {
 
     public AppUser lookupUser(String username) {
         return this.userDAO.getUserByUsername(username);
+    }
+
+    public AppUser lookupUser(AppUser appUser) {
+        AppUser foundUser = null;
+        if (Utility.isNotBlank(appUser.getId())) {
+            foundUser = this.userDAO.getUserById(appUser.getId());
+        }
+        if (foundUser == null && Utility.isNotBlank(appUser.getUsername())) {
+            foundUser = this.lookupUser(appUser.getUsername());
+        }
+        return foundUser;
     }
 
     public List<AppUser> lookupUsers(QueryParams queryParams) {
@@ -102,6 +113,10 @@ public class UserService {
         } catch (UserService.UserException | UserDAO.UserNotFoundException e) {
             System.err.println(">>> Could not set 'last_login'. " + e.getMessage());
         }
+    }
+
+    public void deleteUser(AppUser appUser) {
+        this.userDAO.deleteUser(appUser);
     }
 
     //******************************************************************************************************************

@@ -46,6 +46,13 @@ public class RequestService {
         return foundRequest;
     }
 
+    public void deleteRequestsAll(AppUser appUser) {
+        List<Request> requests = this.requestDAO.retrieveRequestsForUserAll(appUser);
+        if (!requests.isEmpty()) {
+            this.requestDAO.deleteRequests(requests);
+        }
+    }
+
     public static class RequestFlowException extends Exception {
         public RequestFlowException(String message) {
             super(message);
