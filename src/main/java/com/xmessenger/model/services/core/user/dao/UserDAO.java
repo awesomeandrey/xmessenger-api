@@ -60,6 +60,10 @@ public class UserDAO {
         return user.getPicture();
     }
 
+    public void deleteUser(AppUser userToDelete) {
+        this.userRepository.delete(userToDelete);
+    }
+
     public class UserNotFoundException extends Exception {
         public UserNotFoundException(Integer i) {
             super("Could not find user with ID=[" + i + "].");
