@@ -42,6 +42,17 @@ public class AdministrationController {
 
     @RequestMapping(value = "/deactivateUser", method = RequestMethod.DELETE)
     public void deactivateUser(@RequestBody AppUser appUser, HttpServletResponse response) throws IOException {
+        try {
+            appUser.setActive(false);
+            this.userService.changeProfileInfo(appUser);
+            response.setStatus(HttpServletResponse.SC_OK);
+        } catch (Exception ex) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
+        }
+    }
+
+    @RequestMapping(value = "/deleteUser", method = RequestMethod.DELETE)
+    public void deleteUser(@RequestBody AppUser appUser, HttpServletResponse response) throws IOException {
         appUser = this.userService.lookupUser(appUser);
         if (appUser == null) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "User was not found.");

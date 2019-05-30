@@ -90,7 +90,7 @@ public class UserService {
         if (!validationResult.isValid()) {
             throw new UserException(validationResult.getErrorMessage());
         }
-        AppUser persistedUser = this.userDAO.getUserById(updatedUser.getId());
+        AppUser persistedUser = this.lookupUser(updatedUser);
         this.mergeProperties(persistedUser, updatedUser);
         return this.userDAO.update(persistedUser);
     }
