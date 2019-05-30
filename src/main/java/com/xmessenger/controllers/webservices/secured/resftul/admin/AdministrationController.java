@@ -40,10 +40,9 @@ public class AdministrationController {
         return this.indicatorService.getIndicators();
     }
 
-    @RequestMapping(value = "/deactivateUser", method = RequestMethod.PUT)
-    public void deactivateUser(@RequestBody AppUser appUser, HttpServletResponse response) throws IOException {
+    @RequestMapping(value = "/updateUser", method = RequestMethod.PUT)
+    public void changeUserProfileInfo(@RequestBody AppUser appUser, HttpServletResponse response) throws IOException {
         try {
-            appUser.setActive(false);
             this.userService.changeProfileInfo(appUser);
             response.setStatus(HttpServletResponse.SC_OK);
         } catch (Exception ex) {
