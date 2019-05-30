@@ -3,6 +3,7 @@ package com.xmessenger.controllers.webservices.secured.resftul.users;
 import com.xmessenger.configs.WebSecurityConfig;
 import com.xmessenger.controllers.security.user.details.ContextUserRetriever;
 import com.xmessenger.model.database.entities.AppUserIndicator;
+import com.xmessenger.model.database.entities.Role;
 import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.services.IndicatorService;
 import com.xmessenger.model.services.core.user.UserService;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(WebSecurityConfig.API_BASE_PATH + "/user")
@@ -46,7 +48,8 @@ public class UserInfoController {
         QueryParams params = new QueryParams();
         params.setNameOrLogin(nameOrLogin);
         params.setSearchByLogin(searchByLogin);
-        return this.userService.lookupUsers(params);
+        return this.userService.lookupUsers(params).stream()
+                .filter(appUser -> !appUser.getRoles().contains(Role.ROLE_ADMIN)).collect(Collectors.toList());
     }
 
     @RequestMapping(value = "/indicators", method = RequestMethod.GET)
