@@ -17,6 +17,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         AppUser appUser = this.userService.lookupUser(username);
+        if (!appUser.isActive()) return null;
         return new User(appUser.getUsername(), appUser.getPassword(), appUser.getRoles());
     }
 }
