@@ -20,7 +20,7 @@ import java.util.Set;
 
 @RestController
 @PreAuthorize("hasRole('ROLE_ADMIN')")
-@RequestMapping(WebSecurityConfig.API_BASE_PATH + "/admin")
+@RequestMapping(WebSecurityConfig.ADMIN_API_BASE_PATH)
 public class AdministrationController {
     private final UserService userService;
     private final ChattingService chattingService;

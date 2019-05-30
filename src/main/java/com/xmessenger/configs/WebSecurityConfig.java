@@ -1,5 +1,6 @@
 package com.xmessenger.configs;
 
+import com.xmessenger.controllers.security.basic.AuthenticationEntryPointImpl;
 import com.xmessenger.controllers.security.jwt.filters.JwtAuthenticationFilter;
 import com.xmessenger.controllers.security.jwt.filters.JwtAuthorizationFilter;
 import com.xmessenger.controllers.security.jwt.core.TokenProvider;
@@ -17,13 +18,16 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public final static String API_BASE_PATH = "/api";
+    public final static String ADMIN_API_BASE_PATH = "/admin-api";
 
     private final static String API_BASE_PATH_PATTERN = API_BASE_PATH.concat("/**");
+    private final static String ADMIN_BASE_PATH_PATTERN = ADMIN_API_BASE_PATH.concat("/**");
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -38,6 +42,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public UserDetailsService userDetailsService() {
         return new UserDetailsServiceImpl();
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint() {
+        return new AuthenticationEntryPointImpl();
     }
 
     @Bean
@@ -57,6 +66,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .addFilter(new JwtAuthenticationFilter(authenticationManager(), this.tokenProvider(), this.asynchronousService()))
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(), this.tokenProvider(), this.asynchronousService()));
+        http
+                .authorizeRequests()
+                .antMatchers(ADMIN_BASE_PATH_PATTERN)
+                .authenticated()
+                .and()
+                .httpBasic()
+                .authenticationEntryPoint(this.authenticationEntryPoint());
         http
                 .csrf()
                 .disable()
