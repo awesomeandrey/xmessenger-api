@@ -49,7 +49,7 @@ public class MessageService {
     }
 
     public void deleteMessagesByRelations(List<Relation> relations) {
-        this.messageRepository.deleteMessagesByRelation(relations);
+        this.messageRepository.deleteAllByRelationIn(relations);
     }
 
     private boolean isValid(Message message) {
