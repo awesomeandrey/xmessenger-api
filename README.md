@@ -4,7 +4,7 @@ This project is part of <b>xMessenger</b> application ecosystem. Written on Spri
 both open & secure RESTful API for those who want to integrate with it. Also, it's free, cloud based browser messenger 
 hosted on <i>Heroku</i> platform.
 
-### Used technologies
+### Keywords
 
 `java8`, `websockets`, `spring-boot`, `postgre_sql`, `travis`, `heroku`, `oauth`, `cors`, `rest-api`, `redis`
 
