@@ -47,6 +47,9 @@ public class AppUser {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Date lastLogin;
 
+    @Column(name = "email_address")
+    private String email;
+
     public Integer getId() {
         return this.id;
     }
@@ -119,6 +122,14 @@ public class AppUser {
 
     public void setLastLogin(Date lastLogin) {
         this.lastLogin = lastLogin;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public AppUser() {
