@@ -1,6 +1,7 @@
 package com.xmessenger.controllers.webservices.secured.resftul.admin;
 
 import com.xmessenger.configs.WebSecurityConfig;
+import com.xmessenger.controllers.security.user.details.ContextUserRetriever;
 import com.xmessenger.model.database.entities.AppUserIndicator;
 import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.services.IndicatorService;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.Set;
 
@@ -22,13 +24,15 @@ import java.util.Set;
 @PreAuthorize("hasRole('ROLE_ADMIN')")
 @RequestMapping(WebSecurityConfig.ADMIN_API_BASE_PATH)
 public class AdministrationController {
+    private final ContextUserRetriever contextUserRetriever;
     private final UserService userService;
     private final ChattingService chattingService;
     private final RequestService requestService;
     private final IndicatorService indicatorService;
 
     @Autowired
-    public AdministrationController(UserService userService, ChattingService chattingService, RequestService requestService, IndicatorService indicatorService) {
+    public AdministrationController(ContextUserRetriever contextUserRetriever, UserService userService, ChattingService chattingService, RequestService requestService, IndicatorService indicatorService) {
+        this.contextUserRetriever = contextUserRetriever;
         this.userService = userService;
         this.chattingService = chattingService;
         this.requestService = requestService;
@@ -41,7 +45,7 @@ public class AdministrationController {
     }
 
     @RequestMapping(value = "/updateUser", method = RequestMethod.PUT)
-    public void changeUserProfileInfo(@RequestBody AppUser appUser, HttpServletResponse response) throws IOException {
+    public void changeUserProfileInfo(@Valid @RequestBody AppUser appUser, HttpServletResponse response) throws IOException {
         try {
             this.userService.changeProfileInfo(appUser);
             response.setStatus(HttpServletResponse.SC_OK);
@@ -55,6 +59,9 @@ public class AdministrationController {
         appUser = this.userService.lookupUser(appUser);
         if (appUser == null) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "User was not found.");
+            return;
+        } else if (appUser.getId().equals(this.contextUserRetriever.getContextUserId())) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "You cannot delete yourself.");
             return;
         }
         this.requestService.deleteRequestsAll(appUser);

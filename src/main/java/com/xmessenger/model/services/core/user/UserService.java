@@ -12,6 +12,7 @@ import com.xmessenger.model.util.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,11 +68,7 @@ public class UserService {
         return fellowsMap;
     }
 
-    public AppUser registerUser(AppUser userToRegister) throws UserException {
-        UserValidationResult validationResult = this.userValidator.validateOnRegistration(userToRegister);
-        if (!validationResult.isValid()) {
-            throw new UserException(validationResult.getErrorMessage());
-        }
+    public AppUser registerUser(@Valid AppUser userToRegister) throws UserException {
         this.credentialsService.encodePassword(userToRegister);
         userToRegister.renewLastLoginDate();
         return this.userDAO.create(userToRegister);
@@ -85,11 +82,7 @@ public class UserService {
      * @throws UserException
      * @throws UserDAO.UserNotFoundException
      */
-    public AppUser changeProfileInfo(AppUser updatedUser) throws UserException, UserDAO.UserNotFoundException {
-        UserValidationResult validationResult = this.userValidator.validateOnProfileChange(updatedUser);
-        if (!validationResult.isValid()) {
-            throw new UserException(validationResult.getErrorMessage());
-        }
+    public AppUser changeProfileInfo(@Valid AppUser updatedUser) throws UserException, UserDAO.UserNotFoundException {
         AppUser persistedUser = this.lookupUser(updatedUser);
         this.mergeProperties(persistedUser, updatedUser);
         return this.userDAO.update(persistedUser);
@@ -100,7 +93,7 @@ public class UserService {
         if (!validationResult.isValid()) {
             throw new UserException(validationResult.getErrorMessage());
         }
-        AppUser persistedUser = this.userDAO.getUserById(user.getId());
+        AppUser persistedUser = this.lookupUser(user);
         persistedUser.setPassword(rawCredentials.getNewPassword());
         this.credentialsService.encodePassword(persistedUser);
         return this.userDAO.update(persistedUser);
@@ -133,6 +126,9 @@ public class UserService {
         }
         if (updatedUser.getLastLogin() != null) {
             persistedUser.setLastLogin(updatedUser.getLastLogin());
+        }
+        if (Utility.isNotBlank(updatedUser.getEmail())) {
+            persistedUser.setEmail(updatedUser.getEmail());
         }
     }
 
