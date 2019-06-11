@@ -76,6 +76,7 @@ public class UserBuilder {
         user.setName(this.name);
         user.setUsername(this.username);
         user.setPassword(this.password);
+        user.setEmail(this.email);
         user.setPicture(this.picture);
         user.setLoggedExternally(this.loggedExternally);
         user.setActive(this.active);
