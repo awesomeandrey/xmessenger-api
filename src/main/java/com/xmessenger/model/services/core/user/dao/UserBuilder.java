@@ -6,6 +6,7 @@ public class UserBuilder {
     private String name;
     private String username;
     private String password;
+    private String email;
     private byte[] picture;
     private Boolean loggedExternally;
     private Boolean active;
@@ -47,6 +48,11 @@ public class UserBuilder {
 
     public UserBuilder withPassword(String password) {
         this.password = password;
+        return this;
+    }
+
+    public UserBuilder withEmail(String email) {
+        this.email = email;
         return this;
     }
 

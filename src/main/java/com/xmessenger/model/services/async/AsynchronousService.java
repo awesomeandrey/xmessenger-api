@@ -24,11 +24,20 @@ public class AsynchronousService {
     @Autowired
     private IndicatorService indicatorService;
 
-    public void renewLastLoginByUsername(String username) {
+    public void renewLastLogin(String username) {
         this.taskExecutor.execute(new Runnable() {
             @Override
             public void run() {
                 AppUser appUser = userService.lookupUser(username);
+                userService.renewLastLogin(appUser);
+            }
+        });
+    }
+
+    public void renewLastLogin(AppUser appUser) {
+        this.taskExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
                 userService.renewLastLogin(appUser);
             }
         });

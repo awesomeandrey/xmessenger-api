@@ -45,19 +45,19 @@ public class GmailAuthenticationController {
         AppUser appUser = this.authenticateUser(accessToken);
         String token = this.tokenProvider.generateToken(appUser);
         this.tokenProvider.addTokenToResponse(response, token);
+        this.asynchronousService.renewLastLogin(appUser);
     }
 
     private AppUser authenticateUser(String accessToken) throws Exception {
-        String username = this.gmailAuthenticator.getUsername(accessToken);
-        AppUser user = this.userService.lookupUser(username);
+        GmailAccount gmailAccount = this.gmailAuthenticator.getGmailAccount(accessToken);
+        AppUser user = this.userService.lookupUser(gmailAccount.getUsername());
         if (user == null) {
-            user = this.gmailAuthenticator.composeUser(username, accessToken);
+            user = this.gmailAuthenticator.composeUser(gmailAccount, accessToken);
             this.userService.registerUser(user);
         } else if (!user.isActive()) {
             user.setActive(true);
             this.userService.changeProfileInfo(user);
         }
-        this.asynchronousService.renewLastLoginByUsername(username);
         return user;
     }
 }
