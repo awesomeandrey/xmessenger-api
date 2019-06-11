@@ -4,12 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.xmessenger.model.database.converters.RoleCodeConverter;
 import com.xmessenger.model.database.entities.Role;
+import org.hibernate.validator.constraints.Email;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import javax.validation.constraints.Pattern;
+import java.util.*;
 
 @javax.persistence.Entity
 @Table(name = "xm_user")
@@ -20,14 +19,17 @@ public class AppUser {
     @Column(name = "user_id")
     private Integer id;
 
+    @Pattern(regexp = "^[a-zA-Z ]{2,45}$", message = "Name is not correct")
     private String name;
 
     @JsonIgnore
     private byte[] picture;
 
+    @Pattern(regexp = "^[a-zA-Z0-9_-]{4,25}$", message = "Username is not correct")
     private String username;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Pattern(regexp = "^.{4,}$", message = "Password in wrong")
     private String password;
 
     @Column(name = "is_logged_externally")
@@ -46,6 +48,10 @@ public class AppUser {
     @Column(name = "last_login")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Date lastLogin;
+
+    @Column(name = "email_address")
+    @Email(message = "Email should be valid")
+    private String email;
 
     public Integer getId() {
         return this.id;
@@ -121,6 +127,14 @@ public class AppUser {
         this.lastLogin = lastLogin;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public AppUser() {
         this.active = true;
         this.roles = new HashSet<>();
@@ -142,6 +156,7 @@ public class AppUser {
                 ", active=" + active +
                 ", roles=" + roles +
                 ", lastLogin=" + lastLogin +
+                ", email='" + email + '\'' +
                 '}';
     }
 

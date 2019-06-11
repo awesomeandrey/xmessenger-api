@@ -64,6 +64,7 @@ public class UserDataFactory {
         testUser.setPassword("qwerty123456");
         testUser.setPicture(new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9});
         testUser.setActive(true);
+        testUser.setEmail("default@example.com");
         return testUser;
     }
 }

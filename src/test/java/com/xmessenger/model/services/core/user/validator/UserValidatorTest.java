@@ -38,17 +38,6 @@ public class UserValidatorTest {
     }
 
     @Test
-    public void validateOnRegistration() {
-        AppUser testUser = UserDataFactory.generateSuccessUser();
-        Mockito.when(this.userDAO.getUserByUsername(testUser.getUsername())).thenReturn(null);
-        UserValidationResult validationResult1 = this.userValidator.validateOnRegistration(testUser);
-        assertTrue(validationResult1.isValid());
-        testUser.setName("Invalid - name #123");
-        UserValidationResult validationResult2 = this.userValidator.validateOnRegistration(testUser);
-        assertTrue(!validationResult2.isValid());
-    }
-
-    @Test
     public void validateOnPasswordChange() {
         AppUser testUser = UserDataFactory.generateSuccessUser();
         RawCredentials rawCredentials = UserDataFactory.composeRawCredentials(testUser);
@@ -70,24 +59,6 @@ public class UserValidatorTest {
         Mockito.when(this.credentialsService.matchesPassword(rawCredentials.getPassword(), testUser)).thenReturn(true);
         Mockito.when(this.credentialsService.matchesPassword(rawCredentials.getNewPassword(), testUser)).thenReturn(false);
         validationResult = this.userValidator.validateOnPasswordChange(testUser, rawCredentials);
-        assertTrue(validationResult.isValid());
-    }
-
-    @Test
-    public void validateOnProfileChange() {
-        AppUser testUser = UserDataFactory.generateSuccessUser();
-        testUser.setId(0);
-        // Invalid User ID;
-        UserValidationResult validationResult = this.userValidator.validateOnProfileChange(testUser);
-        assertFalse(validationResult.isValid());
-        // Invalid value in 'Name' field;
-        testUser.setId(1234);
-        testUser.setName("Invalid - name_7");
-        validationResult = this.userValidator.validateOnProfileChange(testUser);
-        assertFalse(validationResult.isValid());
-        // Correct;
-        testUser.setName("Success");
-        validationResult = this.userValidator.validateOnProfileChange(testUser);
         assertTrue(validationResult.isValid());
     }
 }

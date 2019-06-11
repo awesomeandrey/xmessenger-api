@@ -59,8 +59,6 @@ public class UserServiceTest {
     @Test
     public void register() throws Exception {
         AppUser testUser = UserDataFactory.generateSuccessUser();
-        UserValidationResult validationResult = new UserValidationResult(true);
-        Mockito.when(this.userValidator.validateOnRegistration(testUser)).thenReturn(validationResult);
         Mockito.when(this.userDAO.create(testUser)).thenReturn(testUser);
         AppUser registeredUser = this.userService.registerUser(testUser);
         assertNotNull(registeredUser);
@@ -70,8 +68,6 @@ public class UserServiceTest {
     @Test
     public void register_InvalidData() {
         AppUser testUser = UserDataFactory.generateSuccessUser();
-        UserValidationResult validationResult = new UserValidationResult(false);
-        Mockito.when(this.userValidator.validateOnRegistration(testUser)).thenReturn(validationResult);
         AppUser registeredUser = null;
         try {
             registeredUser = this.userService.registerUser(testUser);
@@ -85,7 +81,6 @@ public class UserServiceTest {
         AppUser testUser = UserDataFactory.generateSuccessUser();
         String oldName = testUser.getName(), newName = "NEW NAME";
         testUser.setName(newName);
-        Mockito.when(this.userValidator.validateOnProfileChange(testUser)).thenReturn(new UserValidationResult(true));
         Mockito.when(this.userDAO.getUserById(testUser.getId())).thenReturn(testUser);
         Mockito.when(this.userDAO.update(testUser)).thenReturn(testUser);
         AppUser updatedUser = this.userService.changeProfileInfo(testUser);
@@ -97,7 +92,6 @@ public class UserServiceTest {
     public void changeProfileInfo_InvalidData() {
         AppUser testUser = UserDataFactory.generateSuccessUser();
         testUser.setName(testUser.getName().concat("_CHANGED"));
-        Mockito.when(this.userValidator.validateOnProfileChange(testUser)).thenReturn(new UserValidationResult(false));
         AppUser updatedUser = null;
         try {
             updatedUser = this.userService.changeProfileInfo(testUser);
