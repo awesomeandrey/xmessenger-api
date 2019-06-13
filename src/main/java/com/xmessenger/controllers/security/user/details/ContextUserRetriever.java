@@ -21,8 +21,10 @@ public class ContextUserRetriever {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = null;
         if (auth.getPrincipal() instanceof String) {
+            // Bearer Token flow;
             username = (String) auth.getPrincipal();
         } else if (auth.getPrincipal() instanceof UserDetails) {
+            // Basic Authentication flow;
             username = ((UserDetails) auth.getPrincipal()).getUsername();
         }
         return this.userDAO.getUserByUsername(username);
