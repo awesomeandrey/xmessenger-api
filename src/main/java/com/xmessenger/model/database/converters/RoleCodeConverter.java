@@ -1,6 +1,6 @@
 package com.xmessenger.model.database.converters;
 
-import com.xmessenger.model.database.entities.Role;
+import com.xmessenger.model.database.entities.enums.Role;
 
 import javax.persistence.AttributeConverter;
 import java.util.HashSet;

@@ -2,8 +2,8 @@ package com.xmessenger.controllers.webservices.secured.resftul.admin;
 
 import com.xmessenger.configs.WebSecurityConfig;
 import com.xmessenger.controllers.security.user.details.ContextUserRetriever;
-import com.xmessenger.model.database.entities.AppUserIndicator;
 import com.xmessenger.model.database.entities.core.AppUser;
+import com.xmessenger.model.database.entities.wrappers.Indicator;
 import com.xmessenger.model.services.IndicatorService;
 import com.xmessenger.model.services.core.chatter.ChattingService;
 import com.xmessenger.model.services.core.request.RequestService;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.Set;
+import java.util.List;
 
 @RestController
 @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -40,7 +40,7 @@ public class AdministrationController {
     }
 
     @RequestMapping(value = "/indicators", method = RequestMethod.GET)
-    public Set<AppUserIndicator> retrieveUsersOnline() {
+    public List<Indicator> retrieveUsersOnline() {
         return this.indicatorService.getIndicators();
     }
 

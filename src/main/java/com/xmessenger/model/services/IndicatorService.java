@@ -1,6 +1,6 @@
 package com.xmessenger.model.services;
 
-import com.xmessenger.model.database.entities.AppUserIndicator;
+import com.xmessenger.model.database.entities.wrappers.Indicator;
 import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.database.repositories.IndicatorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +9,6 @@ import org.springframework.data.rest.core.event.AfterSaveEvent;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-
-import static java.util.stream.Collectors.toSet;
 
 @Service
 public class IndicatorService {
@@ -23,23 +21,22 @@ public class IndicatorService {
         this.indicatorRepository = indicatorRepository;
     }
 
-    public void switchUserIndicator(AppUser appUser, boolean loggedIn) {
-        AppUserIndicator indicator = new AppUserIndicator(appUser);
-        indicator.setLoggedIn(loggedIn);
-        indicator = this.indicatorRepository.save(indicator);
+    public void switchUserIndicator(AppUser appUser, boolean active) {
+        Indicator indicator = new Indicator(appUser);
+        if (active) {
+            this.indicatorRepository.save(indicator);
+        } else {
+            this.indicatorRepository.delete(indicator);
+        }
         this.publisher.publishEvent(new AfterSaveEvent(indicator));
     }
 
-    public Set<AppUserIndicator> getIndicators() {
-        return new HashSet<>((List<AppUserIndicator>) this.indicatorRepository.findAll());
+    public List<Indicator> getIndicators() {
+        return (List<Indicator>) this.indicatorRepository.findAll();
     }
 
-    public Set<AppUserIndicator> getIndicators(Map<Integer, AppUser> usersMap) {
-        Set<AppUserIndicator> defaultIndicators = usersMap.values().stream()
-                .map(AppUserIndicator::new).collect(toSet());
-        Set<AppUserIndicator> indicators = new HashSet<>(((List<AppUserIndicator>) this.indicatorRepository.findAll(usersMap.keySet())));
-        indicators.addAll(defaultIndicators);
-        return indicators;
+    public List<Indicator> getIndicators(Map<Integer, AppUser> usersMap) {
+        return (List<Indicator>) this.indicatorRepository.findAll(usersMap.keySet());
     }
 
     public void flushIndicators() {

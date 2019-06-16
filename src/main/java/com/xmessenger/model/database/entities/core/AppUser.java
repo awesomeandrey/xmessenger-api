@@ -3,7 +3,7 @@ package com.xmessenger.model.database.entities.core;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.xmessenger.model.database.converters.RoleCodeConverter;
-import com.xmessenger.model.database.entities.Role;
+import com.xmessenger.model.database.entities.enums.Role;
 import org.hibernate.validator.constraints.Email;
 
 import javax.persistence.*;
