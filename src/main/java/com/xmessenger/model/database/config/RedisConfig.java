@@ -14,7 +14,7 @@ import java.net.URISyntaxException;
 @Configuration
 @EnableRedisRepositories
 public class RedisConfig {
-    @Value("${spring.redis.url}")
+    @Value("${spring.redis.url:REDIS_URL}")
     private String redisUrl;
 
     @Bean
@@ -22,8 +22,8 @@ public class RedisConfig {
         try {
             URI redisUri = new URI(this.redisUrl);
 
-            System.out.println(">>> redisURL" + this.redisUrl);
-            System.out.println(">>> redisUri" + redisUri);
+            System.out.println(">>> redisURL " + this.redisUrl);
+            System.out.println(">>> redisURI " + redisUri);
 
             JedisConnectionFactory jedisConnFactory = new JedisConnectionFactory();
             jedisConnFactory.setUsePool(true);
