@@ -33,7 +33,7 @@ public class GeneralUserInfoController {
         appUser = this.userService.lookupUser(appUser);
         if (appUser == null) throw new UserNotFoundException(uid);
         if (appUser.getPicture() == null) {
-            File file = new ClassPathResource("/static/pictures/default-user-picture.png").getFile();
+            File file = new ClassPathResource("static/pictures/default-user-picture.png").getFile();
             return Files.readAllBytes(file.toPath());
         }
         return appUser.getPicture();
