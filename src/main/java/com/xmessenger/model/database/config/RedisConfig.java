@@ -25,9 +25,7 @@ public class RedisConfig {
             jedisConnFactory.setHostName(redisUri.getHost());
             jedisConnFactory.setPort(redisUri.getPort());
             jedisConnFactory.setTimeout(Protocol.DEFAULT_TIMEOUT);
-            if (!redisUri.getHost().equals("localhost")) {
-                jedisConnFactory.setPassword(redisUri.getUserInfo().split(":", 2)[1]);
-            }
+            jedisConnFactory.setPassword(redisUri.getUserInfo().split(":", 2)[1]);
             return jedisConnFactory;
         } catch (URISyntaxException e) {
             e.printStackTrace();
