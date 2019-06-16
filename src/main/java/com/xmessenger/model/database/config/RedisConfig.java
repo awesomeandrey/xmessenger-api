@@ -55,7 +55,8 @@ public class RedisConfig {
     public JedisConnectionFactory jedisConnFactory() {
 
         try {
-            String redistogoUrl = System.getenv("REDIS_URL");
+//            String redistogoUrl = System.getenv("REDIS_URL");
+            String redistogoUrl = "redis://h:p9d75efa2403727d2242df39cf36543a72626b1a57f121d7b7ca8673ce3689d28@ec2-108-129-53-202.eu-west-1.compute.amazonaws.com:8959";
             URI redistogoUri = new URI(redistogoUrl);
 
             JedisConnectionFactory jedisConnFactory = new JedisConnectionFactory();
