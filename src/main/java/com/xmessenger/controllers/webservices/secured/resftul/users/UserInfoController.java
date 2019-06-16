@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -54,7 +54,7 @@ public class UserInfoController {
     }
 
     @RequestMapping(value = "/indicators", method = RequestMethod.GET)
-    public List<Indicator> getFellowsIndicators() {
+    public Collection<Indicator> getFellowsIndicators() {
         Map<Integer, AppUser> fellowsMap = this.userService.findFellows(this.getCurrentUser());
         return this.indicatorService.getIndicators(fellowsMap);
     }

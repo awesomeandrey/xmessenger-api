@@ -9,6 +9,8 @@ import org.springframework.data.rest.core.event.AfterSaveEvent;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class IndicatorService {
@@ -22,21 +24,25 @@ public class IndicatorService {
     }
 
     public void switchUserIndicator(AppUser appUser, boolean active) {
-        Indicator indicator = new Indicator(appUser);
-        if (active) {
-            this.indicatorRepository.save(indicator);
-        } else {
-            this.indicatorRepository.delete(indicator);
-        }
+        Indicator indicator = new Indicator(appUser, active);
+        this.indicatorRepository.save(indicator);
         this.publisher.publishEvent(new AfterSaveEvent(indicator));
     }
 
     public List<Indicator> getIndicators() {
-        return (List<Indicator>) this.indicatorRepository.findAll();
+        return ((List<Indicator>) this.indicatorRepository.findAll()).stream()
+                .filter(Indicator::isActive)
+                .collect(Collectors.toList());
     }
 
-    public List<Indicator> getIndicators(Map<Integer, AppUser> usersMap) {
-        return (List<Indicator>) this.indicatorRepository.findAll(usersMap.keySet());
+    public Collection<Indicator> getIndicators(Map<Integer, AppUser> usersMap) {
+        Set<Indicator> defaultIndicators = usersMap.values().stream()
+                .map(Indicator::new).collect(Collectors.toSet());
+        Iterable<Indicator> iterable = this.indicatorRepository.findAll(usersMap.keySet());
+        Set<Indicator> existingIndicators = StreamSupport.stream(iterable.spliterator(), false)
+                .collect(Collectors.toSet());
+        existingIndicators.addAll(defaultIndicators);
+        return existingIndicators;
     }
 
     public void flushIndicators() {
