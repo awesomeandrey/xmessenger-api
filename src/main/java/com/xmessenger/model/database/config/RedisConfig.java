@@ -14,13 +14,16 @@ import java.net.URISyntaxException;
 @Configuration
 @EnableRedisRepositories
 public class RedisConfig {
-    @Value("${spring.redis.url:REDIS_URL}")
+    @Value("${spring.redis.url}")
     private String redisUrl;
 
     @Bean
     public JedisConnectionFactory jedisConnFactory() {
         try {
             URI redisUri = new URI(this.redisUrl);
+            if (this.redisUrl.length() < 15) {
+                redisUri = new URI(System.getenv("REDIS_ENV"));
+            }
 
             System.out.println(">>> redisURL " + this.redisUrl);
             System.out.println(">>> redisURI " + redisUri);
