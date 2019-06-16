@@ -2,8 +2,8 @@ package com.xmessenger.controllers.webservices.secured.resftul.users;
 
 import com.xmessenger.configs.WebSecurityConfig;
 import com.xmessenger.controllers.security.user.details.ContextUserRetriever;
-import com.xmessenger.model.database.entities.AppUserIndicator;
-import com.xmessenger.model.database.entities.Role;
+import com.xmessenger.model.database.entities.wrappers.Indicator;
+import com.xmessenger.model.database.entities.enums.Role;
 import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.services.IndicatorService;
 import com.xmessenger.model.services.core.user.UserService;
@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -54,7 +54,7 @@ public class UserInfoController {
     }
 
     @RequestMapping(value = "/indicators", method = RequestMethod.GET)
-    public Set<AppUserIndicator> getFellowsIndicators() {
+    public Collection<Indicator> getFellowsIndicators() {
         Map<Integer, AppUser> fellowsMap = this.userService.findFellows(this.getCurrentUser());
         return this.indicatorService.getIndicators(fellowsMap);
     }

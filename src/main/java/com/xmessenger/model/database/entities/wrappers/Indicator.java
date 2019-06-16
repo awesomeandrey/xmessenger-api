@@ -1,0 +1,62 @@
+package com.xmessenger.model.database.entities.wrappers;
+
+import com.xmessenger.model.database.entities.core.AppUser;
+import org.springframework.data.redis.core.RedisHash;
+
+import javax.persistence.Id;
+import java.util.Objects;
+
+@RedisHash("indicators")
+public class Indicator {
+    @Id
+    private Integer id;
+    private boolean active;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public Indicator() {
+        this.active = false;
+    }
+
+    public Indicator(AppUser user) {
+        this();
+        this.id = user.getId();
+    }
+
+    public Indicator(AppUser user, boolean active) {
+        this(user);
+        this.active = active;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Indicator indicator = (Indicator) o;
+        return Objects.equals(id, indicator.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Indicator change: " + this.id + " -> " + this.active;
+    }
+}

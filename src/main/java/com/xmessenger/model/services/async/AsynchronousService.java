@@ -43,12 +43,12 @@ public class AsynchronousService {
         });
     }
 
-    public void switchAppUserIndicator(String username, boolean loggedIn) {
+    public void switchAppUserIndicator(String username, boolean active) {
         this.taskExecutor.execute(new Runnable() {
             @Override
             public void run() {
                 AppUser appUser = userService.lookupUser(username);
-                indicatorService.switchUserIndicator(appUser, loggedIn);
+                indicatorService.switchUserIndicator(appUser, active);
             }
         });
     }

@@ -3,6 +3,7 @@ package com.xmessenger.model.services.core.user;
 import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.services.core.chatter.core.RelationService;
 import com.xmessenger.model.services.core.user.dao.QueryParams;
+import com.xmessenger.model.services.core.user.exceptions.UserNotFoundException;
 import com.xmessenger.model.services.core.user.security.CredentialsService;
 import com.xmessenger.model.services.core.user.security.RawCredentials;
 import com.xmessenger.model.services.core.user.dao.UserDAO;
@@ -80,15 +81,15 @@ public class UserService {
      * @param updatedUser - User record with updated profile info.
      * @return Modified User record;
      * @throws UserException
-     * @throws UserDAO.UserNotFoundException
+     * @throws UserNotFoundException
      */
-    public AppUser changeProfileInfo(@Valid AppUser updatedUser) throws UserException, UserDAO.UserNotFoundException {
+    public AppUser changeProfileInfo(@Valid AppUser updatedUser) throws UserException, UserNotFoundException {
         AppUser persistedUser = this.lookupUser(updatedUser);
         this.mergeProperties(persistedUser, updatedUser);
         return this.userDAO.update(persistedUser);
     }
 
-    public AppUser changePassword(AppUser user, RawCredentials rawCredentials) throws UserException, UserDAO.UserNotFoundException {
+    public AppUser changePassword(AppUser user, RawCredentials rawCredentials) throws UserException, UserNotFoundException {
         UserValidationResult validationResult = this.userValidator.validateOnPasswordChange(user, rawCredentials);
         if (!validationResult.isValid()) {
             throw new UserException(validationResult.getErrorMessage());
@@ -103,7 +104,7 @@ public class UserService {
         try {
             appUser.renewLastLoginDate();
             this.changeProfileInfo(appUser);
-        } catch (UserService.UserException | UserDAO.UserNotFoundException e) {
+        } catch (UserService.UserException | UserNotFoundException e) {
             System.err.println(">>> Could not set 'last_login'. " + e.getMessage());
         }
     }

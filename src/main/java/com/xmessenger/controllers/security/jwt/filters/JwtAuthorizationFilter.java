@@ -2,7 +2,7 @@ package com.xmessenger.controllers.security.jwt.filters;
 
 import com.xmessenger.configs.WebSecurityConfig;
 import com.xmessenger.controllers.security.jwt.core.TokenProvider;
-import com.xmessenger.model.database.entities.Role;
+import com.xmessenger.model.database.entities.enums.Role;
 import com.xmessenger.model.services.async.AsynchronousService;
 import com.xmessenger.model.util.Utility;
 import org.springframework.security.authentication.AuthenticationManager;

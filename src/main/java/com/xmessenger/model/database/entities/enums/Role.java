@@ -1,4 +1,4 @@
-package com.xmessenger.model.database.entities;
+package com.xmessenger.model.database.entities.enums;
 
 import org.springframework.security.core.GrantedAuthority;
 
