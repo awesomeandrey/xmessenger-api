@@ -2,6 +2,7 @@ package com.xmessenger.model.services.core.user.dao;
 
 import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.database.repositories.core.UserRepository;
+import com.xmessenger.model.services.core.user.exceptions.UserNotFoundException;
 import com.xmessenger.model.util.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -62,11 +63,5 @@ public class UserDAO {
 
     public void deleteUser(AppUser userToDelete) {
         this.userRepository.delete(userToDelete);
-    }
-
-    public class UserNotFoundException extends Exception {
-        public UserNotFoundException(Integer i) {
-            super("Could not find user with ID=[" + i + "].");
-        }
     }
 }
