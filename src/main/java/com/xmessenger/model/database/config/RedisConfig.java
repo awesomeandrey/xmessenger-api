@@ -24,19 +24,12 @@ public class RedisConfig {
             if (Utility.isBlank(this.redisUrl) || this.redisUrl.length() < 10) {
                 redisUri = new URI(System.getenv("REDIS_URL"));
             }
-
-            System.out.println(">>> redisURL " + this.redisUrl);
-            System.out.println(">>> redisURI " + redisUri);
-
             JedisConnectionFactory jedisConnFactory = new JedisConnectionFactory();
             jedisConnFactory.setUsePool(true);
             jedisConnFactory.setHostName(redisUri.getHost());
-            System.out.println(">>> " + redisUri.getHost());
             jedisConnFactory.setPort(redisUri.getPort());
-            System.out.println(">>> " + redisUri.getPort());
             jedisConnFactory.setTimeout(Protocol.DEFAULT_TIMEOUT);
             String password = this.getPassword(redisUri);
-            System.out.println(">>> " + password);
             if (Utility.isNotBlank(password)) {
                 jedisConnFactory.setPassword(password);
             }
