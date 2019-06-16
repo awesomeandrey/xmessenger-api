@@ -8,6 +8,10 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.data.redis.serializer.GenericToStringSerializer;
 import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.Protocol;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 
 @Configuration
 @EnableRedisRepositories
@@ -21,30 +25,52 @@ public class RedisConfig {
     @Value("${spring.redis.password:pwd}")
     private String redisPassword;
 
-    @Bean
-    public JedisConnectionFactory jedisConnectionFactory() {
-        JedisPoolConfig poolConfig = new JedisPoolConfig();
-        poolConfig.setMinIdle(1);
-        poolConfig.setMaxIdle(5);
-        poolConfig.setMaxTotal(128);
-        poolConfig.setTestOnBorrow(true);
-        poolConfig.setTestOnReturn(true);
-        poolConfig.setTestWhileIdle(true);
-        JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory(poolConfig);
-        jedisConnectionFactory.setHostName(this.redisHost);
-        jedisConnectionFactory.setPort(this.redisPort);
-        if (!this.redisHost.equals("localhost")) {
-            jedisConnectionFactory.setPassword(this.redisPassword);
-        }
-        jedisConnectionFactory.setUsePool(true);
-        return jedisConnectionFactory;
-    }
+//    @Bean
+//    public JedisConnectionFactory jedisConnectionFactory() {
+//        JedisPoolConfig poolConfig = new JedisPoolConfig();
+//        poolConfig.setMinIdle(1);
+//        poolConfig.setMaxIdle(5);
+//        poolConfig.setTestOnBorrow(true);
+//        poolConfig.setTestOnReturn(true);
+//        poolConfig.setTestWhileIdle(true);
+//        JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory(poolConfig);
+//        jedisConnectionFactory.setHostName(this.redisHost);
+//        jedisConnectionFactory.setPort(this.redisPort);
+//        if (!this.redisHost.equals("localhost")) {
+//            jedisConnectionFactory.setPassword(this.redisPassword);
+//        }
+//        jedisConnectionFactory.setUsePool(true);
+//        return jedisConnectionFactory;
+//    }
+//
+//    @Bean
+//    public RedisTemplate<?, ?> redisTemplate() {
+//        final RedisTemplate<String, Object> template = new RedisTemplate<String, Object>();
+//        template.setConnectionFactory(jedisConnectionFactory());
+//        template.setValueSerializer(new GenericToStringSerializer<>(Object.class));
+//        return template;
+//    }
 
     @Bean
-    public RedisTemplate<?, ?> redisTemplate() {
-        final RedisTemplate<String, Object> template = new RedisTemplate<String, Object>();
-        template.setConnectionFactory(jedisConnectionFactory());
-        template.setValueSerializer(new GenericToStringSerializer<Object>(Object.class));
-        return template;
+    public JedisConnectionFactory jedisConnFactory() {
+
+        try {
+            String redistogoUrl = System.getenv("REDIS_URL");
+            URI redistogoUri = new URI(redistogoUrl);
+
+            JedisConnectionFactory jedisConnFactory = new JedisConnectionFactory();
+
+            jedisConnFactory.setUsePool(true);
+            jedisConnFactory.setHostName(redistogoUri.getHost());
+            jedisConnFactory.setPort(redistogoUri.getPort());
+            jedisConnFactory.setTimeout(Protocol.DEFAULT_TIMEOUT);
+            jedisConnFactory.setPassword(redistogoUri.getUserInfo().split(":", 2)[1]);
+
+            return jedisConnFactory;
+
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
