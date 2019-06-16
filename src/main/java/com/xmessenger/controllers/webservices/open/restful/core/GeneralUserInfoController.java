@@ -8,6 +8,7 @@ import com.xmessenger.model.services.core.user.UserService;
 import com.xmessenger.model.services.core.user.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -38,8 +39,10 @@ public class GeneralUserInfoController {
 //            File file = new ClassPathResource("static/pictures/default-user-picture.png").getFile();
 //            return Files.readAllBytes(file.toPath());
 
-            return Resources.toByteArray(Resources.getResource("static/pictures/default-user-picture.png"));
+//            return Resources.toByteArray(Resources.getResource("static/pictures/default-user-picture.png"));
 
+            File file = ResourceUtils.getFile("classpath:static/pictures/default-user-picture.png");
+            return Files.readAllBytes(file.toPath());
         }
         return appUser.getPicture();
     }
