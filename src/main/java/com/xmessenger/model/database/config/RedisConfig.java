@@ -21,8 +21,8 @@ public class RedisConfig {
     public JedisConnectionFactory jedisConnFactory() {
         try {
             URI redisUri = new URI(this.redisUrl);
-            if (Utility.isBlank(this.redisUrl)) {
-                redisUri = new URI(System.getenv("REDIS_ENV"));
+            if (Utility.isBlank(this.redisUrl) || this.redisUrl.length() < 10) {
+                redisUri = new URI(System.getenv("REDIS_URL"));
             }
 
             System.out.println(">>> redisURL " + this.redisUrl);
