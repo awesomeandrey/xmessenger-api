@@ -1,5 +1,7 @@
 package com.xmessenger.controllers.webservices.open.restful.core;
 
+import com.google.common.base.Charsets;
+import com.google.common.io.Resources;
 import com.xmessenger.controllers.webservices.open.config.OpenResource;
 import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.services.core.user.UserService;
@@ -33,8 +35,11 @@ public class GeneralUserInfoController {
         appUser = this.userService.lookupUser(appUser);
         if (appUser == null) throw new UserNotFoundException(uid);
         if (appUser.getPicture() == null) {
-            File file = new ClassPathResource("static/pictures/default-user-picture.png").getFile();
-            return Files.readAllBytes(file.toPath());
+//            File file = new ClassPathResource("static/pictures/default-user-picture.png").getFile();
+//            return Files.readAllBytes(file.toPath());
+
+            return Resources.toByteArray(Resources.getResource("static/pictures/default-user-picture.png"));
+
         }
         return appUser.getPicture();
     }
