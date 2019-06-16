@@ -1,25 +1,33 @@
 package com.xmessenger.controllers.webservices.open.restful.core;
 
-import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 import com.xmessenger.controllers.webservices.open.config.OpenResource;
 import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.services.core.user.UserService;
 import com.xmessenger.model.services.core.user.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.nio.file.Files;
+import java.io.IOException;
+import java.net.URL;
 
 @OpenResource
 public class GeneralUserInfoController {
     private final UserService userService;
+
+    private static byte[] DEFAULT_USER_PICTURE;
+
+    static {
+        try {
+            URL resourceUrl = Resources.getResource("static/pictures/default-user-picture.png");
+            DEFAULT_USER_PICTURE = Resources.toByteArray(resourceUrl);
+        } catch (IOException ex) {
+            System.err.println(">>> GeneralUserInfoController: " + ex.getMessage());
+        }
+    }
 
     @Autowired
     public GeneralUserInfoController(UserService userService) {
@@ -35,15 +43,7 @@ public class GeneralUserInfoController {
         // Query app user info;
         appUser = this.userService.lookupUser(appUser);
         if (appUser == null) throw new UserNotFoundException(uid);
-        if (appUser.getPicture() == null) {
-//            File file = new ClassPathResource("static/pictures/default-user-picture.png").getFile();
-//            return Files.readAllBytes(file.toPath());
-
-//            return Resources.toByteArray(Resources.getResource("static/pictures/default-user-picture.png"));
-
-            File file = ResourceUtils.getFile("classpath:static/pictures/default-user-picture.png");
-            return Files.readAllBytes(file.toPath());
-        }
+        if (appUser.getPicture() == null) return DEFAULT_USER_PICTURE;
         return appUser.getPicture();
     }
 }
