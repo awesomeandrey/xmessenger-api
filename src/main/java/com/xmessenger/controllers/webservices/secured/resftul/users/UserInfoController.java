@@ -1,7 +1,7 @@
 package com.xmessenger.controllers.webservices.secured.resftul.users;
 
 import com.xmessenger.configs.WebSecurityConfig;
-import com.xmessenger.controllers.security.user.details.ContextUserRetriever;
+import com.xmessenger.controllers.security.user.details.ContextUserHolder;
 import com.xmessenger.model.database.entities.wrappers.Indicator;
 import com.xmessenger.model.database.entities.enums.Role;
 import com.xmessenger.model.database.entities.core.AppUser;
@@ -22,25 +22,25 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(WebSecurityConfig.API_BASE_PATH + "/user")
 public class UserInfoController {
-    private final ContextUserRetriever contextUserRetriever;
+    private final ContextUserHolder contextUserHolder;
     private final UserService userService;
     private final IndicatorService indicatorService;
 
     @Autowired
-    public UserInfoController(ContextUserRetriever contextUserRetriever, UserService userService, IndicatorService indicatorService) {
-        this.contextUserRetriever = contextUserRetriever;
+    public UserInfoController(ContextUserHolder contextUserHolder, UserService userService, IndicatorService indicatorService) {
+        this.contextUserHolder = contextUserHolder;
         this.userService = userService;
         this.indicatorService = indicatorService;
     }
 
     @RequestMapping(value = "/info", method = RequestMethod.GET)
     public AppUser getCurrentUser() {
-        return this.contextUserRetriever.getContextUser();
+        return this.contextUserHolder.getContextUser();
     }
 
     @RequestMapping(value = "/info", method = RequestMethod.PUT)
     public AppUser changeProfileInfo(@Valid @RequestBody AppUser userToUpdate) throws Exception {
-        userToUpdate.setId(this.contextUserRetriever.getContextUserId());
+        userToUpdate.setId(this.contextUserHolder.getContextUserId());
         return this.userService.changeProfileInfo(userToUpdate);
     }
 

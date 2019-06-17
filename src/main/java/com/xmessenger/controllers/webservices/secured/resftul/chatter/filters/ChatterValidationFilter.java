@@ -1,6 +1,6 @@
 package com.xmessenger.controllers.webservices.secured.resftul.chatter.filters;
 
-import com.xmessenger.controllers.security.user.details.ContextUserRetriever;
+import com.xmessenger.controllers.security.user.details.ContextUserHolder;
 import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.services.core.chatter.ChattingService;
 import com.xmessenger.model.services.core.chatter.decorators.Chat;
@@ -15,12 +15,12 @@ import java.io.IOException;
 
 @Component
 public class ChatterValidationFilter implements Filter {
-    private final ContextUserRetriever contextUserRetriever;
+    private final ContextUserHolder contextUserHolder;
     private final ChattingService chattingService;
 
     @Autowired
-    public ChatterValidationFilter(ContextUserRetriever contextUserRetriever, ChattingService chattingService) {
-        this.contextUserRetriever = contextUserRetriever;
+    public ChatterValidationFilter(ContextUserHolder contextUserHolder, ChattingService chattingService) {
+        this.contextUserHolder = contextUserHolder;
         this.chattingService = chattingService;
     }
 
@@ -32,7 +32,7 @@ public class ChatterValidationFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         Integer chatId = this.getChatIdFromRequestUri(request.getRequestURI());
-        AppUser user = this.contextUserRetriever.getContextUser();
+        AppUser user = this.contextUserHolder.getContextUser();
         if (chatId == null || this.chattingService.hasAuthorityToOperateWithChat(user, new Chat(chatId))) {
             filterChain.doFilter(servletRequest, servletResponse);
         } else {

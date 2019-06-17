@@ -1,7 +1,7 @@
 package com.xmessenger.controllers.webservices.secured.resftul.requests;
 
 import com.xmessenger.configs.WebSecurityConfig;
-import com.xmessenger.controllers.security.user.details.ContextUserRetriever;
+import com.xmessenger.controllers.security.user.details.ContextUserHolder;
 import com.xmessenger.model.database.entities.core.Request;
 import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.services.core.chatter.ChattingService;
@@ -20,14 +20,14 @@ import java.util.List;
 @RestController
 @RequestMapping(WebSecurityConfig.API_BASE_PATH + "/requests")
 public class RequestController {
-    private final ContextUserRetriever contextUserRetriever;
+    private final ContextUserHolder contextUserHolder;
     private final ApplicationEventPublisher publisher;
     private final RequestService requestService;
     private final ChattingService chattingService;
 
     @Autowired
-    public RequestController(ContextUserRetriever contextUserRetriever, ApplicationEventPublisher publisher, RequestService requestService, ChattingService chattingService) {
-        this.contextUserRetriever = contextUserRetriever;
+    public RequestController(ContextUserHolder contextUserHolder, ApplicationEventPublisher publisher, RequestService requestService, ChattingService chattingService) {
+        this.contextUserHolder = contextUserHolder;
         this.publisher = publisher;
         this.requestService = requestService;
         this.chattingService = chattingService;
@@ -35,13 +35,13 @@ public class RequestController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public List<Request> getRequests() {
-        AppUser user = this.contextUserRetriever.getContextUser();
+        AppUser user = this.contextUserHolder.getContextUser();
         return this.requestService.retrieveRequests(user);
     }
 
     @RequestMapping(value = "/process", method = RequestMethod.PUT)
     public Request processRequest(@RequestBody Request requestToProcess) throws Exception {
-        AppUser user = this.contextUserRetriever.getContextUser();
+        AppUser user = this.contextUserHolder.getContextUser();
         Request processedRequest = this.requestService.processRequest(requestToProcess, user);
         if (processedRequest.getApproved()) {
             this.chattingService.createChat(processedRequest.getSender(), processedRequest.getRecipient());
@@ -52,7 +52,7 @@ public class RequestController {
 
     @RequestMapping(value = "/send", method = RequestMethod.POST)
     public Request sendRequest(@RequestBody Request requestToCreate) throws Exception {
-        AppUser recipient = requestToCreate.getRecipient(), sender = this.contextUserRetriever.getContextUser();
+        AppUser recipient = requestToCreate.getRecipient(), sender = this.contextUserHolder.getContextUser();
         if (this.chattingService.isFellow(sender, recipient)) {
             throw new RequestService.RequestFlowException("The request recipient is already your friend.");
         }

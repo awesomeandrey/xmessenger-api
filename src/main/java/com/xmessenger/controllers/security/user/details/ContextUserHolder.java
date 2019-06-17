@@ -9,11 +9,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ContextUserRetriever {
+public class ContextUserHolder {
     protected final UserDAO userDAO;
 
     @Autowired
-    public ContextUserRetriever(UserDAO userDAO) {
+    public ContextUserHolder(UserDAO userDAO) {
         this.userDAO = userDAO;
     }
 

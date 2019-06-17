@@ -1,7 +1,7 @@
 package com.xmessenger.controllers.webservices.secured.resftul.admin;
 
 import com.xmessenger.configs.WebSecurityConfig;
-import com.xmessenger.controllers.security.user.details.ContextUserRetriever;
+import com.xmessenger.controllers.security.user.details.ContextUserHolder;
 import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.database.entities.wrappers.Indicator;
 import com.xmessenger.model.services.IndicatorService;
@@ -24,15 +24,15 @@ import java.util.List;
 @PreAuthorize("hasRole('ROLE_ADMIN')")
 @RequestMapping(WebSecurityConfig.ADMIN_API_BASE_PATH)
 public class AdministrationController {
-    private final ContextUserRetriever contextUserRetriever;
+    private final ContextUserHolder contextUserHolder;
     private final UserService userService;
     private final ChattingService chattingService;
     private final RequestService requestService;
     private final IndicatorService indicatorService;
 
     @Autowired
-    public AdministrationController(ContextUserRetriever contextUserRetriever, UserService userService, ChattingService chattingService, RequestService requestService, IndicatorService indicatorService) {
-        this.contextUserRetriever = contextUserRetriever;
+    public AdministrationController(ContextUserHolder contextUserHolder, UserService userService, ChattingService chattingService, RequestService requestService, IndicatorService indicatorService) {
+        this.contextUserHolder = contextUserHolder;
         this.userService = userService;
         this.chattingService = chattingService;
         this.requestService = requestService;
@@ -60,7 +60,7 @@ public class AdministrationController {
         if (appUser == null) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "User was not found.");
             return;
-        } else if (appUser.getId().equals(this.contextUserRetriever.getContextUserId())) {
+        } else if (appUser.getId().equals(this.contextUserHolder.getContextUserId())) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "You cannot delete yourself.");
             return;
         }
