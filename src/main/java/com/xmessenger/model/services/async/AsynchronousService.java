@@ -25,31 +25,20 @@ public class AsynchronousService {
     private IndicatorService indicatorService;
 
     public void renewLastLogin(String username) {
-        this.taskExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                AppUser appUser = userService.lookupUser(username);
-                userService.renewLastLogin(appUser);
-            }
+        this.taskExecutor.execute(() -> {
+            AppUser appUser = userService.lookupUser(username);
+            renewLastLogin(appUser);
         });
     }
 
     public void renewLastLogin(AppUser appUser) {
-        this.taskExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                userService.renewLastLogin(appUser);
-            }
-        });
+        this.taskExecutor.execute(() -> userService.renewLastLogin(appUser));
     }
 
     public void switchAppUserIndicator(String username, boolean active) {
-        this.taskExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                AppUser appUser = userService.lookupUser(username);
-                indicatorService.switchUserIndicator(appUser, active);
-            }
+        this.taskExecutor.execute(() -> {
+            AppUser appUser = userService.lookupUser(username);
+            indicatorService.switchUserIndicator(appUser, active);
         });
     }
 }

@@ -53,10 +53,10 @@ public class GmailAuthenticationController {
         AppUser user = this.userService.lookupUser(gmailAccount.getUsername());
         if (user == null) {
             user = this.gmailAuthenticator.composeUser(gmailAccount, accessToken);
-            this.userService.registerUser(user);
+            return this.userService.registerUser(user);
         } else if (!user.isActive()) {
             user.setActive(true);
-            this.userService.changeProfileInfo(user);
+            return this.userService.changeProfileInfo(user);
         }
         return user;
     }

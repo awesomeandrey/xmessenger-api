@@ -142,10 +142,6 @@ public class AppUser {
         this.external = false;
     }
 
-    public void renewLastLoginDate() {
-        this.lastLogin = new Date();
-    }
-
     @Override
     public String toString() {
         return "AppUser{" +

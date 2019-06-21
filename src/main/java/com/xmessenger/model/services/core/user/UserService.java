@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,7 +72,6 @@ public class UserService {
 
     public AppUser registerUser(@Valid AppUser userToRegister) throws UserException {
         this.credentialsService.encodePassword(userToRegister);
-        userToRegister.renewLastLoginDate();
         return this.userDAO.create(userToRegister);
     }
 
@@ -102,7 +102,7 @@ public class UserService {
 
     public void renewLastLogin(AppUser appUser) {
         try {
-            appUser.renewLastLoginDate();
+            appUser.setLastLogin(new Date());
             this.changeProfileInfo(appUser);
         } catch (UserService.UserException | UserNotFoundException e) {
             System.err.println(">>> Could not set 'last_login'. " + e.getMessage());
