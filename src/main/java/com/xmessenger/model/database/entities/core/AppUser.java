@@ -32,12 +32,12 @@ public class AppUser {
     @Pattern(regexp = "^.{4,}$", message = "Password in wrong")
     private String password;
 
-    @Column(name = "is_logged_externally")
+    @Column(name = "external")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Boolean loggedExternally;
+    private Boolean external;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @Column(name = "is_active")
+    @Column(name = "active")
     private Boolean active;
 
     @Column(name = "role_code")
@@ -103,12 +103,12 @@ public class AppUser {
         this.active = active;
     }
 
-    public Boolean getLoggedExternally() {
-        return this.loggedExternally;
+    public Boolean isExternal() {
+        return this.external;
     }
 
-    public void setLoggedExternally(Boolean loggedExternally) {
-        this.loggedExternally = loggedExternally;
+    public void setExternal(Boolean external) {
+        this.external = external;
     }
 
     public Set<Role> getRoles() {
@@ -139,7 +139,7 @@ public class AppUser {
         this.active = true;
         this.roles = new HashSet<>();
         this.roles.add(Role.ROLE_USER);
-        this.loggedExternally = false;
+        this.external = false;
     }
 
     public void renewLastLoginDate() {
@@ -152,7 +152,7 @@ public class AppUser {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", username='" + username + '\'' +
-                ", loggedExternally=" + loggedExternally +
+                ", external=" + external +
                 ", active=" + active +
                 ", roles=" + roles +
                 ", lastLogin=" + lastLogin +

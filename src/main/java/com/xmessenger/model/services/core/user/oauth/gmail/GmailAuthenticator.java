@@ -53,7 +53,7 @@ public class GmailAuthenticator {
                     .withPassword(gmailAccount.getPassword(String.valueOf(payloadMap.get("id"))))
                     .withEmail(gmailAccount.getEmailAddress())
                     .withPicture(this.requestUserPicture(new URL(String.valueOf(payloadMap.get("picture")))))
-                    .withLoggedExternally(true)
+                    .withExternal(true)
                     .withActive(true)
                     .build();
         } else {

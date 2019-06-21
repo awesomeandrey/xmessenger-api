@@ -8,7 +8,7 @@ public class UserBuilder {
     private String password;
     private String email;
     private byte[] picture;
-    private Boolean loggedExternally;
+    private Boolean external;
     private Boolean active;
 
     public void setName(String name) {
@@ -33,7 +33,7 @@ public class UserBuilder {
 
     public UserBuilder() {
         this.active = true;
-        this.loggedExternally = false;
+        this.external = false;
     }
 
     public UserBuilder(String name) {
@@ -61,8 +61,8 @@ public class UserBuilder {
         return this;
     }
 
-    public UserBuilder withLoggedExternally(boolean loggedExternally) {
-        this.loggedExternally = loggedExternally;
+    public UserBuilder withExternal(boolean external) {
+        this.external = external;
         return this;
     }
 
@@ -78,7 +78,7 @@ public class UserBuilder {
         user.setPassword(this.password);
         user.setEmail(this.email);
         user.setPicture(this.picture);
-        user.setLoggedExternally(this.loggedExternally);
+        user.setExternal(this.external);
         user.setActive(this.active);
         return user;
     }
