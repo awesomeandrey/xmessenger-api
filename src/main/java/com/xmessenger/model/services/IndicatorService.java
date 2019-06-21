@@ -23,7 +23,7 @@ public class IndicatorService {
         this.indicatorRepository = indicatorRepository;
     }
 
-    public void switchUserIndicator(AppUser appUser, boolean active) {
+    public void switchIndicator(AppUser appUser, boolean active) {
         Indicator indicator = new Indicator(appUser, active);
         this.indicatorRepository.save(indicator);
         this.publisher.publishEvent(new AfterSaveEvent(indicator));

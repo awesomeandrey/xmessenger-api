@@ -74,6 +74,6 @@ public class UserInfoController {
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
     public void logout() {
         AppUser appUser = this.getCurrentUser();
-        this.indicatorService.switchUserIndicator(appUser, false);
+        this.indicatorService.switchIndicator(appUser, false);
     }
 }

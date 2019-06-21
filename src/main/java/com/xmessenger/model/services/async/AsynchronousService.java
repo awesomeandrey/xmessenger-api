@@ -38,7 +38,7 @@ public class AsynchronousService {
     public void switchAppUserIndicator(String username, boolean active) {
         this.taskExecutor.execute(() -> {
             AppUser appUser = userService.lookupUser(username);
-            indicatorService.switchUserIndicator(appUser, active);
+            indicatorService.switchIndicator(appUser, active);
         });
     }
 }
