@@ -3,7 +3,7 @@ package com.xmessenger.controllers.webservices.secured.resftul.chatter.core;
 import com.xmessenger.configs.WebSecurityConfig;
 import com.xmessenger.controllers.security.user.details.ContextUserHolder;
 import com.xmessenger.model.services.core.chatter.ChattingService;
-import com.xmessenger.model.services.core.chatter.decorators.Chat;
+import com.xmessenger.model.database.entities.decorators.Chat;
 import com.xmessenger.model.database.entities.core.Message;
 import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.controllers.webservices.open.websockets.events.ChatClearEvent;

@@ -1,4 +1,4 @@
-package com.xmessenger.model.database.entities.wrappers;
+package com.xmessenger.model.database.entities.decorators;
 
 import com.xmessenger.model.database.entities.core.AppUser;
 import org.springframework.data.redis.core.RedisHash;

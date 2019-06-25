@@ -2,10 +2,10 @@ package com.xmessenger.controllers.webservices.secured.resftul.users;
 
 import com.xmessenger.configs.WebSecurityConfig;
 import com.xmessenger.controllers.security.user.details.ContextUserHolder;
-import com.xmessenger.model.database.entities.wrappers.Indicator;
+import com.xmessenger.model.database.entities.decorators.Indicator;
 import com.xmessenger.model.database.entities.enums.Role;
 import com.xmessenger.model.database.entities.core.AppUser;
-import com.xmessenger.model.services.IndicatorService;
+import com.xmessenger.model.services.core.IndicatorService;
 import com.xmessenger.model.services.core.user.UserService;
 import com.xmessenger.model.services.core.user.dao.QueryParams;
 import com.xmessenger.model.services.core.user.security.RawCredentials;

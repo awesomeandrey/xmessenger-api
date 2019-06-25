@@ -1,6 +1,6 @@
 package com.xmessenger.controllers.webservices.open.websockets.handlers;
 
-import com.xmessenger.model.services.core.chatter.decorators.Chat;
+import com.xmessenger.model.database.entities.decorators.Chat;
 import com.xmessenger.controllers.webservices.open.websockets.events.ChatDeleteEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;

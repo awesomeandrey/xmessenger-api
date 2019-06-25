@@ -3,7 +3,7 @@ package com.xmessenger.model.services.core.chatter;
 import com.xmessenger.model.database.entities.core.Message;
 import com.xmessenger.model.database.entities.core.Relation;
 import com.xmessenger.model.database.entities.core.AppUser;
-import com.xmessenger.model.services.core.chatter.decorators.Chat;
+import com.xmessenger.model.database.entities.decorators.Chat;
 import com.xmessenger.model.services.core.chatter.core.MessageService;
 import com.xmessenger.model.services.core.chatter.core.RelationService;
 import org.springframework.beans.factory.annotation.Autowired;
