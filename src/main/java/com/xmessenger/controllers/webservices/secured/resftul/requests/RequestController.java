@@ -42,19 +42,25 @@ public class RequestController {
     @RequestMapping(value = "/process", method = RequestMethod.PUT)
     public Request processRequest(@RequestBody Request requestToProcess) throws Exception {
         AppUser user = this.contextUserHolder.getContextUser();
-        Request processedRequest = this.requestService.processRequest(requestToProcess, user);
-        if (processedRequest.getApproved()) {
-            this.chattingService.createChat(processedRequest.getSender(), processedRequest.getRecipient());
+        Request foundRequest = this.requestService.lookupRequest(requestToProcess);
+        if (foundRequest == null) {
+            throw new IllegalArgumentException("Friendship request was not found.");
+        } else if (!user.equals(foundRequest.getRecipient())) {
+            throw new IllegalArgumentException("Request recipient didn't pass validity check.");
         }
-        this.publisher.publishEvent(new AfterDeleteEvent(processedRequest));
-        return processedRequest;
+        if (requestToProcess.getApproved()) {
+            this.chattingService.createChat(foundRequest.getSender(), foundRequest.getRecipient());
+        }
+        this.requestService.deleteRequest(foundRequest);
+        this.publisher.publishEvent(new AfterDeleteEvent(foundRequest));
+        return foundRequest;
     }
 
     @RequestMapping(value = "/send", method = RequestMethod.POST)
-    public Request sendRequest(@RequestBody Request requestToCreate) throws Exception {
+    public Request sendRequest(@RequestBody Request requestToCreate) {
         AppUser recipient = requestToCreate.getRecipient(), sender = this.contextUserHolder.getContextUser();
         if (this.chattingService.isFellow(sender, recipient)) {
-            throw new RequestService.RequestFlowException("The request recipient is already your friend.");
+            throw new IllegalArgumentException("The request recipient is already your friend.");
         }
         Request request = this.requestService.createRequest(sender, recipient);
         this.publisher.publishEvent(new AfterCreateEvent(request));
