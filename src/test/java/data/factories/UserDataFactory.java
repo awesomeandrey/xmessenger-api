@@ -53,6 +53,7 @@ public class UserDataFactory {
         RawCredentials rawCredentials = new RawCredentials();
         rawCredentials.setUsername(user.getUsername());
         rawCredentials.setPassword(user.getPassword());
+        rawCredentials.setNewPassword(user.getPassword().concat("_new"));
         return rawCredentials;
     }
 

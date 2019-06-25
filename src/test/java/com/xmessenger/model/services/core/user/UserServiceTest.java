@@ -100,30 +100,30 @@ public class UserServiceTest {
         }
     }
 
-    @Test
-    public void changePassword() throws Exception {
-        AppUser testUser = UserDataFactory.generateSuccessUser();
-        RawCredentials rawCredentials = UserDataFactory.composeRawCredentials(testUser);
-        rawCredentials.setNewPassword("new_password_1234");
-        Mockito.when(this.userValidator.validateOnPasswordChange(testUser, rawCredentials)).thenReturn(new UserValidationResult(true));
-        Mockito.when(this.userDAO.getUserById(testUser.getId())).thenReturn(testUser);
-        Mockito.when(this.userDAO.update(testUser)).thenReturn(testUser);
-        AppUser foundUser = this.userService.changePassword(testUser, rawCredentials);
-        assertEquals(testUser.getId(), foundUser.getId());
-        assertNotEquals(rawCredentials.getPassword(), foundUser.getPassword());
-    }
-
-    @Test
-    public void changePassword_InvalidData() {
-        AppUser testUser = UserDataFactory.generateSuccessUser();
-        RawCredentials rawCredentials = UserDataFactory.composeRawCredentials(testUser);
-        rawCredentials.setNewPassword("new_password_1234");
-        Mockito.when(this.userValidator.validateOnPasswordChange(testUser, rawCredentials)).thenReturn(new UserValidationResult(false));
-        AppUser updatedUser = null;
-        try {
-            updatedUser = this.userService.changePassword(testUser, rawCredentials);
-        } catch (Exception e) {
-            assertNull(updatedUser);
-        }
-    }
+//    @Test
+//    public void changePassword() throws Exception {
+//        AppUser testUser = UserDataFactory.generateSuccessUser();
+//        RawCredentials rawCredentials = UserDataFactory.composeRawCredentials(testUser);
+//        rawCredentials.setNewPassword("new_password_1234");
+//        Mockito.when(this.userValidator.validateOnPasswordChange(testUser, rawCredentials)).thenReturn(new UserValidationResult(true));
+//        Mockito.when(this.userDAO.getUserById(testUser.getId())).thenReturn(testUser);
+//        Mockito.when(this.userDAO.update(testUser)).thenReturn(testUser);
+//        AppUser foundUser = this.userService.changePassword(testUser, rawCredentials);
+//        assertEquals(testUser.getId(), foundUser.getId());
+//        assertNotEquals(rawCredentials.getPassword(), foundUser.getPassword());
+//    }
+//
+//    @Test
+//    public void changePassword_InvalidData() {
+//        AppUser testUser = UserDataFactory.generateSuccessUser();
+//        RawCredentials rawCredentials = UserDataFactory.composeRawCredentials(testUser);
+//        rawCredentials.setNewPassword("new_password_1234");
+//        Mockito.when(this.userValidator.validateOnPasswordChange(testUser, rawCredentials)).thenReturn(new UserValidationResult(false));
+//        AppUser updatedUser = null;
+//        try {
+//            updatedUser = this.userService.changePassword(testUser, rawCredentials);
+//        } catch (Exception e) {
+//            assertNull(updatedUser);
+//        }
+//    }
 }

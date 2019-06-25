@@ -5,16 +5,12 @@ import com.xmessenger.model.services.core.chatter.RelationService;
 import com.xmessenger.model.services.core.user.dao.QueryParams;
 import com.xmessenger.model.services.core.user.exceptions.UserNotFoundException;
 import com.xmessenger.model.services.core.security.CredentialsService;
-import com.xmessenger.model.services.core.security.RawCredentials;
 import com.xmessenger.model.services.core.user.dao.UserDAO;
-import com.xmessenger.model.services.core.user.validator.UserValidationResult;
-import com.xmessenger.model.services.core.user.validator.UserValidator;
 import com.xmessenger.model.util.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,14 +18,12 @@ import java.util.Map;
 @Service
 public class UserService {
     private final UserDAO userDAO;
-    private final UserValidator userValidator;
     private final CredentialsService credentialsService;
     private final RelationService relationService;
 
     @Autowired
-    public UserService(UserDAO userDAO, UserValidator userValidator, CredentialsService credentialsService, RelationService relationService) {
+    public UserService(UserDAO userDAO, CredentialsService credentialsService, RelationService relationService) {
         this.userDAO = userDAO;
-        this.userValidator = userValidator;
         this.credentialsService = credentialsService;
         this.relationService = relationService;
     }
@@ -74,25 +68,10 @@ public class UserService {
         return this.userDAO.update(persistedUser);
     }
 
-    public AppUser changePassword(AppUser user, RawCredentials rawCredentials) throws UserNotFoundException {
-        UserValidationResult validationResult = this.userValidator.validateOnPasswordChange(user, rawCredentials);
-        if (!validationResult.isValid()) {
-            throw new IllegalArgumentException(validationResult.getErrorMessage());
-        }
-        AppUser persistedUser = this.lookupUser(user);
-        String encodedPassword = this.credentialsService.encodePassword(rawCredentials.getNewPassword());
-        persistedUser.setPassword(encodedPassword);
-        return this.userDAO.update(persistedUser);
-    }
-
-    public RawCredentials resetPassword(AppUser appUser) throws UserNotFoundException {
-        String newRawPassword = this.credentialsService.generateRandomPassword(8);
+    public AppUser changePassword(AppUser appUser, String newRawPassword) throws UserNotFoundException {
         String encodedPassword = this.credentialsService.encodePassword(newRawPassword);
         appUser.setPassword(encodedPassword);
-        this.userDAO.update(appUser);
-        RawCredentials rawCredentials = new RawCredentials(appUser);
-        rawCredentials.setNewPassword(newRawPassword);
-        return rawCredentials;
+        return this.userDAO.update(appUser);
     }
 
     public void deleteUser(AppUser appUser) {

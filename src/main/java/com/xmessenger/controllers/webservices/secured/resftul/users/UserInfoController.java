@@ -9,12 +9,13 @@ import com.xmessenger.model.services.core.user.indicators.IndicatorService;
 import com.xmessenger.model.services.core.user.UserService;
 import com.xmessenger.model.services.core.user.dao.QueryParams;
 import com.xmessenger.model.services.core.security.RawCredentials;
+import com.xmessenger.model.services.core.user.validator.UserValidationResult;
+import com.xmessenger.model.services.core.user.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -24,12 +25,14 @@ import java.util.stream.Collectors;
 public class UserInfoController {
     private final ContextUserHolder contextUserHolder;
     private final UserService userService;
+    private final UserValidator userValidator;
     private final IndicatorService indicatorService;
 
     @Autowired
-    public UserInfoController(ContextUserHolder contextUserHolder, UserService userService, IndicatorService indicatorService) {
+    public UserInfoController(ContextUserHolder contextUserHolder, UserService userService, UserValidator userValidator, IndicatorService indicatorService) {
         this.contextUserHolder = contextUserHolder;
         this.userService = userService;
+        this.userValidator = userValidator;
         this.indicatorService = indicatorService;
     }
 
@@ -39,7 +42,7 @@ public class UserInfoController {
     }
 
     @RequestMapping(value = "/info", method = RequestMethod.PUT)
-    public AppUser changeProfileInfo(@Valid @RequestBody AppUser userToUpdate) throws Exception {
+    public AppUser changeProfileInfo(@Valid @RequestBody AppUser userToUpdate) {
         userToUpdate.setId(this.contextUserHolder.getContextUserId());
         return this.userService.changeProfileInfo(userToUpdate);
     }
@@ -54,7 +57,7 @@ public class UserInfoController {
     }
 
     @RequestMapping(value = "/indicators", method = RequestMethod.GET)
-    public Collection<Indicator> getFellowsIndicators() {
+    public List<Indicator> getFellowsIndicators() {
         Map<Integer, AppUser> fellowsMap = this.userService.findFellows(this.getCurrentUser());
         return this.indicatorService.getIndicators(fellowsMap);
     }
@@ -67,8 +70,14 @@ public class UserInfoController {
     }
 
     @RequestMapping(value = "/password", method = RequestMethod.PUT)
-    public AppUser changePassword(@RequestBody RawCredentials rawCredentials) throws Exception {
-        return this.userService.changePassword(this.getCurrentUser(), rawCredentials);
+    public AppUser changePassword(@RequestBody RawCredentials rawCredentials) {
+        AppUser runningUser = this.getCurrentUser();
+        UserValidationResult validationResult = this.userValidator.validateOnPasswordChange(runningUser, rawCredentials);
+        if (validationResult.isValid()) {
+            return this.userService.changePassword(runningUser, rawCredentials.getNewPassword());
+        } else {
+            throw new IllegalArgumentException(validationResult.getErrorMessage());
+        }
     }
 
     @RequestMapping(value = "/logout", method = RequestMethod.POST)

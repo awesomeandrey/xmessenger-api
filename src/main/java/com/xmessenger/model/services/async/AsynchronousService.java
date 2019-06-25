@@ -30,7 +30,7 @@ public class AsynchronousService {
     public void renewLastLogin(String username) {
         this.taskExecutor.execute(() -> {
             AppUser appUser = this.userService.lookupUser(username);
-            renewLastLogin(appUser);
+            this.renewLastLogin(appUser);
         });
     }
 

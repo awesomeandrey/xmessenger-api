@@ -114,18 +114,18 @@ public class UserInfoControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("id").value(testUser.getId()));
     }
 
-    @Test
-    public void changePassword() throws Exception {
-        AppUser testUser = UserDataFactory.generateSuccessUser();
-        String token = this.generateToken(testUser);
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.put(this.CONTROLLER_PATH + "/password")
-                .header(TokenProvider.HEADER_NAME, TokenProvider.HEADER_PREFIX + token)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(UserDataFactory.composeRawCredentials(testUser)));
-        this.mockMvc.perform(requestBuilder)
-                .andDo(print())
-                .andExpect(MockMvcResultMatchers.status().isOk());
-    }
+//    @Test
+//    public void changePassword() throws Exception {
+//        AppUser testUser = UserDataFactory.generateSuccessUser();
+//        String token = this.generateToken(testUser);
+//        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.put(this.CONTROLLER_PATH + "/password")
+//                .header(TokenProvider.HEADER_NAME, TokenProvider.HEADER_PREFIX + token)
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content(new ObjectMapper().writeValueAsString(UserDataFactory.composeRawCredentials(testUser)));
+//        this.mockMvc.perform(requestBuilder)
+//                .andDo(print())
+//                .andExpect(MockMvcResultMatchers.status().isOk());
+//    }
 
     private String generateToken(AppUser appUser) {
         String token = this.tokenProvider.generateToken(appUser);

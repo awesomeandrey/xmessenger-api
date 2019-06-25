@@ -73,7 +73,8 @@ public class AdministrationController {
     public RawCredentials resetUserPassword(@RequestBody AppUser appUser, HttpServletResponse response) throws IOException {
         try {
             appUser = this.performPrimaryValidation(appUser);
-            return this.userService.resetPassword(appUser);
+//            return this.userService.resetPassword(appUser);
+            return null;
         } catch (IllegalArgumentException ex) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
             return null;
