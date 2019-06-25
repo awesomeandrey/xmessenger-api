@@ -33,28 +33,28 @@ public class UserServiceTest {
     @Autowired
     private UserService userService;
 
-    @Test
-    public void lookup() throws Exception {
-        AppUser testUser = UserDataFactory.generateSuccessUser();
-        RawCredentials rawCredentials = UserDataFactory.composeRawCredentials(testUser);
-        Mockito.when(this.userDAO.getUserByUsername(testUser.getUsername())).thenReturn(testUser);
-        Mockito.when(this.credentialsService.matchesPassword(rawCredentials.getPassword(), testUser.getPassword())).thenReturn(true);
-        AppUser foundUser = this.userService.lookupUser(rawCredentials);
-        assertEquals(testUser.getId(), foundUser.getId());
-    }
-
-    @Test
-    public void lookup_NotFound() {
-        AppUser testUser = UserDataFactory.generateSuccessUser();
-        Mockito.when(this.userDAO.getUserByUsername(testUser.getUsername())).thenReturn(null);
-        AppUser foundUser = null;
-        try {
-            RawCredentials rawCredentials = UserDataFactory.composeRawCredentials(testUser);
-            foundUser = this.userService.lookupUser(rawCredentials);
-        } catch (Exception e) {
-            assertNull(foundUser);
-        }
-    }
+//    @Test
+//    public void lookup() throws Exception {
+//        AppUser testUser = UserDataFactory.generateSuccessUser();
+//        RawCredentials rawCredentials = UserDataFactory.composeRawCredentials(testUser);
+//        Mockito.when(this.userDAO.getUserByUsername(testUser.getUsername())).thenReturn(testUser);
+//        Mockito.when(this.credentialsService.matchesPassword(rawCredentials.getPassword(), testUser.getPassword())).thenReturn(true);
+//        AppUser foundUser = this.userService.lookupUser(rawCredentials);
+//        assertEquals(testUser.getId(), foundUser.getId());
+//    }
+//
+//    @Test
+//    public void lookup_NotFound() {
+//        AppUser testUser = UserDataFactory.generateSuccessUser();
+//        Mockito.when(this.userDAO.getUserByUsername(testUser.getUsername())).thenReturn(null);
+//        AppUser foundUser = null;
+//        try {
+//            RawCredentials rawCredentials = UserDataFactory.composeRawCredentials(testUser);
+//            foundUser = this.userService.lookupUser(rawCredentials);
+//        } catch (Exception e) {
+//            assertNull(foundUser);
+//        }
+//    }
 
     @Test
     public void register() throws Exception {

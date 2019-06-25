@@ -1,4 +1,4 @@
-package com.xmessenger.model.services.core;
+package com.xmessenger.model.services.core.user.indicators;
 
 import com.xmessenger.model.database.entities.decorators.Indicator;
 import com.xmessenger.model.database.entities.core.AppUser;

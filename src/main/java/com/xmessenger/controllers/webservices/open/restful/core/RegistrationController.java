@@ -22,7 +22,7 @@ public class RegistrationController {
     }
 
     @RequestMapping(value = "/sign-up", method = RequestMethod.POST)
-    public AppUser signUp(@RequestBody AppUser user) throws UserService.UserException {
+    public AppUser signUp(@RequestBody AppUser user) {
         return this.userService.registerUser(user);
     }
 

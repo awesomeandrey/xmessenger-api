@@ -4,7 +4,7 @@ import com.xmessenger.configs.WebSecurityConfig;
 import com.xmessenger.controllers.security.user.details.ContextUserHolder;
 import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.database.entities.decorators.Indicator;
-import com.xmessenger.model.services.core.IndicatorService;
+import com.xmessenger.model.services.core.user.indicators.IndicatorService;
 import com.xmessenger.model.services.core.chatter.ChattingService;
 import com.xmessenger.model.services.core.request.RequestService;
 import com.xmessenger.model.services.core.user.UserService;

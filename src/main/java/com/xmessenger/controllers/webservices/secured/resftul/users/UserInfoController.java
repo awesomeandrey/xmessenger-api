@@ -5,7 +5,7 @@ import com.xmessenger.controllers.security.user.details.ContextUserHolder;
 import com.xmessenger.model.database.entities.decorators.Indicator;
 import com.xmessenger.model.database.entities.enums.Role;
 import com.xmessenger.model.database.entities.core.AppUser;
-import com.xmessenger.model.services.core.IndicatorService;
+import com.xmessenger.model.services.core.user.indicators.IndicatorService;
 import com.xmessenger.model.services.core.user.UserService;
 import com.xmessenger.model.services.core.user.dao.QueryParams;
 import com.xmessenger.model.services.core.security.RawCredentials;
@@ -49,7 +49,7 @@ public class UserInfoController {
         QueryParams params = new QueryParams();
         params.setNameOrLogin(nameOrLogin);
         params.setSearchByLogin(searchByLogin);
-        return this.userService.lookupUsers(params).stream()
+        return this.userService.search(params).stream()
                 .filter(appUser -> !appUser.getRoles().contains(Role.ROLE_ADMIN)).collect(Collectors.toList());
     }
 

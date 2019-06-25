@@ -1,6 +1,6 @@
 package com.xmessenger.model.services.scheduled;
 
-import com.xmessenger.model.services.core.IndicatorService;
+import com.xmessenger.model.services.core.user.indicators.IndicatorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;

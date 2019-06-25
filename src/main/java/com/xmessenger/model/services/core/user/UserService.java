@@ -34,14 +34,6 @@ public class UserService {
         this.relationService = relationService;
     }
 
-    public AppUser lookupUser(RawCredentials rawCredentials) throws UserException {
-        AppUser foundUser = this.lookupUser(rawCredentials.getUsername());
-        if (foundUser == null || !foundUser.isActive() || !this.credentialsService.matchesPassword(rawCredentials.getPassword(), foundUser.getPassword())) {
-            throw new UserException("User with such credentials was not found.");
-        }
-        return foundUser;
-    }
-
     public AppUser lookupUser(String username) {
         return this.userDAO.getUserByUsername(username);
     }
@@ -57,7 +49,7 @@ public class UserService {
         return foundUser;
     }
 
-    public List<AppUser> lookupUsers(QueryParams queryParams) {
+    public List<AppUser> search(QueryParams queryParams) {
         return this.userDAO.search(queryParams);
     }
 
@@ -82,10 +74,10 @@ public class UserService {
         return this.userDAO.update(persistedUser);
     }
 
-    public AppUser changePassword(AppUser user, RawCredentials rawCredentials) throws UserException, UserNotFoundException {
+    public AppUser changePassword(AppUser user, RawCredentials rawCredentials) throws UserNotFoundException {
         UserValidationResult validationResult = this.userValidator.validateOnPasswordChange(user, rawCredentials);
         if (!validationResult.isValid()) {
-            throw new UserException(validationResult.getErrorMessage());
+            throw new IllegalArgumentException(validationResult.getErrorMessage());
         }
         AppUser persistedUser = this.lookupUser(user);
         String encodedPassword = this.credentialsService.encodePassword(rawCredentials.getNewPassword());
@@ -103,29 +95,12 @@ public class UserService {
         return rawCredentials;
     }
 
-    public void renewLastLogin(AppUser appUser) {
-        try {
-            appUser.setLastLogin(new Date());
-            this.changeProfileInfo(appUser);
-        } catch (UserNotFoundException e) {
-            System.err.println(">>> Could not set 'last_login'. " + e.getMessage());
-        }
-    }
-
     public void deleteUser(AppUser appUser) {
         this.userDAO.deleteUser(appUser);
     }
 
     //******************************************************************************************************************
 
-    /**
-     * Allowed fields to modify: Name, Picture, IsActive, Email.
-     *
-     * @param updatedUser - User record with updated profile info.
-     * @return Modified User record;
-     * @throws UserException
-     * @throws UserNotFoundException
-     */
     private void mergeProperties(AppUser persistedUser, AppUser updatedUser) {
         if (Utility.isNotBlank(updatedUser.getName())) {
             persistedUser.setName(updatedUser.getName());
@@ -141,12 +116,6 @@ public class UserService {
         }
         if (Utility.isNotBlank(updatedUser.getEmail())) {
             persistedUser.setEmail(updatedUser.getEmail());
-        }
-    }
-
-    public class UserException extends Exception {
-        public UserException(String m) {
-            super(m);
         }
     }
 }
