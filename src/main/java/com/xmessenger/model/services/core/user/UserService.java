@@ -3,7 +3,6 @@ package com.xmessenger.model.services.core.user;
 import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.services.core.chatter.RelationService;
 import com.xmessenger.model.services.core.user.dao.QueryParams;
-import com.xmessenger.model.services.core.user.exceptions.UserNotFoundException;
 import com.xmessenger.model.services.core.security.CredentialsService;
 import com.xmessenger.model.services.core.user.dao.UserDAO;
 import com.xmessenger.model.util.Utility;
@@ -62,13 +61,13 @@ public class UserService {
         return this.userDAO.create(userToRegister);
     }
 
-    public AppUser changeProfileInfo(@Valid AppUser updatedUser) throws UserNotFoundException {
+    public AppUser changeProfileInfo(@Valid AppUser updatedUser) {
         AppUser persistedUser = this.lookupUser(updatedUser);
         this.mergeProperties(persistedUser, updatedUser);
         return this.userDAO.update(persistedUser);
     }
 
-    public AppUser changePassword(AppUser appUser, String newRawPassword) throws UserNotFoundException {
+    public AppUser changePassword(AppUser appUser, String newRawPassword) {
         String encodedPassword = this.credentialsService.encodePassword(newRawPassword);
         appUser.setPassword(encodedPassword);
         return this.userDAO.update(appUser);

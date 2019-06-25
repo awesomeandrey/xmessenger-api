@@ -142,6 +142,11 @@ public class AppUser {
         this.external = false;
     }
 
+    public AppUser(Integer uid) {
+        this();
+        this.id = uid;
+    }
+
     @Override
     public String toString() {
         return "AppUser{" +

@@ -2,7 +2,6 @@ package com.xmessenger.model.services.core.user.dao;
 
 import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.database.repositories.core.UserRepository;
-import com.xmessenger.model.services.core.user.exceptions.UserNotFoundException;
 import com.xmessenger.model.util.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,15 +55,21 @@ public class UserDAO {
         }
     }
 
-    public byte[] getPicture(Integer uid) throws UserNotFoundException {
-        AppUser user = this.userRepository.findOne(uid);
-        if (user == null) {
-            throw new UserNotFoundException(uid);
-        }
-        return user.getPicture();
-    }
-
     public void deleteUser(AppUser userToDelete) {
         this.userRepository.delete(userToDelete);
+    }
+
+    public static class UserNotFoundException extends IllegalArgumentException {
+        public UserNotFoundException() {
+            this(0);
+        }
+
+        public UserNotFoundException(Integer uid) {
+            super(String.format("User with ID=%d was not found.", uid));
+        }
+
+        public UserNotFoundException(AppUser appUser) {
+            this(appUser.getId());
+        }
     }
 }

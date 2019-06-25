@@ -4,11 +4,12 @@ import com.xmessenger.configs.WebSecurityConfig;
 import com.xmessenger.controllers.security.user.details.ContextUserHolder;
 import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.database.entities.decorators.Indicator;
+import com.xmessenger.model.services.core.security.CredentialsService;
+import com.xmessenger.model.services.core.user.dao.UserDAO;
 import com.xmessenger.model.services.core.user.indicators.IndicatorService;
 import com.xmessenger.model.services.core.chatter.ChattingService;
 import com.xmessenger.model.services.core.request.RequestService;
 import com.xmessenger.model.services.core.user.UserService;
-import com.xmessenger.model.services.core.user.exceptions.UserNotFoundException;
 import com.xmessenger.model.services.core.security.RawCredentials;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -31,14 +32,16 @@ public class AdministrationController {
     private final ChattingService chattingService;
     private final RequestService requestService;
     private final IndicatorService indicatorService;
+    private final CredentialsService credentialsService;
 
     @Autowired
-    public AdministrationController(ContextUserHolder contextUserHolder, UserService userService, ChattingService chattingService, RequestService requestService, IndicatorService indicatorService) {
+    public AdministrationController(ContextUserHolder contextUserHolder, UserService userService, ChattingService chattingService, RequestService requestService, IndicatorService indicatorService, CredentialsService credentialsService) {
         this.contextUserHolder = contextUserHolder;
         this.userService = userService;
         this.chattingService = chattingService;
         this.requestService = requestService;
         this.indicatorService = indicatorService;
+        this.credentialsService = credentialsService;
     }
 
     @RequestMapping(value = "/indicators", method = RequestMethod.GET)
@@ -73,8 +76,11 @@ public class AdministrationController {
     public RawCredentials resetUserPassword(@RequestBody AppUser appUser, HttpServletResponse response) throws IOException {
         try {
             appUser = this.performPrimaryValidation(appUser);
-//            return this.userService.resetPassword(appUser);
-            return null;
+            String randomPassword = this.credentialsService.generateRandomPassword(8);
+            this.userService.changePassword(appUser, randomPassword);
+            RawCredentials rawCredentials = new RawCredentials(appUser);
+            rawCredentials.setNewPassword(randomPassword);
+            return rawCredentials;
         } catch (IllegalArgumentException ex) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
             return null;
@@ -84,7 +90,7 @@ public class AdministrationController {
     private AppUser performPrimaryValidation(AppUser appUser) throws IllegalArgumentException {
         appUser = this.userService.lookupUser(appUser);
         if (appUser == null) {
-            throw new UserNotFoundException(appUser);
+            throw new UserDAO.UserNotFoundException();
         } else if (appUser.getId().equals(this.contextUserHolder.getContextUserId())) {
             throw new IllegalArgumentException("You cannot delete yourself.");
         }

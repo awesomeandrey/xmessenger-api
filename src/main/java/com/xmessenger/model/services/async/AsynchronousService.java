@@ -1,7 +1,6 @@
 package com.xmessenger.model.services.async;
 
 import com.xmessenger.model.database.entities.core.AppUser;
-import com.xmessenger.model.services.core.user.exceptions.UserNotFoundException;
 import com.xmessenger.model.services.core.user.indicators.IndicatorService;
 import com.xmessenger.model.services.core.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
