@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.xmessenger.configs.WebSecurityConfig;
 import com.xmessenger.controllers.security.jwt.core.TokenProvider;
 import com.xmessenger.model.services.async.AsynchronousService;
-import com.xmessenger.model.services.core.user.security.RawCredentials;
+import com.xmessenger.model.services.core.security.RawCredentials;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

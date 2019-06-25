@@ -2,8 +2,8 @@ package com.xmessenger.model.services.core.user;
 
 import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.services.core.chatter.RelationService;
-import com.xmessenger.model.services.core.user.security.CredentialsService;
-import com.xmessenger.model.services.core.user.security.RawCredentials;
+import com.xmessenger.model.services.core.security.CredentialsService;
+import com.xmessenger.model.services.core.security.RawCredentials;
 import com.xmessenger.model.services.core.user.dao.UserDAO;
 import com.xmessenger.model.services.core.user.validator.UserValidationResult;
 import com.xmessenger.model.services.core.user.validator.UserValidator;
@@ -38,7 +38,7 @@ public class UserServiceTest {
         AppUser testUser = UserDataFactory.generateSuccessUser();
         RawCredentials rawCredentials = UserDataFactory.composeRawCredentials(testUser);
         Mockito.when(this.userDAO.getUserByUsername(testUser.getUsername())).thenReturn(testUser);
-        Mockito.when(this.credentialsService.matchesPassword(rawCredentials.getPassword(), testUser)).thenReturn(true);
+        Mockito.when(this.credentialsService.matchesPassword(rawCredentials.getPassword(), testUser.getPassword())).thenReturn(true);
         AppUser foundUser = this.userService.lookupUser(rawCredentials);
         assertEquals(testUser.getId(), foundUser.getId());
     }

@@ -1,8 +1,8 @@
 package com.xmessenger.model.services.core.user.validator;
 
 import com.xmessenger.model.database.entities.core.AppUser;
-import com.xmessenger.model.services.core.user.security.CredentialsService;
-import com.xmessenger.model.services.core.user.security.RawCredentials;
+import com.xmessenger.model.services.core.security.CredentialsService;
+import com.xmessenger.model.services.core.security.RawCredentials;
 import com.xmessenger.model.services.core.user.dao.UserDAO;
 import com.xmessenger.model.util.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +24,10 @@ public class UserValidator {
         if (!this.isRawPasswordCorrect(newRawPassword)) {
             return new UserValidationResult(false, "Invalid 'Password' field value.");
         }
-        if (!this.credentialsService.matchesPassword(oldRawPassword, userToValidate)) {
+        if (!this.credentialsService.matchesPassword(oldRawPassword, userToValidate.getPassword())) {
             return new UserValidationResult(false, "Password is not confirmed.");
         }
-        if (this.credentialsService.matchesPassword(newRawPassword, userToValidate)) {
+        if (this.credentialsService.matchesPassword(newRawPassword, userToValidate.getPassword())) {
             return new UserValidationResult(false, "Password cannot be the same.");
         }
         return new UserValidationResult(true);

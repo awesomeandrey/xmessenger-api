@@ -1,8 +1,8 @@
 package com.xmessenger.model.services.core.user.validator;
 
 import com.xmessenger.model.database.entities.core.AppUser;
-import com.xmessenger.model.services.core.user.security.CredentialsService;
-import com.xmessenger.model.services.core.user.security.RawCredentials;
+import com.xmessenger.model.services.core.security.CredentialsService;
+import com.xmessenger.model.services.core.security.RawCredentials;
 import com.xmessenger.model.services.core.user.dao.UserDAO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,17 +47,17 @@ public class UserValidatorTest {
         assertFalse(validationResult.isValid());
         // Password not confirmed;
         rawCredentials.setNewPassword("pwd_super_7");
-        Mockito.when(this.credentialsService.matchesPassword(rawCredentials.getPassword(), testUser)).thenReturn(false);
+        Mockito.when(this.credentialsService.matchesPassword(rawCredentials.getPassword(), testUser.getPassword())).thenReturn(false);
         validationResult = this.userValidator.validateOnPasswordChange(testUser, rawCredentials);
         assertFalse(validationResult.isValid());
         // Password cannot be the same;
-        Mockito.when(this.credentialsService.matchesPassword(rawCredentials.getPassword(), testUser)).thenReturn(true);
-        Mockito.when(this.credentialsService.matchesPassword(rawCredentials.getNewPassword(), testUser)).thenReturn(true);
+        Mockito.when(this.credentialsService.matchesPassword(rawCredentials.getPassword(), testUser.getPassword())).thenReturn(true);
+        Mockito.when(this.credentialsService.matchesPassword(rawCredentials.getNewPassword(), testUser.getPassword())).thenReturn(true);
         validationResult = this.userValidator.validateOnPasswordChange(testUser, rawCredentials);
         assertFalse(validationResult.isValid());
         // Correct;
-        Mockito.when(this.credentialsService.matchesPassword(rawCredentials.getPassword(), testUser)).thenReturn(true);
-        Mockito.when(this.credentialsService.matchesPassword(rawCredentials.getNewPassword(), testUser)).thenReturn(false);
+        Mockito.when(this.credentialsService.matchesPassword(rawCredentials.getPassword(), testUser.getPassword())).thenReturn(true);
+        Mockito.when(this.credentialsService.matchesPassword(rawCredentials.getNewPassword(), testUser.getPassword())).thenReturn(false);
         validationResult = this.userValidator.validateOnPasswordChange(testUser, rawCredentials);
         assertTrue(validationResult.isValid());
     }

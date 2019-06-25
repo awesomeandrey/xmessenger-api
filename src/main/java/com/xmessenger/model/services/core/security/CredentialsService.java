@@ -1,6 +1,5 @@
-package com.xmessenger.model.services.core.user.security;
+package com.xmessenger.model.services.core.security;
 
-import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.util.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,14 +16,11 @@ public class CredentialsService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public void encodePassword(AppUser user) {
-        user.setPassword(
-                this.passwordEncoder.encode(user.getPassword())
-        );
+    public String encodePassword(String rawPassword) {
+        return this.passwordEncoder.encode(rawPassword);
     }
 
-    public boolean matchesPassword(String rawPassword, AppUser userToVerify) {
-        String encodedPassword = userToVerify.getPassword();
+    public boolean matchesPassword(String rawPassword, String encodedPassword) {
         return Utility.isNotBlank(rawPassword)
                 && Utility.isNotBlank(encodedPassword)
                 && this.passwordEncoder.matches(rawPassword, encodedPassword);

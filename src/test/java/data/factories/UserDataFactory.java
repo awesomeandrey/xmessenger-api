@@ -1,7 +1,7 @@
 package data.factories;
 
 import com.xmessenger.model.database.entities.core.AppUser;
-import com.xmessenger.model.services.core.user.security.RawCredentials;
+import com.xmessenger.model.services.core.security.RawCredentials;
 
 import java.util.ArrayList;
 import java.util.HashMap;

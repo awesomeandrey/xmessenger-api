@@ -1,4 +1,4 @@
-package com.xmessenger.model.services.core.user.security;
+package com.xmessenger.model.services.core.security;
 
 import com.xmessenger.model.database.entities.core.AppUser;
 import org.junit.Test;
@@ -21,19 +21,19 @@ public class CredentialsServiceTest {
     @Autowired
     private CredentialsService credentialsService;
 
-    @Test
-    public void encodePassword() {
-        AppUser testUser = UserDataFactory.generateSuccessUser();
-        String rawPassword = testUser.getPassword();
-        Mockito.when(this.passwordEncoder.encode(testUser.getPassword())).thenReturn("SUPER_ENCODED_STRING");
-        this.credentialsService.encodePassword(testUser);
-        assertNotEquals(rawPassword, testUser.getPassword());
-    }
+//    @Test
+//    public void encodePassword() {
+//        AppUser testUser = UserDataFactory.generateSuccessUser();
+//        String rawPassword = testUser.getPassword();
+//        Mockito.when(this.passwordEncoder.encode(testUser.getPassword())).thenReturn("SUPER_ENCODED_STRING");
+//        this.credentialsService.encodePassword(testUser);
+//        assertNotEquals(rawPassword, testUser.getPassword());
+//    }
 
     @Test
     public void matchesPassword() {
         AppUser testUser = UserDataFactory.generateSuccessUser();
         Mockito.when(this.passwordEncoder.matches("raw", testUser.getPassword())).thenReturn(true);
-        assertTrue(this.credentialsService.matchesPassword("raw", testUser));
+        assertTrue(this.credentialsService.matchesPassword("raw", testUser.getPassword()));
     }
 }

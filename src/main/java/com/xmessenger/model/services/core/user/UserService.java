@@ -4,8 +4,8 @@ import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.services.core.chatter.RelationService;
 import com.xmessenger.model.services.core.user.dao.QueryParams;
 import com.xmessenger.model.services.core.user.exceptions.UserNotFoundException;
-import com.xmessenger.model.services.core.user.security.CredentialsService;
-import com.xmessenger.model.services.core.user.security.RawCredentials;
+import com.xmessenger.model.services.core.security.CredentialsService;
+import com.xmessenger.model.services.core.security.RawCredentials;
 import com.xmessenger.model.services.core.user.dao.UserDAO;
 import com.xmessenger.model.services.core.user.validator.UserValidationResult;
 import com.xmessenger.model.services.core.user.validator.UserValidator;
@@ -36,7 +36,7 @@ public class UserService {
 
     public AppUser lookupUser(RawCredentials rawCredentials) throws UserException {
         AppUser foundUser = this.lookupUser(rawCredentials.getUsername());
-        if (foundUser == null || !foundUser.isActive() || !this.credentialsService.matchesPassword(rawCredentials.getPassword(), foundUser)) {
+        if (foundUser == null || !foundUser.isActive() || !this.credentialsService.matchesPassword(rawCredentials.getPassword(), foundUser.getPassword())) {
             throw new UserException("User with such credentials was not found.");
         }
         return foundUser;
@@ -71,7 +71,8 @@ public class UserService {
     }
 
     public AppUser registerUser(@Valid AppUser userToRegister) {
-        this.credentialsService.encodePassword(userToRegister);
+        String encodedPwd = this.credentialsService.encodePassword(userToRegister.getPassword());
+        userToRegister.setPassword(encodedPwd);
         return this.userDAO.create(userToRegister);
     }
 
@@ -87,15 +88,15 @@ public class UserService {
             throw new UserException(validationResult.getErrorMessage());
         }
         AppUser persistedUser = this.lookupUser(user);
-        persistedUser.setPassword(rawCredentials.getNewPassword());
-        this.credentialsService.encodePassword(persistedUser);
+        String encodedPassword = this.credentialsService.encodePassword(rawCredentials.getNewPassword());
+        persistedUser.setPassword(encodedPassword);
         return this.userDAO.update(persistedUser);
     }
 
     public RawCredentials resetPassword(AppUser appUser) throws UserNotFoundException {
         String newRawPassword = this.credentialsService.generateRandomPassword(8);
-        appUser.setPassword(newRawPassword);
-        this.credentialsService.encodePassword(appUser);
+        String encodedPassword = this.credentialsService.encodePassword(newRawPassword);
+        appUser.setPassword(encodedPassword);
         this.userDAO.update(appUser);
         RawCredentials rawCredentials = new RawCredentials(appUser);
         rawCredentials.setNewPassword(newRawPassword);
