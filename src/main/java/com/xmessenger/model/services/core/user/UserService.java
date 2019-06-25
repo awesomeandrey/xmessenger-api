@@ -70,20 +70,12 @@ public class UserService {
         return fellowsMap;
     }
 
-    public AppUser registerUser(@Valid AppUser userToRegister) throws UserException {
+    public AppUser registerUser(@Valid AppUser userToRegister) {
         this.credentialsService.encodePassword(userToRegister);
         return this.userDAO.create(userToRegister);
     }
 
-    /**
-     * Allowed fields to modify: Name, Picture, IsActive.
-     *
-     * @param updatedUser - User record with updated profile info.
-     * @return Modified User record;
-     * @throws UserException
-     * @throws UserNotFoundException
-     */
-    public AppUser changeProfileInfo(@Valid AppUser updatedUser) throws UserException, UserNotFoundException {
+    public AppUser changeProfileInfo(@Valid AppUser updatedUser) throws UserNotFoundException {
         AppUser persistedUser = this.lookupUser(updatedUser);
         this.mergeProperties(persistedUser, updatedUser);
         return this.userDAO.update(persistedUser);
@@ -100,11 +92,21 @@ public class UserService {
         return this.userDAO.update(persistedUser);
     }
 
+    public RawCredentials resetPassword(AppUser appUser) throws UserNotFoundException {
+        String newRawPassword = this.credentialsService.generateRandomPassword(8);
+        appUser.setPassword(newRawPassword);
+        this.credentialsService.encodePassword(appUser);
+        this.userDAO.update(appUser);
+        RawCredentials rawCredentials = new RawCredentials(appUser);
+        rawCredentials.setNewPassword(newRawPassword);
+        return rawCredentials;
+    }
+
     public void renewLastLogin(AppUser appUser) {
         try {
             appUser.setLastLogin(new Date());
             this.changeProfileInfo(appUser);
-        } catch (UserService.UserException | UserNotFoundException e) {
+        } catch (UserNotFoundException e) {
             System.err.println(">>> Could not set 'last_login'. " + e.getMessage());
         }
     }
@@ -115,6 +117,14 @@ public class UserService {
 
     //******************************************************************************************************************
 
+    /**
+     * Allowed fields to modify: Name, Picture, IsActive, Email.
+     *
+     * @param updatedUser - User record with updated profile info.
+     * @return Modified User record;
+     * @throws UserException
+     * @throws UserNotFoundException
+     */
     private void mergeProperties(AppUser persistedUser, AppUser updatedUser) {
         if (Utility.isNotBlank(updatedUser.getName())) {
             persistedUser.setName(updatedUser.getName());

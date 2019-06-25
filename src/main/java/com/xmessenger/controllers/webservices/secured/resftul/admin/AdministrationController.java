@@ -8,6 +8,8 @@ import com.xmessenger.model.services.IndicatorService;
 import com.xmessenger.model.services.core.chatter.ChattingService;
 import com.xmessenger.model.services.core.request.RequestService;
 import com.xmessenger.model.services.core.user.UserService;
+import com.xmessenger.model.services.core.user.exceptions.UserNotFoundException;
+import com.xmessenger.model.services.core.user.security.RawCredentials;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -56,22 +58,35 @@ public class AdministrationController {
 
     @RequestMapping(value = "/deleteUser", method = RequestMethod.DELETE)
     public void deleteUser(@RequestBody AppUser appUser, HttpServletResponse response) throws IOException {
-        appUser = this.userService.lookupUser(appUser);
-        if (appUser == null) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "User was not found.");
-            return;
-        } else if (appUser.getId().equals(this.contextUserHolder.getContextUserId())) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "You cannot delete yourself.");
-            return;
+        try {
+            appUser = this.performPrimaryValidation(appUser);
+            this.requestService.deleteRequestsAll(appUser);
+            this.chattingService.deleteChatsAll(appUser);
+            this.userService.deleteUser(appUser);
+            response.setStatus(HttpServletResponse.SC_OK);
+        } catch (UserNotFoundException | IllegalArgumentException ex) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
         }
-        this.requestService.deleteRequestsAll(appUser);
-        this.chattingService.deleteChatsAll(appUser);
-        this.userService.deleteUser(appUser);
-        response.setStatus(HttpServletResponse.SC_OK);
     }
 
     @RequestMapping(value = "/resetUser", method = RequestMethod.PUT)
-    public void resetUserPassword() {
-        // TODO - future release (email notification support);
+    public RawCredentials resetUserPassword(@RequestBody AppUser appUser, HttpServletResponse response) throws IOException {
+        try {
+            appUser = this.performPrimaryValidation(appUser);
+            return this.userService.resetPassword(appUser);
+        } catch (UserNotFoundException | IllegalArgumentException ex) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
+            return null;
+        }
+    }
+
+    private AppUser performPrimaryValidation(AppUser appUser) throws IllegalArgumentException, UserNotFoundException {
+        appUser = this.userService.lookupUser(appUser);
+        if (appUser == null) {
+            throw new UserNotFoundException(appUser);
+        } else if (appUser.getId().equals(this.contextUserHolder.getContextUserId())) {
+            throw new IllegalArgumentException("You cannot delete yourself.");
+        }
+        return appUser;
     }
 }
