@@ -1,4 +1,4 @@
-package com.xmessenger.model.services.core.chatter.core;
+package com.xmessenger.model.services.core.chatter;
 
 import com.xmessenger.model.database.entities.core.Relation;
 import com.xmessenger.model.database.entities.core.AppUser;
@@ -30,13 +30,13 @@ public class RelationService {
         return this.relationRepository.findOne(relationId);
     }
 
-    public Relation createRelation(AppUser user1, AppUser user2) throws RelationException {
+    public Relation createRelation(AppUser user1, AppUser user2) {
         Relation relation = new Relation(user1, user2);
         if (!this.isValid(relation)) {
-            throw new RelationException("Relation entity isn't valid.");
+            throw new IllegalArgumentException("Relation entity isn't valid.");
         }
         if (this.hasRelation(user1, user2)) {
-            throw new RelationException("The relation already exists.");
+            throw new IllegalArgumentException("The relation already exists.");
         }
         return this.relationRepository.save(relation);
     }
@@ -67,11 +67,5 @@ public class RelationService {
         Integer uid1 = relation.getUserOne().getId(), uid2 = relation.getUserTwo().getId();
         if (uid1 == null || uid2 == null) return false;
         return !uid1.equals(uid2);
-    }
-
-    public class RelationException extends Exception {
-        public RelationException(String message) {
-            super(message);
-        }
     }
 }

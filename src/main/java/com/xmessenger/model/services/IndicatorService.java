@@ -1,4 +1,4 @@
-package com.xmessenger.model.services.core;
+package com.xmessenger.model.services;
 
 import com.xmessenger.model.database.entities.decorators.Indicator;
 import com.xmessenger.model.database.entities.core.AppUser;
@@ -35,12 +35,12 @@ public class IndicatorService {
                 .collect(Collectors.toList());
     }
 
-    public Collection<Indicator> getIndicators(Map<Integer, AppUser> usersMap) {
+    public List<Indicator> getIndicators(Map<Integer, AppUser> usersMap) {
         Set<Indicator> defaultIndicators = usersMap.values().stream()
                 .map(Indicator::new).collect(Collectors.toSet());
         Iterable<Indicator> iterable = this.indicatorRepository.findAll(usersMap.keySet());
-        Set<Indicator> existingIndicators = StreamSupport.stream(iterable.spliterator(), false)
-                .collect(Collectors.toSet());
+        List<Indicator> existingIndicators = StreamSupport.stream(iterable.spliterator(), false)
+                .collect(Collectors.toList());
         existingIndicators.addAll(defaultIndicators);
         return existingIndicators;
     }

@@ -4,7 +4,7 @@ import com.xmessenger.configs.WebSecurityConfig;
 import com.xmessenger.controllers.security.user.details.ContextUserHolder;
 import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.database.entities.decorators.Indicator;
-import com.xmessenger.model.services.core.IndicatorService;
+import com.xmessenger.model.services.IndicatorService;
 import com.xmessenger.model.services.core.chatter.ChattingService;
 import com.xmessenger.model.services.core.request.RequestService;
 import com.xmessenger.model.services.core.user.UserService;
@@ -64,7 +64,7 @@ public class AdministrationController {
             this.chattingService.deleteChatsAll(appUser);
             this.userService.deleteUser(appUser);
             response.setStatus(HttpServletResponse.SC_OK);
-        } catch (UserNotFoundException | IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ex) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
         }
     }
@@ -74,13 +74,13 @@ public class AdministrationController {
         try {
             appUser = this.performPrimaryValidation(appUser);
             return this.userService.resetPassword(appUser);
-        } catch (UserNotFoundException | IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ex) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
             return null;
         }
     }
 
-    private AppUser performPrimaryValidation(AppUser appUser) throws IllegalArgumentException, UserNotFoundException {
+    private AppUser performPrimaryValidation(AppUser appUser) throws IllegalArgumentException {
         appUser = this.userService.lookupUser(appUser);
         if (appUser == null) {
             throw new UserNotFoundException(appUser);

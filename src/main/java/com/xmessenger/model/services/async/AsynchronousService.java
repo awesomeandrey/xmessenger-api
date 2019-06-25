@@ -1,7 +1,7 @@
 package com.xmessenger.model.services.async;
 
 import com.xmessenger.model.database.entities.core.AppUser;
-import com.xmessenger.model.services.core.IndicatorService;
+import com.xmessenger.model.services.IndicatorService;
 import com.xmessenger.model.services.core.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
