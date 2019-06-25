@@ -1,4 +1,4 @@
-package com.xmessenger.model.integrations.gmail.services;
+package com.xmessenger.model.integrations.gmail;
 
 import org.apache.http.client.utils.URIBuilder;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,7 +34,7 @@ public class GmailUrlBuilder {
         URIBuilder builder = new URIBuilder();
         builder.setScheme("https");
         builder.setHost("www.googleapis.com");
-        builder.setPath("/gmail/v1/users/me/profile");
+        builder.setPath("/gmail/v1/user/me/profile");
         builder.addParameter(this.ACCESS_TOKEN_PROPERTY_NAME, accessToken);
         return builder.build().toURL();
     }

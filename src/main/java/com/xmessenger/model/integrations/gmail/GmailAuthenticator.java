@@ -1,4 +1,4 @@
-package com.xmessenger.model.integrations.gmail.services;
+package com.xmessenger.model.integrations.gmail;
 
 import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.integrations.gmail.decorators.GmailAccount;

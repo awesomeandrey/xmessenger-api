@@ -1,8 +1,8 @@
 package com.xmessenger.model.services.core.user.validator;
 
 import com.xmessenger.model.database.entities.core.AppUser;
-import com.xmessenger.model.services.core.security.CredentialsService;
-import com.xmessenger.model.services.core.security.RawCredentials;
+import com.xmessenger.model.services.core.user.security.CredentialsService;
+import com.xmessenger.model.services.core.user.security.decorators.RawCredentials;
 import com.xmessenger.model.services.core.user.dao.UserDAO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,24 +26,12 @@ public class UserValidatorTest {
     private UserValidator userValidator;
 
     @Test
-    public void isUsernameUnique() {
-        AppUser testUser1 = UserDataFactory.generateSuccessUser();
-        Mockito.when(this.userDAO.getUserByUsername(testUser1.getUsername())).thenReturn(null);
-        UserValidationResult validationResult1 = this.userValidator.isUsernameUnique(testUser1.getUsername());
-        assertTrue(validationResult1.isValid());
-        AppUser testUser2 = UserDataFactory.generateFailureUser();
-        Mockito.when(this.userDAO.getUserByUsername(testUser2.getUsername())).thenReturn(testUser2);
-        UserValidationResult validationResult2 = this.userValidator.isUsernameUnique(testUser2.getUsername());
-        assertTrue(!validationResult2.isValid());
-    }
-
-    @Test
     public void validateOnPasswordChange() {
         AppUser testUser = UserDataFactory.generateSuccessUser();
         RawCredentials rawCredentials = UserDataFactory.composeRawCredentials(testUser);
         rawCredentials.setNewPassword("77");
         // Invalid password;
-        UserValidationResult validationResult = this.userValidator.validateOnPasswordChange(testUser, rawCredentials);
+        UserValidator.Result validationResult = this.userValidator.validateOnPasswordChange(testUser, rawCredentials);
         assertFalse(validationResult.isValid());
         // Password not confirmed;
         rawCredentials.setNewPassword("pwd_super_7");

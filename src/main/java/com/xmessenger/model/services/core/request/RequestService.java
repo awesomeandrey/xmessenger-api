@@ -37,11 +37,11 @@ public class RequestService {
     }
 
     /**
-     * Fetches all non-approved friendship requests for
+     * Fetches all non-approved friendship request for
      * passed as a parameter application user.
      *
      * @param user - Application user whose request are to be retrieved.
-     * @return List of friendship requests.
+     * @return List of friendship request.
      */
     public List<Request> retrieveRequests(AppUser user) {
         return this.requestRepository.findByRecipientAndApprovedIsFalse(user);
@@ -77,9 +77,9 @@ public class RequestService {
     }
 
     /**
-     * Removes all user related requests from database.
+     * Removes all user related request from database.
      *
-     * @param appUser - Application user whose friendship requests are to be deleted.
+     * @param appUser - Application user whose friendship request are to be deleted.
      */
     public void deleteRequestsAll(AppUser appUser) {
         List<Request> requests = this.requestRepository.findByRecipientOrSender(appUser, appUser);

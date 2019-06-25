@@ -6,7 +6,7 @@ import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.integrations.gmail.decorators.GmailAccount;
 import com.xmessenger.model.services.async.AsynchronousService;
 import com.xmessenger.model.services.core.user.UserService;
-import com.xmessenger.model.integrations.gmail.services.GmailAuthenticator;
+import com.xmessenger.model.integrations.gmail.GmailAuthenticator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

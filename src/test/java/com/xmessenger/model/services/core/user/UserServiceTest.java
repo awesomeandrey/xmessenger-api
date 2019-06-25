@@ -2,10 +2,8 @@ package com.xmessenger.model.services.core.user;
 
 import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.services.core.chatter.RelationService;
-import com.xmessenger.model.services.core.security.CredentialsService;
-import com.xmessenger.model.services.core.security.RawCredentials;
+import com.xmessenger.model.services.core.user.security.CredentialsService;
 import com.xmessenger.model.services.core.user.dao.UserDAO;
-import com.xmessenger.model.services.core.user.validator.UserValidationResult;
 import com.xmessenger.model.services.core.user.validator.UserValidator;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -4,13 +4,13 @@ import com.xmessenger.configs.WebSecurityConfig;
 import com.xmessenger.controllers.security.user.details.ContextUserHolder;
 import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.database.entities.core.Indicator;
-import com.xmessenger.model.services.core.security.CredentialsService;
+import com.xmessenger.model.services.core.user.security.CredentialsService;
 import com.xmessenger.model.services.core.user.dao.UserDAO;
 import com.xmessenger.model.services.core.user.indicators.IndicatorService;
 import com.xmessenger.model.services.core.chatter.ChattingService;
 import com.xmessenger.model.services.core.request.RequestService;
 import com.xmessenger.model.services.core.user.UserService;
-import com.xmessenger.model.services.core.security.RawCredentials;
+import com.xmessenger.model.services.core.user.security.decorators.RawCredentials;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -87,7 +87,7 @@ public class AdministrationController {
         }
     }
 
-    private AppUser performPrimaryValidation(AppUser appUser) throws IllegalArgumentException {
+    private AppUser performPrimaryValidation(AppUser appUser) {
         appUser = this.userService.lookupUser(appUser);
         if (appUser == null) {
             throw new UserDAO.UserNotFoundException();

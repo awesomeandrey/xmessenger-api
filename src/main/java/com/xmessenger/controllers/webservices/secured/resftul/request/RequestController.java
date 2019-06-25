@@ -1,4 +1,4 @@
-package com.xmessenger.controllers.webservices.secured.resftul.requests;
+package com.xmessenger.controllers.webservices.secured.resftul.request;
 
 import com.xmessenger.configs.WebSecurityConfig;
 import com.xmessenger.controllers.security.user.details.ContextUserHolder;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping(WebSecurityConfig.API_BASE_PATH + "/requests")
+@RequestMapping(WebSecurityConfig.API_BASE_PATH + "/request")
 public class RequestController {
     private final ContextUserHolder contextUserHolder;
     private final ApplicationEventPublisher publisher;
