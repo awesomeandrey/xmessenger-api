@@ -2,12 +2,13 @@ package com.xmessenger.controllers.webservices.secured.resftul.users;
 
 import com.xmessenger.configs.WebSecurityConfig;
 import com.xmessenger.controllers.security.user.details.ContextUserHolder;
-import com.xmessenger.model.database.entities.decorators.Indicator;
+import com.xmessenger.model.database.entities.core.Indicator;
 import com.xmessenger.model.database.entities.enums.Role;
 import com.xmessenger.model.database.entities.core.AppUser;
+import com.xmessenger.model.services.core.chatter.RelationService;
 import com.xmessenger.model.services.core.user.indicators.IndicatorService;
 import com.xmessenger.model.services.core.user.UserService;
-import com.xmessenger.model.services.core.user.dao.QueryParams;
+import com.xmessenger.model.services.core.user.dao.decorators.QueryParams;
 import com.xmessenger.model.services.core.security.RawCredentials;
 import com.xmessenger.model.services.core.user.validator.UserValidationResult;
 import com.xmessenger.model.services.core.user.validator.UserValidator;
@@ -25,13 +26,15 @@ import java.util.stream.Collectors;
 public class UserInfoController {
     private final ContextUserHolder contextUserHolder;
     private final UserService userService;
+    private final RelationService relationService;
     private final UserValidator userValidator;
     private final IndicatorService indicatorService;
 
     @Autowired
-    public UserInfoController(ContextUserHolder contextUserHolder, UserService userService, UserValidator userValidator, IndicatorService indicatorService) {
+    public UserInfoController(ContextUserHolder contextUserHolder, UserService userService, RelationService relationService, UserValidator userValidator, IndicatorService indicatorService) {
         this.contextUserHolder = contextUserHolder;
         this.userService = userService;
+        this.relationService = relationService;
         this.userValidator = userValidator;
         this.indicatorService = indicatorService;
     }
@@ -58,7 +61,7 @@ public class UserInfoController {
 
     @RequestMapping(value = "/indicators", method = RequestMethod.GET)
     public List<Indicator> getFellowsIndicators() {
-        Map<Integer, AppUser> fellowsMap = this.userService.findFellows(this.getCurrentUser());
+        Map<Integer, AppUser> fellowsMap = this.relationService.getRelatedUsersMap(this.getCurrentUser());
         return this.indicatorService.getIndicators(fellowsMap);
     }
 

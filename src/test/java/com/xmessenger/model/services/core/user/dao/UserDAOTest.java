@@ -2,6 +2,7 @@ package com.xmessenger.model.services.core.user.dao;
 
 import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.database.repositories.core.UserRepository;
+import com.xmessenger.model.services.core.user.dao.decorators.QueryParams;
 import data.factories.UserDataFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;

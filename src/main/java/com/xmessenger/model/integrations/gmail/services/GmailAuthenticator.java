@@ -2,7 +2,6 @@ package com.xmessenger.model.integrations.gmail.services;
 
 import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.integrations.gmail.decorators.GmailAccount;
-import com.xmessenger.model.services.core.user.dao.UserBuilder;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.GsonJsonParser;
@@ -48,7 +47,7 @@ public class GmailAuthenticator {
         ResponseEntity<String> responseEntity = restTemplate.exchange(requestUserInfoUrl.toString(), HttpMethod.GET, null, String.class);
         if (responseEntity.getStatusCode() == HttpStatus.valueOf(200)) {
             Map<String, Object> payloadMap = this.parser.parseMap(responseEntity.getBody());
-            return new UserBuilder(String.valueOf(payloadMap.get("name")))
+            return new AppUser.Builder(String.valueOf(payloadMap.get("name")))
                     .withUsername(gmailAccount.getUsername())
                     .withPassword(gmailAccount.getPassword(String.valueOf(payloadMap.get("id"))))
                     .withEmail(gmailAccount.getEmailAddress())

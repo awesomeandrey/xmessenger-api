@@ -1,6 +1,6 @@
 package com.xmessenger.controllers.webservices.open.websockets.events;
 
-import com.xmessenger.model.database.entities.decorators.Chat;
+import com.xmessenger.model.services.core.chatter.decorators.Chat;
 import org.springframework.context.ApplicationEvent;
 
 public class ChatClearEvent extends ApplicationEvent {

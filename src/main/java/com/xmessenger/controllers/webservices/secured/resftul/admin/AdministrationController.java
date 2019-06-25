@@ -3,7 +3,7 @@ package com.xmessenger.controllers.webservices.secured.resftul.admin;
 import com.xmessenger.configs.WebSecurityConfig;
 import com.xmessenger.controllers.security.user.details.ContextUserHolder;
 import com.xmessenger.model.database.entities.core.AppUser;
-import com.xmessenger.model.database.entities.decorators.Indicator;
+import com.xmessenger.model.database.entities.core.Indicator;
 import com.xmessenger.model.services.core.security.CredentialsService;
 import com.xmessenger.model.services.core.user.dao.UserDAO;
 import com.xmessenger.model.services.core.user.indicators.IndicatorService;

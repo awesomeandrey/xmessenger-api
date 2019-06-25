@@ -1,6 +1,6 @@
 package com.xmessenger.model.services.core.user.indicators;
 
-import com.xmessenger.model.database.entities.decorators.Indicator;
+import com.xmessenger.model.database.entities.core.Indicator;
 import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.database.repositories.IndicatorRepository;
 import org.springframework.beans.factory.annotation.Autowired;

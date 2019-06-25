@@ -1,4 +1,4 @@
-package com.xmessenger.model.database.entities.decorators;
+package com.xmessenger.model.services.core.chatter.decorators;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.xmessenger.model.database.entities.core.Relation;

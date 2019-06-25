@@ -3,7 +3,7 @@ package com.xmessenger.model.services.core.chatter;
 import com.xmessenger.model.database.entities.core.Message;
 import com.xmessenger.model.database.entities.core.Relation;
 import com.xmessenger.model.database.entities.core.AppUser;
-import com.xmessenger.model.database.entities.decorators.Chat;
+import com.xmessenger.model.services.core.chatter.decorators.Chat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,14 +47,14 @@ public class ChattingService {
     }
 
     public void deleteChatsAll(AppUser appUser) {
-        Map<Integer, Relation> relationsMap = this.relationService.getUserRelations(appUser);
+        Map<Integer, Relation> relationsMap = this.relationService.getUserRelationsMap(appUser);
         List<Relation> relations = new ArrayList<>(relationsMap.values());
         this.messageService.deleteMessagesByRelations(relations);
         this.relationService.deleteRelations(relations);
     }
 
     public Map<Integer, Chat> retrieveChats(AppUser runningUser) {
-        Map<Integer, Relation> relationsMap = this.relationService.getUserRelations(runningUser);
+        Map<Integer, Relation> relationsMap = this.relationService.getUserRelationsMap(runningUser);
         Map<Integer, Date> latestMessageDateByRelation = this.messageService.groupLastMessageDateByRelations(
                 (List<Relation>) relationsMap.values()
         );

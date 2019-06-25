@@ -1,4 +1,4 @@
-package com.xmessenger.model.services.core.user.dao;
+package com.xmessenger.model.services.core.user.dao.decorators;
 
 public class QueryParams {
     private String nameOrLogin;

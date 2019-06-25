@@ -1,8 +1,7 @@
 package com.xmessenger.model.services.core.user;
 
 import com.xmessenger.model.database.entities.core.AppUser;
-import com.xmessenger.model.services.core.chatter.RelationService;
-import com.xmessenger.model.services.core.user.dao.QueryParams;
+import com.xmessenger.model.services.core.user.dao.decorators.QueryParams;
 import com.xmessenger.model.services.core.security.CredentialsService;
 import com.xmessenger.model.services.core.user.dao.UserDAO;
 import com.xmessenger.model.util.Utility;
@@ -10,21 +9,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class UserService {
     private final UserDAO userDAO;
     private final CredentialsService credentialsService;
-    private final RelationService relationService;
 
     @Autowired
-    public UserService(UserDAO userDAO, CredentialsService credentialsService, RelationService relationService) {
+    public UserService(UserDAO userDAO, CredentialsService credentialsService) {
         this.userDAO = userDAO;
         this.credentialsService = credentialsService;
-        this.relationService = relationService;
     }
 
     public AppUser lookupUser(String username) {
@@ -44,15 +39,6 @@ public class UserService {
 
     public List<AppUser> search(QueryParams queryParams) {
         return this.userDAO.search(queryParams);
-    }
-
-    public Map<Integer, AppUser> findFellows(AppUser user) {
-        Map<Integer, AppUser> fellowsMap = new HashMap<>();
-        this.relationService.getUserRelations(user).values().forEach(relation -> {
-            AppUser fellow = this.relationService.getFellowFromRelation(user, relation);
-            fellowsMap.put(fellow.getId(), fellow);
-        });
-        return fellowsMap;
     }
 
     public AppUser registerUser(@Valid AppUser userToRegister) {

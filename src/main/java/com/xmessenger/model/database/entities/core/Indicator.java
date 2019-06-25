@@ -1,6 +1,5 @@
-package com.xmessenger.model.database.entities.decorators;
+package com.xmessenger.model.database.entities.core;
 
-import com.xmessenger.model.database.entities.core.AppUser;
 import org.springframework.data.redis.core.RedisHash;
 
 import javax.persistence.Id;

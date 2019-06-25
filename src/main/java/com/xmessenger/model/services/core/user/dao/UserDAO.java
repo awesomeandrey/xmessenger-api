@@ -2,6 +2,7 @@ package com.xmessenger.model.services.core.user.dao;
 
 import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.database.repositories.core.UserRepository;
+import com.xmessenger.model.services.core.user.dao.decorators.QueryParams;
 import com.xmessenger.model.util.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

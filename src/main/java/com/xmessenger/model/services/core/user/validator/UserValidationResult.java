@@ -4,13 +4,12 @@ public class UserValidationResult {
     private boolean isValid;
     private String errorMessage;
 
-    public UserValidationResult(boolean isValid) {
-        this.isValid = isValid;
-        this.errorMessage = isValid ? "" : "User validation failure.";
+    public UserValidationResult() {
+        this.isValid = true;
     }
 
-    public UserValidationResult(boolean isValid, String errorMessage) {
-        this.isValid = isValid;
+    public UserValidationResult(String errorMessage) {
+        this.isValid = false;
         this.errorMessage = errorMessage;
     }
 

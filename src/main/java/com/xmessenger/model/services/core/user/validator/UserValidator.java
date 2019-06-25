@@ -22,22 +22,22 @@ public class UserValidator {
     public UserValidationResult validateOnPasswordChange(AppUser userToValidate, RawCredentials rawCredentials) {
         final String oldRawPassword = rawCredentials.getPassword(), newRawPassword = rawCredentials.getNewPassword();
         if (!this.isRawPasswordCorrect(newRawPassword)) {
-            return new UserValidationResult(false, "Invalid 'Password' field value.");
+            return new UserValidationResult("Invalid 'Password' field value.");
         }
         if (!this.credentialsService.matchesPassword(oldRawPassword, userToValidate.getPassword())) {
-            return new UserValidationResult(false, "Password is not confirmed.");
+            return new UserValidationResult("Password is not confirmed.");
         }
         if (this.credentialsService.matchesPassword(newRawPassword, userToValidate.getPassword())) {
-            return new UserValidationResult(false, "Password cannot be the same.");
+            return new UserValidationResult("Password cannot be the same.");
         }
-        return new UserValidationResult(true);
+        return new UserValidationResult();
     }
 
     public UserValidationResult isUsernameUnique(String username) {
         if (this.userDAO.getUserByUsername(username) != null) {
-            return new UserValidationResult(false, "Username is already in use.");
+            return new UserValidationResult("Username is already in use.");
         }
-        return new UserValidationResult(true);
+        return new UserValidationResult();
     }
 
     private boolean isRawPasswordCorrect(String password) {

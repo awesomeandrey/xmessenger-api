@@ -17,12 +17,21 @@ public class RelationService {
         this.relationRepository = relationRepository;
     }
 
-    public Map<Integer, Relation> getUserRelations(AppUser user) {
+    public Map<Integer, Relation> getUserRelationsMap(AppUser user) {
         Map<Integer, Relation> relationsMap = new HashMap<>();
         this.relationRepository.findAllByUserOneOrUserTwo(user, user).forEach((Relation rel) -> {
             relationsMap.put(rel.getId(), rel);
         });
         return relationsMap;
+    }
+
+    public Map<Integer, AppUser> getRelatedUsersMap(AppUser user) {
+        Map<Integer, AppUser> fellowsMap = new HashMap<>();
+        this.getUserRelationsMap(user).values().forEach(relation -> {
+            AppUser fellow = this.getFellowFromRelation(user, relation);
+            fellowsMap.put(fellow.getId(), fellow);
+        });
+        return fellowsMap;
     }
 
     public Relation lookupRelation(Integer relationId) {

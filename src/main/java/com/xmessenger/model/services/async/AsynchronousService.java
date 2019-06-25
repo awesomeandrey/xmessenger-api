@@ -5,7 +5,6 @@ import com.xmessenger.model.services.core.user.indicators.IndicatorService;
 import com.xmessenger.model.services.core.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.ApplicationContext;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +12,6 @@ import java.util.Date;
 
 @Service
 public class AsynchronousService {
-    @Autowired
-    private ApplicationContext applicationContext;
-
     @Qualifier("asyncService")
     @Autowired
     private TaskExecutor taskExecutor;
@@ -40,6 +36,7 @@ public class AsynchronousService {
                 this.userService.changeProfileInfo(appUser);
             } catch (Exception e) {
                 System.err.println(">>> Could not set 'last_login'. " + e.getMessage());
+                e.printStackTrace();
             }
         });
     }
