@@ -19,15 +19,19 @@ public class AppUser {
     @Column(name = "user_id")
     private Integer id;
 
+    @Column(name = "name")
     @Pattern(regexp = "^[a-zA-Z ]{2,45}$", message = "Name is not correct")
     private String name;
 
+    @Column(name = "picture")
     @JsonIgnore
     private byte[] picture;
 
+    @Column(name = "username")
     @Pattern(regexp = "^[a-zA-Z0-9_-]{4,25}$", message = "Username is not correct")
     private String username;
 
+    @Column(name = "password")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Pattern(regexp = "^.{4,}$", message = "Password in wrong")
     private String password;
@@ -36,8 +40,8 @@ public class AppUser {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Boolean external;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(name = "active")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Boolean active;
 
     @Column(name = "role_code")
@@ -50,7 +54,7 @@ public class AppUser {
     private Date lastLogin;
 
     @Column(name = "email_address")
-    @Email(message = "Email should be valid")
+    @Email(message = "Email address should be valid.")
     private String email;
 
     public Integer getId() {
