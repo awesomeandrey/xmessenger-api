@@ -16,6 +16,32 @@ public class UserValidator {
         this.credentialsService = credentialsService;
     }
 
+    /**
+     * Validates AppUser entity when registration is being happening.
+     * Mandatory fields to check: Name, Username, Password (raw).
+     *
+     * @param userToValidate - AppUser entity to check.
+     * @return Validation Result object.
+     */
+    public Result validateOnRegistration(AppUser userToValidate) {
+        Result result = this.validateOnProfileChange(userToValidate);
+        if (!result.isValid) return result;
+        if (!this.isUsernameCorrect(userToValidate.getUsername())) {
+            return new Result("Invalid 'Username' field value.");
+        }
+        if (!this.isRawPasswordCorrect(userToValidate.getPassword())) {
+            return new Result("Invalid 'Password' field value.");
+        }
+        return new Result();
+    }
+
+    public Result validateOnProfileChange(AppUser userToValidate) {
+        if (!this.isNameCorrect(userToValidate.getName())) {
+            return new Result("Invalid 'Name' field value.");
+        }
+        return new Result();
+    }
+
     public Result validateOnPasswordChange(AppUser userToValidate, RawCredentials rawCredentials) {
         final String oldRawPassword = rawCredentials.getPassword(), newRawPassword = rawCredentials.getNewPassword();
         if (!this.isRawPasswordCorrect(newRawPassword)) {
@@ -28,6 +54,14 @@ public class UserValidator {
             return new Result("Password cannot be the same.");
         }
         return new Result();
+    }
+
+    private boolean isNameCorrect(String name) {
+        return Utility.isNotBlank(name) && name.matches("^[a-zA-Z ]{2,45}$");
+    }
+
+    private boolean isUsernameCorrect(String username) {
+        return Utility.isNotBlank(username) && username.matches("^[a-zA-Z0-9_-]{4,25}$");
     }
 
     private boolean isRawPasswordCorrect(String password) {
