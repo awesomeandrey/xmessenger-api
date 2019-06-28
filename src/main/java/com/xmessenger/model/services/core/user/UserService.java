@@ -48,7 +48,6 @@ public class UserService {
 
     public AppUser changeProfileInfo(AppUser updatedUser) {
         AppUser persistedUser = this.lookupUser(updatedUser);
-        if (persistedUser == null) throw new UserDAO.UserNotFoundException(updatedUser);
         this.mergeProperties(persistedUser, updatedUser);
         return this.userDAO.update(persistedUser);
     }
