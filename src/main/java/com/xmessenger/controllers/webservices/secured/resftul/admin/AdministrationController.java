@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
@@ -50,8 +49,9 @@ public class AdministrationController {
     }
 
     @RequestMapping(value = "/updateUser", method = RequestMethod.PUT)
-    public void changeUserProfileInfo(@Valid @RequestBody AppUser appUser, HttpServletResponse response) throws IOException {
+    public void changeUserProfileInfo(@RequestBody AppUser appUser, HttpServletResponse response) throws IOException {
         try {
+            appUser = this.performPrimaryValidation(appUser);
             this.userService.changeProfileInfo(appUser);
             response.setStatus(HttpServletResponse.SC_OK);
         } catch (Exception ex) {

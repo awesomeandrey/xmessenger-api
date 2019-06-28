@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -44,7 +43,7 @@ public class UserInfoController {
     }
 
     @RequestMapping(value = "/info", method = RequestMethod.PUT)
-    public AppUser changeProfileInfo(@Valid @RequestBody AppUser userToUpdate) {
+    public AppUser changeProfileInfo(@RequestBody AppUser userToUpdate) {
         userToUpdate.setId(this.contextUserHolder.getContextUserId());
         return this.userService.changeProfileInfo(userToUpdate);
     }
