@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
 
 @OpenResource
 public class RegistrationController {
@@ -22,8 +24,18 @@ public class RegistrationController {
     }
 
     @RequestMapping(value = "/sign-up", method = RequestMethod.POST)
-    public AppUser signUp(@Valid @RequestBody AppUser user) {
-        return this.userService.registerUser(user);
+    public AppUser signUp(@Valid @RequestBody AppUser user, HttpServletResponse response) throws IOException {
+        UserValidator.Result result = this.isUsernameUnique(user.getUsername());
+        if (result.isValid()) {
+            try {
+                return this.userService.registerUser(user);
+            } catch (Exception ex) {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
+            }
+        } else {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, result.getErrorMessage());
+        }
+        return null;
     }
 
     @RequestMapping(value = "/sign-up/username", method = RequestMethod.POST)

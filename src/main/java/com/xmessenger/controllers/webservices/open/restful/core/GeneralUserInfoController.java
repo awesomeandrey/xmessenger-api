@@ -39,6 +39,7 @@ public class GeneralUserInfoController {
         AppUser appUser = this.userService.lookupUser(new AppUser(uid));
         if (appUser == null) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "User not found.");
+            return null;
         }
         return appUser.getPicture() == null ? DEFAULT_USER_PICTURE : appUser.getPicture();
     }
