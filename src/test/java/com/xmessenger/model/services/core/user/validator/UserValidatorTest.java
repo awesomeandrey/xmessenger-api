@@ -3,7 +3,6 @@ package com.xmessenger.model.services.core.user.validator;
 import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.services.core.user.security.CredentialsService;
 import com.xmessenger.model.services.core.user.security.decorators.RawCredentials;
-import com.xmessenger.model.services.core.user.dao.UserDAO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -19,8 +18,6 @@ import static org.junit.Assert.*;
 @SpringBootTest(classes = UserValidator.class)
 public class UserValidatorTest {
     @MockBean
-    private UserDAO userDAO;
-    @MockBean
     private CredentialsService credentialsService;
     @Autowired
     private UserValidator userValidator;
@@ -33,6 +30,7 @@ public class UserValidatorTest {
         // Invalid password;
         UserValidator.Result validationResult = this.userValidator.validateOnPasswordChange(testUser, rawCredentials);
         assertFalse(validationResult.isValid());
+        assertNotNull(validationResult.getErrorMessage());
         // Password not confirmed;
         rawCredentials.setNewPassword("pwd_super_7");
         Mockito.when(this.credentialsService.matchesPassword(rawCredentials.getPassword(), testUser.getPassword())).thenReturn(false);
