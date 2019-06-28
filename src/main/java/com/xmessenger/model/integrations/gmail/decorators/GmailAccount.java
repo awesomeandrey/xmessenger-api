@@ -1,4 +1,4 @@
-package com.xmessenger.controllers.webservices.open.restful.oauth.gmail;
+package com.xmessenger.model.integrations.gmail.decorators;
 
 public class GmailAccount {
     private String emailAddress;

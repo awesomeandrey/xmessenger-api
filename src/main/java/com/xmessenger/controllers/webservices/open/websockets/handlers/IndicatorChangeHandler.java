@@ -1,6 +1,6 @@
 package com.xmessenger.controllers.webservices.open.websockets.handlers;
 
-import com.xmessenger.model.database.entities.wrappers.Indicator;
+import com.xmessenger.model.database.entities.core.Indicator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.HandleAfterSave;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;

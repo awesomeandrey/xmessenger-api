@@ -2,6 +2,7 @@ package com.xmessenger.model.services.core.user.dao;
 
 import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.database.repositories.core.UserRepository;
+import com.xmessenger.model.services.core.user.dao.decorators.QueryParams;
 import data.factories.UserDataFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -82,23 +83,5 @@ public class UserDAOTest {
         } catch (Exception ignore) {
         }
         assertEquals(testUser.getId(), updatedUser.getId());
-    }
-
-    @Test
-    public void getPicture() {
-        Mockito.when(this.userRepository.findOne(null)).thenReturn(null);
-        byte[] picture = null;
-        try {
-            picture = this.userDAO.getPicture(null);
-        } catch (Exception e) {
-            assertNull(picture);
-        }
-        AppUser testUser = UserDataFactory.generateSuccessUser();
-        Mockito.when(this.userRepository.findOne(testUser.getId())).thenReturn(testUser);
-        try {
-            picture = this.userDAO.getPicture(testUser.getId());
-        } catch (Exception ignore) {
-        }
-        assertEquals(testUser.getPicture(), picture);
     }
 }

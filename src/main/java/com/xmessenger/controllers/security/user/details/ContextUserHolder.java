@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ContextUserHolder {
-    protected final UserDAO userDAO;
+    private final UserDAO userDAO;
 
     @Autowired
     public ContextUserHolder(UserDAO userDAO) {

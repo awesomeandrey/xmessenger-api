@@ -4,8 +4,6 @@ import com.xmessenger.model.database.entities.core.Message;
 import com.xmessenger.model.database.entities.core.Relation;
 import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.services.core.chatter.decorators.Chat;
-import com.xmessenger.model.services.core.chatter.core.MessageService;
-import com.xmessenger.model.services.core.chatter.core.RelationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,10 +24,13 @@ public class ChattingService {
 
     public boolean hasAuthorityToOperateWithChat(AppUser authorizedUser, Chat chat) {
         Relation relation = this.relationService.lookupRelation(chat.getId());
-        return relation != null && relation.isUserRelated(authorizedUser);
+        if (relation == null) return false;
+        if (relation.getUserOne().equals(authorizedUser)) return true;
+        if (relation.getUserTwo().equals(authorizedUser)) return true;
+        return false;
     }
 
-    public Chat createChat(AppUser user1, AppUser user2) throws Exception {
+    public Chat createChat(AppUser user1, AppUser user2) {
         Relation relation = this.relationService.createRelation(user1, user2);
         return new Chat(relation);
     }
@@ -46,15 +47,17 @@ public class ChattingService {
     }
 
     public void deleteChatsAll(AppUser appUser) {
-        Map<Integer, Relation> relationsMap = this.relationService.getUserRelations(appUser);
+        Map<Integer, Relation> relationsMap = this.relationService.getUserRelationsMap(appUser);
         List<Relation> relations = new ArrayList<>(relationsMap.values());
         this.messageService.deleteMessagesByRelations(relations);
         this.relationService.deleteRelations(relations);
     }
 
     public Map<Integer, Chat> retrieveChats(AppUser runningUser) {
-        Map<Integer, Relation> relationsMap = this.relationService.getUserRelations(runningUser);
-        Map<Integer, Date> latestMessageDateByRelation = this.messageService.groupLastMessageDateByRelations(relationsMap.values());
+        Map<Integer, Relation> relationsMap = this.relationService.getUserRelationsMap(runningUser);
+        Map<Integer, Date> latestMessageDateByRelation = this.messageService.groupLastMessageDateByRelations(
+                (List<Relation>) relationsMap.values()
+        );
         Map<Integer, Chat> chatsMap = new HashMap<>();
         relationsMap.values().forEach((relation) -> {
             Chat chatEntity = new Chat(relation);
@@ -67,7 +70,7 @@ public class ChattingService {
         return chatsMap;
     }
 
-    public Message postMessage(Message message) throws Exception {
+    public Message postMessage(Message message) {
         return this.messageService.composeMessage(message);
     }
 

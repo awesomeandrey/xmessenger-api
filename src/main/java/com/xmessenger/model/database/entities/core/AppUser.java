@@ -19,15 +19,19 @@ public class AppUser {
     @Column(name = "user_id")
     private Integer id;
 
+    @Column(name = "name")
     @Pattern(regexp = "^[a-zA-Z ]{2,45}$", message = "Name is not correct")
     private String name;
 
+    @Column(name = "picture")
     @JsonIgnore
     private byte[] picture;
 
+    @Column(name = "username")
     @Pattern(regexp = "^[a-zA-Z0-9_-]{4,25}$", message = "Username is not correct")
     private String username;
 
+    @Column(name = "password")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Pattern(regexp = "^.{4,}$", message = "Password in wrong")
     private String password;
@@ -36,8 +40,8 @@ public class AppUser {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Boolean external;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(name = "active")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Boolean active;
 
     @Column(name = "role_code")
@@ -50,7 +54,7 @@ public class AppUser {
     private Date lastLogin;
 
     @Column(name = "email_address")
-    @Email(message = "Email should be valid")
+    @Email(message = "Email address should be valid.")
     private String email;
 
     public Integer getId() {
@@ -142,6 +146,11 @@ public class AppUser {
         this.external = false;
     }
 
+    public AppUser(Integer uid) {
+        this();
+        this.id = uid;
+    }
+
     @Override
     public String toString() {
         return "AppUser{" +
@@ -167,5 +176,87 @@ public class AppUser {
     @Override
     public int hashCode() {
         return Objects.hash(this.id, this.username);
+    }
+
+    public static class Builder {
+        private String name;
+        private String username;
+        private String password;
+        private String email;
+        private byte[] picture;
+        private Boolean external;
+        private Boolean active;
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public void setUsername(String username) {
+            this.username = username;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
+        }
+
+        public void setPicture(byte[] picture) {
+            this.picture = picture;
+        }
+
+        public void setActive(Boolean active) {
+            this.active = active;
+        }
+
+        public Builder() {
+            this.active = true;
+            this.external = false;
+        }
+
+        public Builder(String name) {
+            this();
+            this.name = name;
+        }
+
+        public Builder withUsername(String username) {
+            this.username = username;
+            return this;
+        }
+
+        public Builder withPassword(String password) {
+            this.password = password;
+            return this;
+        }
+
+        public Builder withEmail(String email) {
+            this.email = email;
+            return this;
+        }
+
+        public Builder withPicture(byte[] picture) {
+            this.picture = picture;
+            return this;
+        }
+
+        public Builder withExternal(boolean external) {
+            this.external = external;
+            return this;
+        }
+
+        public Builder withActive(boolean active) {
+            this.active = active;
+            return this;
+        }
+
+        public AppUser build() {
+            AppUser user = new AppUser();
+            user.setName(this.name);
+            user.setUsername(this.username);
+            user.setPassword(this.password);
+            user.setEmail(this.email);
+            user.setPicture(this.picture);
+            user.setExternal(this.external);
+            user.setActive(this.active);
+            return user;
+        }
     }
 }

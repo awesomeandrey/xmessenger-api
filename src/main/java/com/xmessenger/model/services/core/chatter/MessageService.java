@@ -1,4 +1,4 @@
-package com.xmessenger.model.services.core.chatter.core;
+package com.xmessenger.model.services.core.chatter;
 
 import com.xmessenger.model.database.entities.core.Message;
 import com.xmessenger.model.database.entities.core.Relation;
@@ -18,14 +18,11 @@ public class MessageService {
         this.messageRepository = messageRepository;
     }
 
-    public Map<Integer, Date> groupLastMessageDateByRelations(Collection<Relation> relations) {
+    public Map<Integer, Date> groupLastMessageDateByRelations(List<Relation> relations) {
         Map<Integer, Date> dateByRelationMap = new HashMap<>();
         if (!relations.isEmpty()) {
             List<Object[]> aggregationResult = this.messageRepository.aggregateMessagesDateByRelations(relations);
-            aggregationResult.forEach(objects -> dateByRelationMap.put(
-                    (Integer) objects[0],
-                    (Date) objects[1]
-            ));
+            aggregationResult.forEach(objects -> dateByRelationMap.put((Integer) objects[0], (Date) objects[1]));
         }
         return dateByRelationMap;
     }
@@ -34,9 +31,9 @@ public class MessageService {
         return this.messageRepository.findTop20ByRelationOrderByDateDesc(relation);
     }
 
-    public Message composeMessage(Message message) throws MessageException {
+    public Message composeMessage(Message message) {
         if (!this.isValid(message)) {
-            throw new MessageException("Invalid message entity.");
+            throw new IllegalArgumentException("Invalid message entity.");
         }
         message.setDate(new Date());
         return this.messageRepository.save(message);
@@ -56,11 +53,5 @@ public class MessageService {
         if (message.getAuthor() == null || message.getAuthor().getId() == null) return false;
         if (message.getRelation() == null || message.getRelation().getId() == null) return false;
         return !Utility.isBlank(message.getBody());
-    }
-
-    public class MessageException extends Exception {
-        public MessageException(String message) {
-            super(message);
-        }
     }
 }

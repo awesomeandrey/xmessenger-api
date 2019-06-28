@@ -1,8 +1,7 @@
-package com.xmessenger.model.services.core.user.oauth.gmail;
+package com.xmessenger.model.integrations.gmail;
 
-import com.xmessenger.controllers.webservices.open.restful.oauth.gmail.GmailAccount;
 import com.xmessenger.model.database.entities.core.AppUser;
-import com.xmessenger.model.services.core.user.dao.UserBuilder;
+import com.xmessenger.model.integrations.gmail.decorators.GmailAccount;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.GsonJsonParser;
@@ -18,15 +17,15 @@ import java.util.Map;
 @Service
 public class GmailAuthenticator {
     private final GsonJsonParser parser;
-    private final UrlBuilder urlBuilder;
+    private final GmailUrlBuilder urlBuilder;
 
     @Autowired
-    public GmailAuthenticator(UrlBuilder urlBuilder) {
+    public GmailAuthenticator(GmailUrlBuilder urlBuilder) {
         this.urlBuilder = urlBuilder;
         this.parser = new GsonJsonParser();
     }
 
-    public UrlBuilder urlBuilder() {
+    public GmailUrlBuilder urlBuilder() {
         return this.urlBuilder;
     }
 
@@ -48,7 +47,7 @@ public class GmailAuthenticator {
         ResponseEntity<String> responseEntity = restTemplate.exchange(requestUserInfoUrl.toString(), HttpMethod.GET, null, String.class);
         if (responseEntity.getStatusCode() == HttpStatus.valueOf(200)) {
             Map<String, Object> payloadMap = this.parser.parseMap(responseEntity.getBody());
-            return new UserBuilder(String.valueOf(payloadMap.get("name")))
+            return new AppUser.Builder(String.valueOf(payloadMap.get("name")))
                     .withUsername(gmailAccount.getUsername())
                     .withPassword(gmailAccount.getPassword(String.valueOf(payloadMap.get("id"))))
                     .withEmail(gmailAccount.getEmailAddress())

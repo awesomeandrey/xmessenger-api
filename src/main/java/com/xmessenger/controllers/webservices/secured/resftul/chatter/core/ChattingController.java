@@ -42,7 +42,7 @@ public class ChattingController {
     }
 
     @RequestMapping(value = "/{chatId}/messages", method = RequestMethod.POST)
-    public Message sendMessage(@PathVariable("chatId") Integer chatId, @RequestBody Message message) throws Exception {
+    public Message sendMessage(@PathVariable("chatId") Integer chatId, @RequestBody Message message) {
         message.getRelation().setId(chatId);
         message.setAuthor(this.contextUserHolder.getContextUser());
         Message postedMessage = this.chattingService.postMessage(message);

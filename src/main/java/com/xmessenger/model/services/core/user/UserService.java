@@ -1,45 +1,24 @@
 package com.xmessenger.model.services.core.user;
 
 import com.xmessenger.model.database.entities.core.AppUser;
-import com.xmessenger.model.services.core.chatter.core.RelationService;
-import com.xmessenger.model.services.core.user.dao.QueryParams;
-import com.xmessenger.model.services.core.user.exceptions.UserNotFoundException;
-import com.xmessenger.model.services.core.user.security.CredentialsService;
-import com.xmessenger.model.services.core.user.security.RawCredentials;
+import com.xmessenger.model.services.core.user.dao.decorators.QueryParams;
+import com.xmessenger.model.services.core.user.credentials.CredentialsService;
 import com.xmessenger.model.services.core.user.dao.UserDAO;
-import com.xmessenger.model.services.core.user.validator.UserValidationResult;
-import com.xmessenger.model.services.core.user.validator.UserValidator;
 import com.xmessenger.model.util.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.validation.Valid;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class UserService {
     private final UserDAO userDAO;
-    private final UserValidator userValidator;
     private final CredentialsService credentialsService;
-    private final RelationService relationService;
 
     @Autowired
-    public UserService(UserDAO userDAO, UserValidator userValidator, CredentialsService credentialsService, RelationService relationService) {
+    public UserService(UserDAO userDAO, CredentialsService credentialsService) {
         this.userDAO = userDAO;
-        this.userValidator = userValidator;
         this.credentialsService = credentialsService;
-        this.relationService = relationService;
-    }
-
-    public AppUser lookupUser(RawCredentials rawCredentials) throws UserException {
-        AppUser foundUser = this.lookupUser(rawCredentials.getUsername());
-        if (foundUser == null || !foundUser.isActive() || !this.credentialsService.matchesPassword(rawCredentials.getPassword(), foundUser)) {
-            throw new UserException("User with such credentials was not found.");
-        }
-        return foundUser;
     }
 
     public AppUser lookupUser(String username) {
@@ -57,56 +36,27 @@ public class UserService {
         return foundUser;
     }
 
-    public List<AppUser> lookupUsers(QueryParams queryParams) {
+    public List<AppUser> search(QueryParams queryParams) {
         return this.userDAO.search(queryParams);
     }
 
-    public Map<Integer, AppUser> findFellows(AppUser user) {
-        Map<Integer, AppUser> fellowsMap = new HashMap<>();
-        this.relationService.getUserRelations(user).values().forEach(relation -> {
-            AppUser fellow = this.relationService.getFellowFromRelation(user, relation);
-            fellowsMap.put(fellow.getId(), fellow);
-        });
-        return fellowsMap;
-    }
-
-    public AppUser registerUser(@Valid AppUser userToRegister) throws UserException {
-        this.credentialsService.encodePassword(userToRegister);
+    public AppUser registerUser(AppUser userToRegister) {
+        String encodedPwd = this.credentialsService.encodePassword(userToRegister.getPassword());
+        userToRegister.setPassword(encodedPwd);
         return this.userDAO.create(userToRegister);
     }
 
-    /**
-     * Allowed fields to modify: Name, Picture, IsActive.
-     *
-     * @param updatedUser - User record with updated profile info.
-     * @return Modified User record;
-     * @throws UserException
-     * @throws UserNotFoundException
-     */
-    public AppUser changeProfileInfo(@Valid AppUser updatedUser) throws UserException, UserNotFoundException {
+    public AppUser changeProfileInfo(AppUser updatedUser) {
         AppUser persistedUser = this.lookupUser(updatedUser);
+        if (persistedUser == null) throw new UserDAO.UserNotFoundException(updatedUser);
         this.mergeProperties(persistedUser, updatedUser);
         return this.userDAO.update(persistedUser);
     }
 
-    public AppUser changePassword(AppUser user, RawCredentials rawCredentials) throws UserException, UserNotFoundException {
-        UserValidationResult validationResult = this.userValidator.validateOnPasswordChange(user, rawCredentials);
-        if (!validationResult.isValid()) {
-            throw new UserException(validationResult.getErrorMessage());
-        }
-        AppUser persistedUser = this.lookupUser(user);
-        persistedUser.setPassword(rawCredentials.getNewPassword());
-        this.credentialsService.encodePassword(persistedUser);
-        return this.userDAO.update(persistedUser);
-    }
-
-    public void renewLastLogin(AppUser appUser) {
-        try {
-            appUser.setLastLogin(new Date());
-            this.changeProfileInfo(appUser);
-        } catch (UserService.UserException | UserNotFoundException e) {
-            System.err.println(">>> Could not set 'last_login'. " + e.getMessage());
-        }
+    public AppUser changePassword(AppUser appUser, String newRawPassword) {
+        String encodedPassword = this.credentialsService.encodePassword(newRawPassword);
+        appUser.setPassword(encodedPassword);
+        return this.userDAO.update(appUser);
     }
 
     public void deleteUser(AppUser appUser) {
@@ -130,12 +80,6 @@ public class UserService {
         }
         if (Utility.isNotBlank(updatedUser.getEmail())) {
             persistedUser.setEmail(updatedUser.getEmail());
-        }
-    }
-
-    public class UserException extends Exception {
-        public UserException(String m) {
-            super(m);
         }
     }
 }

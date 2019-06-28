@@ -1,4 +1,4 @@
-package com.xmessenger.model.services.core.user.oauth.gmail;
+package com.xmessenger.model.integrations.gmail;
 
 import org.apache.http.client.utils.URIBuilder;
 import org.springframework.beans.factory.annotation.Value;
@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import java.net.URL;
 
 @Component
-public class UrlBuilder {
+public class GmailUrlBuilder {
     private final String ACCESS_TOKEN_PROPERTY_NAME = "access_token";
     @Value(value = "${gmail.client_id}")
     private String clientId;
@@ -34,7 +34,7 @@ public class UrlBuilder {
         URIBuilder builder = new URIBuilder();
         builder.setScheme("https");
         builder.setHost("www.googleapis.com");
-        builder.setPath("/gmail/v1/users/me/profile");
+        builder.setPath("/gmail/v1/user/me/profile");
         builder.addParameter(this.ACCESS_TOKEN_PROPERTY_NAME, accessToken);
         return builder.build().toURL();
     }

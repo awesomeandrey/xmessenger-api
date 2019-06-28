@@ -4,7 +4,6 @@ import com.google.common.io.Resources;
 import com.xmessenger.controllers.webservices.open.config.OpenResource;
 import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.services.core.user.UserService;
-import com.xmessenger.model.services.core.user.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,13 +36,11 @@ public class GeneralUserInfoController {
     @RequestMapping(value = "/user/{uid}/picture", method = RequestMethod.GET)
     public byte[] getUserPicture(@PathVariable("uid") Integer uid, HttpServletResponse response) throws Exception {
         response.setHeader("Cache-Control", "max-age=14400"); // 4 hours;
-        // Create shell copy;
-        AppUser appUser = new AppUser();
-        appUser.setId(uid);
-        // Query app user info;
-        appUser = this.userService.lookupUser(appUser);
-        if (appUser == null) throw new UserNotFoundException(uid);
-        if (appUser.getPicture() == null) return DEFAULT_USER_PICTURE;
-        return appUser.getPicture();
+        AppUser appUser = this.userService.lookupUser(new AppUser(uid));
+        if (appUser == null) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "User not found.");
+            return null;
+        }
+        return appUser.getPicture() == null ? DEFAULT_USER_PICTURE : appUser.getPicture();
     }
 }

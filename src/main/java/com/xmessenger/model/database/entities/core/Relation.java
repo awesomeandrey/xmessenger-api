@@ -56,12 +56,6 @@ public class Relation {
         this.userTwo = userTwo;
     }
 
-    public boolean isUserRelated(AppUser userToCheck) {
-        if (this.userOne.equals(userToCheck)) return true;
-        if (this.userTwo.equals(userToCheck)) return true;
-        return false;
-    }
-
     @Override
     public String toString() {
         return "Relation{" +

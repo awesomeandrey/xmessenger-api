@@ -46,7 +46,7 @@ public class UserInfoControllerTest {
     private TokenProvider tokenProvider;
 
     @MockBean
-    private UserService flowExecutor;
+    private UserService userService;
 
     @MockBean
     private UserDAO userDAO;
@@ -54,11 +54,11 @@ public class UserInfoControllerTest {
     private MockMvc mockMvc;
 
     @Before
-    public void before() throws Exception {
+    public void before() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.context).addFilters(this.springSecurityFilterChain).build();
         AppUser testUser = UserDataFactory.generateSuccessUser();
         Mockito.when(this.userDAO.getUserByUsername(testUser.getUsername())).thenReturn(testUser);
-        Mockito.when(this.flowExecutor.changeProfileInfo(testUser)).thenReturn(testUser);
+        Mockito.when(this.userService.changeProfileInfo(testUser)).thenReturn(testUser);
     }
 
     @Test
@@ -112,19 +112,6 @@ public class UserInfoControllerTest {
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("id").value(testUser.getId()));
-    }
-
-    @Test
-    public void changePassword() throws Exception {
-        AppUser testUser = UserDataFactory.generateSuccessUser();
-        String token = this.generateToken(testUser);
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.put(this.CONTROLLER_PATH + "/password")
-                .header(TokenProvider.HEADER_NAME, TokenProvider.HEADER_PREFIX + token)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(UserDataFactory.composeRawCredentials(testUser)));
-        this.mockMvc.perform(requestBuilder)
-                .andDo(print())
-                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     private String generateToken(AppUser appUser) {
