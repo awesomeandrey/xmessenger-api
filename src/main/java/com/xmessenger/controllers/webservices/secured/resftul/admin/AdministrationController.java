@@ -77,11 +77,11 @@ public class AdministrationController {
         try {
             appUser = this.performPrimaryValidation(appUser);
             String randomPassword = this.credentialsService.generateRandomPassword(8);
-            this.userService.changePassword(appUser, randomPassword);
+            appUser = this.userService.changePassword(appUser, randomPassword);
             RawCredentials rawCredentials = new RawCredentials(appUser);
             rawCredentials.setNewPassword(randomPassword);
             return rawCredentials;
-        } catch (IllegalArgumentException ex) {
+        } catch (Exception ex) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
             return null;
         }
