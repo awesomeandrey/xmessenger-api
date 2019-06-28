@@ -1,8 +1,8 @@
 package com.xmessenger.model.services.core.user.validator;
 
 import com.xmessenger.model.database.entities.core.AppUser;
-import com.xmessenger.model.services.core.user.security.CredentialsService;
-import com.xmessenger.model.services.core.user.security.decorators.RawCredentials;
+import com.xmessenger.model.services.core.user.credentials.CredentialsService;
+import com.xmessenger.model.services.core.user.credentials.decorators.RawCredentials;
 import com.xmessenger.model.util.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

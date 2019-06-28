@@ -1,7 +1,7 @@
 package data.factories;
 
 import com.xmessenger.model.database.entities.core.AppUser;
-import com.xmessenger.model.services.core.user.security.decorators.RawCredentials;
+import com.xmessenger.model.services.core.user.credentials.decorators.RawCredentials;
 
 import java.util.*;
 

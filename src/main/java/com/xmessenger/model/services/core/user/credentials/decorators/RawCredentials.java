@@ -1,4 +1,4 @@
-package com.xmessenger.model.services.core.user.security.decorators;
+package com.xmessenger.model.services.core.user.credentials.decorators;
 
 import com.xmessenger.model.database.entities.core.AppUser;
 

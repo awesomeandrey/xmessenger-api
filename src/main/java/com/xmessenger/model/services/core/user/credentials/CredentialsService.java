@@ -1,4 +1,4 @@
-package com.xmessenger.model.services.core.user.security;
+package com.xmessenger.model.services.core.user.credentials;
 
 import com.xmessenger.model.util.Utility;
 import org.springframework.beans.factory.annotation.Autowired;

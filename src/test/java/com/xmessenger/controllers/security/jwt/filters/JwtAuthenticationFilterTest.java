@@ -5,7 +5,7 @@ import com.xmessenger.configs.WebSecurityConfig;
 import com.xmessenger.controllers.security.jwt.core.TokenProvider;
 import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.services.core.user.UserService;
-import com.xmessenger.model.services.core.user.security.decorators.RawCredentials;
+import com.xmessenger.model.services.core.user.credentials.decorators.RawCredentials;
 import data.factories.UserDataFactory;
 import org.junit.Before;
 import org.junit.Test;

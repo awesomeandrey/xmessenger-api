@@ -1,7 +1,7 @@
 package com.xmessenger.model.services.core.user;
 
 import com.xmessenger.model.database.entities.core.AppUser;
-import com.xmessenger.model.services.core.user.security.CredentialsService;
+import com.xmessenger.model.services.core.user.credentials.CredentialsService;
 import com.xmessenger.model.services.core.user.dao.UserDAO;
 import org.junit.Test;
 import org.junit.runner.RunWith;

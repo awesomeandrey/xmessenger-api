@@ -9,7 +9,7 @@ import com.xmessenger.model.services.core.chatter.RelationService;
 import com.xmessenger.model.services.core.user.indicators.IndicatorService;
 import com.xmessenger.model.services.core.user.UserService;
 import com.xmessenger.model.services.core.user.dao.decorators.QueryParams;
-import com.xmessenger.model.services.core.user.security.decorators.RawCredentials;
+import com.xmessenger.model.services.core.user.credentials.decorators.RawCredentials;
 import com.xmessenger.model.services.core.user.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
