@@ -61,10 +61,6 @@ public class UserDAO {
     }
 
     public static class UserNotFoundException extends IllegalArgumentException {
-        public UserNotFoundException() {
-            this(0);
-        }
-
         public UserNotFoundException(Integer uid) {
             super(String.format("User with ID=%d was not found.", uid));
         }

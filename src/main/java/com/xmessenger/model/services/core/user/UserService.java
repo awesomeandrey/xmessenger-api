@@ -8,7 +8,6 @@ import com.xmessenger.model.util.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @Service
@@ -41,13 +40,13 @@ public class UserService {
         return this.userDAO.search(queryParams);
     }
 
-    public AppUser registerUser(@Valid AppUser userToRegister) {
+    public AppUser registerUser(AppUser userToRegister) {
         String encodedPwd = this.credentialsService.encodePassword(userToRegister.getPassword());
         userToRegister.setPassword(encodedPwd);
         return this.userDAO.create(userToRegister);
     }
 
-    public AppUser changeProfileInfo(@Valid AppUser updatedUser) {
+    public AppUser changeProfileInfo(AppUser updatedUser) {
         AppUser persistedUser = this.lookupUser(updatedUser);
         this.mergeProperties(persistedUser, updatedUser);
         return this.userDAO.update(persistedUser);

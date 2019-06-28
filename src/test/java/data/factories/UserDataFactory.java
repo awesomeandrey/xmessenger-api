@@ -3,10 +3,7 @@ package data.factories;
 import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.services.core.user.security.decorators.RawCredentials;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class UserDataFactory {
     private static int FELLOWS_AMOUNT = 5;
@@ -66,6 +63,7 @@ public class UserDataFactory {
         testUser.setPicture(new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9});
         testUser.setActive(true);
         testUser.setEmail("default@example.com");
+        testUser.setLastLogin(new Date());
         return testUser;
     }
 }

@@ -88,12 +88,12 @@ public class AdministrationController {
     }
 
     private AppUser performPrimaryValidation(AppUser appUser) {
-        appUser = this.userService.lookupUser(appUser);
-        if (appUser == null) {
-            throw new UserDAO.UserNotFoundException();
-        } else if (appUser.getId().equals(this.contextUserHolder.getContextUserId())) {
-            throw new IllegalArgumentException("You cannot delete yourself.");
+        AppUser foundUser = this.userService.lookupUser(appUser);
+        if (foundUser == null) {
+            throw new UserDAO.UserNotFoundException(appUser);
+        } else if (foundUser.getId().equals(this.contextUserHolder.getContextUserId())) {
+            throw new UnsupportedOperationException("Admin cannot perform operations on himself.");
         }
-        return appUser;
+        return foundUser;
     }
 }
