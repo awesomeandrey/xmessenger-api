@@ -51,7 +51,7 @@ public class AdministrationController {
     @RequestMapping(value = "/updateUser", method = RequestMethod.PUT)
     public void changeUserProfileInfo(@RequestBody AppUser appUser, HttpServletResponse response) throws IOException {
         try {
-            appUser = this.performPrimaryValidation(appUser);
+            this.performPrimaryValidation(appUser);
             this.userService.changeProfileInfo(appUser);
             response.setStatus(HttpServletResponse.SC_OK);
         } catch (Exception ex) {
