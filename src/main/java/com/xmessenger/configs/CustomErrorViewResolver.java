@@ -15,14 +15,12 @@ public class CustomErrorViewResolver implements ErrorViewResolver {
         String pathStr = (String) model.get("path");
         System.out.println("PATH: " + pathStr);
         if (pathStr.contains("api")) {
+            System.out.println(">>> REST API error");
+            System.out.println("STATUS " + status.toString());
+            System.out.println("STATUS " + status.getReasonPhrase());
 
-            System.out.println("REST API error");
-
-            return new ModelAndView("/errorpage/api");
+            return new ModelAndView("/test/api-error");
         } else {
-
-            System.out.println("To HTML page");
-
             return new ModelAndView("/error");
         }
     }
