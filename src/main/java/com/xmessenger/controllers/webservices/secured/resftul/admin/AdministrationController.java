@@ -2,7 +2,7 @@ package com.xmessenger.controllers.webservices.secured.resftul.admin;
 
 import com.xmessenger.configs.WebSecurityConfig;
 import com.xmessenger.controllers.security.user.details.ContextUserHolder;
-import com.xmessenger.controllers.webservices.exceptions.BadRequestException;
+import com.xmessenger.controllers.webservices.config.exceptions.BadRequestException;
 import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.database.entities.core.Indicator;
 import com.xmessenger.model.services.core.user.credentials.CredentialsService;
@@ -13,16 +13,12 @@ import com.xmessenger.model.services.core.request.RequestService;
 import com.xmessenger.model.services.core.user.UserService;
 import com.xmessenger.model.services.core.user.credentials.decorators.RawCredentials;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -52,33 +48,31 @@ public class AdministrationController {
     }
 
     @RequestMapping(value = "/updateUser", method = RequestMethod.PUT)
-    public void changeUserProfileInfo(@RequestBody AppUser appUser, HttpServletResponse response) throws IOException {
+    public void changeUserProfileInfo(@RequestBody AppUser appUser) {
         try {
-            AppUser persistedUser = this.lookupUser(appUser);
+            AppUser persistedUser = this.lookupUserAndValidate(appUser);
             this.userService.changeProfileInfo(persistedUser, appUser);
-            response.setStatus(HttpServletResponse.SC_OK);
         } catch (Exception ex) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
+            throw new BadRequestException(ex);
         }
     }
 
     @RequestMapping(value = "/deleteUser", method = RequestMethod.DELETE)
-    public void deleteUser(@RequestBody AppUser appUser, HttpServletResponse response) throws IOException {
+    public void deleteUser(@RequestBody AppUser appUser) {
         try {
-            appUser = this.lookupUser(appUser);
+            appUser = this.lookupUserAndValidate(appUser);
             this.requestService.deleteRequestsAll(appUser);
             this.chattingService.deleteChatsAll(appUser);
             this.userService.deleteUser(appUser);
-            response.setStatus(HttpServletResponse.SC_OK);
         } catch (IllegalArgumentException ex) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
+            throw new BadRequestException(ex);
         }
     }
 
     @RequestMapping(value = "/resetUser", method = RequestMethod.PUT)
     public RawCredentials resetUserPassword(@RequestBody AppUser appUser) {
         try {
-            appUser = this.lookupUser(appUser);
+            appUser = this.lookupUserAndValidate(appUser);
             if (appUser.isExternal()) {
                 throw new UnsupportedOperationException("Externally logged users don't change password.");
             }
@@ -90,7 +84,7 @@ public class AdministrationController {
         }
     }
 
-    private AppUser lookupUser(AppUser appUser) {
+    private AppUser lookupUserAndValidate(AppUser appUser) {
         AppUser foundUser = this.userService.lookupUser(appUser);
         if (foundUser == null) {
             throw new UserDAO.UserNotFoundException(appUser);
