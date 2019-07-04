@@ -40,7 +40,7 @@ public class RequestController {
     }
 
     @RequestMapping(value = "/process", method = RequestMethod.PUT)
-    public Request processRequest(@RequestBody Request requestToProcess) throws Exception {
+    public Request processRequest(@RequestBody Request requestToProcess) {
         AppUser user = this.contextUserHolder.getContextUser();
         Request foundRequest = this.requestService.lookupRequest(requestToProcess);
         if (foundRequest == null) {
@@ -49,6 +49,7 @@ public class RequestController {
             throw new IllegalArgumentException("Request recipient didn't pass validity check.");
         }
         if (requestToProcess.getApproved()) {
+            foundRequest.setApproved(requestToProcess.getApproved());
             this.chattingService.createChat(foundRequest.getSender(), foundRequest.getRecipient());
         }
         this.requestService.deleteRequest(foundRequest);

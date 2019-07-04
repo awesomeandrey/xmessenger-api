@@ -56,7 +56,7 @@ public class ChattingService {
     public Map<Integer, Chat> retrieveChats(AppUser runningUser) {
         Map<Integer, Relation> relationsMap = this.relationService.getUserRelationsMap(runningUser);
         Map<Integer, Date> latestMessageDateByRelation = this.messageService.groupLastMessageDateByRelations(
-                (List<Relation>) relationsMap.values()
+                new ArrayList<>(relationsMap.values())
         );
         Map<Integer, Chat> chatsMap = new HashMap<>();
         relationsMap.values().forEach((relation) -> {
