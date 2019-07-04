@@ -21,6 +21,7 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
         Map<String, Object> response = new HashMap<>();
         response.put("message", ex.getLocalizedMessage().split(":")[1].trim());
         response.put("locale", request.getLocale());
+        response.put("details", request.getDescription(false));
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }
