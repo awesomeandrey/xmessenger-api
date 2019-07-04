@@ -51,8 +51,8 @@ public class AdministrationController {
     @RequestMapping(value = "/updateUser", method = RequestMethod.PUT)
     public void changeUserProfileInfo(@RequestBody AppUser appUser, HttpServletResponse response) throws IOException {
         try {
-            this.performPrimaryValidation(appUser);
-            this.userService.changeProfileInfo(appUser);
+            AppUser persistedUser = this.lookupUser(appUser);
+            this.userService.changeProfileInfo(persistedUser, appUser);
             response.setStatus(HttpServletResponse.SC_OK);
         } catch (Exception ex) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
@@ -62,7 +62,7 @@ public class AdministrationController {
     @RequestMapping(value = "/deleteUser", method = RequestMethod.DELETE)
     public void deleteUser(@RequestBody AppUser appUser, HttpServletResponse response) throws IOException {
         try {
-            appUser = this.performPrimaryValidation(appUser);
+            appUser = this.lookupUser(appUser);
             this.requestService.deleteRequestsAll(appUser);
             this.chattingService.deleteChatsAll(appUser);
             this.userService.deleteUser(appUser);
@@ -75,19 +75,20 @@ public class AdministrationController {
     @RequestMapping(value = "/resetUser", method = RequestMethod.PUT)
     public RawCredentials resetUserPassword(@RequestBody AppUser appUser, HttpServletResponse response) throws IOException {
         try {
-            appUser = this.performPrimaryValidation(appUser);
+            appUser = this.lookupUser(appUser);
+            if (appUser.isExternal()) {
+                throw new UnsupportedOperationException("Externally logged users don't change password.");
+            }
             String randomPassword = this.credentialsService.generateRandomPassword(8);
             appUser = this.userService.changePassword(appUser, randomPassword);
-            RawCredentials rawCredentials = new RawCredentials(appUser);
-            rawCredentials.setNewPassword(randomPassword);
-            return rawCredentials;
+            return new RawCredentials(appUser.getUsername(), null, randomPassword);
         } catch (Exception ex) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
             return null;
         }
     }
 
-    private AppUser performPrimaryValidation(AppUser appUser) {
+    private AppUser lookupUser(AppUser appUser) {
         AppUser foundUser = this.userService.lookupUser(appUser);
         if (foundUser == null) {
             throw new UserDAO.UserNotFoundException(appUser);

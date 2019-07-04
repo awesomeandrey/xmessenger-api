@@ -1,7 +1,5 @@
 package com.xmessenger.model.services.core.user.credentials.decorators;
 
-import com.xmessenger.model.database.entities.core.AppUser;
-
 public class RawCredentials {
     private String username;
     private String password;
@@ -10,8 +8,10 @@ public class RawCredentials {
     public RawCredentials() {
     }
 
-    public RawCredentials(AppUser appUser) {
-        this.username = appUser.getUsername();
+    public RawCredentials(String username, String password, String newPassword) {
+        this.username = username;
+        this.password = password;
+        this.newPassword = newPassword;
     }
 
     public String getUsername() {

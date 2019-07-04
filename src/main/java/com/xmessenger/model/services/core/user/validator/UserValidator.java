@@ -43,6 +43,9 @@ public class UserValidator {
     }
 
     public Result validateOnPasswordChange(AppUser userToValidate, RawCredentials rawCredentials) {
+        if (userToValidate.isExternal()) {
+            return new Result("Externally logged users don't change password.");
+        }
         final String oldRawPassword = rawCredentials.getPassword(), newRawPassword = rawCredentials.getNewPassword();
         if (!this.isRawPasswordCorrect(newRawPassword)) {
             return new Result("Invalid 'Password' field value.");

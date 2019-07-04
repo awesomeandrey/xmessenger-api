@@ -48,6 +48,10 @@ public class UserService {
 
     public AppUser changeProfileInfo(AppUser updatedUser) {
         AppUser persistedUser = this.lookupUser(updatedUser);
+        return this.changeProfileInfo(persistedUser, updatedUser);
+    }
+
+    public AppUser changeProfileInfo(AppUser persistedUser, AppUser updatedUser) {
         this.mergeProperties(persistedUser, updatedUser);
         return this.userDAO.update(persistedUser);
     }
