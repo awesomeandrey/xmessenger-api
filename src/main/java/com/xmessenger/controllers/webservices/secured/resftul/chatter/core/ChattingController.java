@@ -30,7 +30,7 @@ public class ChattingController {
         this.chattingService = chattingService;
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "/", method = RequestMethod.GET)
     public List<Chat> retrieveChats() {
         AppUser user = this.contextUserHolder.getContextUser();
         return new ArrayList<>(this.chattingService.retrieveChats(user).values());
