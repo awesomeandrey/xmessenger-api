@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping(WebSecurityConfig.API_BASE_PATH + "/request")
+@RequestMapping(WebSecurityConfig.API_BASE_PATH + "/requests")
 public class RequestController {
     private final ContextUserHolder contextUserHolder;
     private final ApplicationEventPublisher publisher;
