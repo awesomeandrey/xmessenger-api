@@ -2,6 +2,7 @@ package com.xmessenger.controllers.webservices.secured.resftul.admin;
 
 import com.xmessenger.configs.WebSecurityConfig;
 import com.xmessenger.controllers.security.user.details.ContextUserHolder;
+import com.xmessenger.controllers.webservices.exceptions.BadRequestException;
 import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.database.entities.core.Indicator;
 import com.xmessenger.model.services.core.user.credentials.CredentialsService;
@@ -73,7 +74,7 @@ public class AdministrationController {
     }
 
     @RequestMapping(value = "/resetUser", method = RequestMethod.PUT)
-    public RawCredentials resetUserPassword(@RequestBody AppUser appUser, HttpServletResponse response) throws IOException {
+    public RawCredentials resetUserPassword(@RequestBody AppUser appUser) {
         try {
             appUser = this.lookupUser(appUser);
             if (appUser.isExternal()) {
@@ -83,8 +84,7 @@ public class AdministrationController {
             appUser = this.userService.changePassword(appUser, randomPassword);
             return new RawCredentials(appUser.getUsername(), null, randomPassword);
         } catch (Exception ex) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
-            return null;
+            throw new BadRequestException(ex);
         }
     }
 
