@@ -5,6 +5,7 @@ import com.xmessenger.controllers.security.user.details.ContextUserHolder;
 import com.xmessenger.model.database.entities.core.Indicator;
 import com.xmessenger.model.database.entities.enums.Role;
 import com.xmessenger.model.database.entities.core.AppUser;
+import com.xmessenger.model.services.async.AsynchronousService;
 import com.xmessenger.model.services.core.chatter.RelationService;
 import com.xmessenger.model.services.core.user.indicators.IndicatorService;
 import com.xmessenger.model.services.core.user.UserService;
@@ -27,14 +28,16 @@ public class UserInfoController {
     private final RelationService relationService;
     private final UserValidator userValidator;
     private final IndicatorService indicatorService;
+    private final AsynchronousService asynchronousService;
 
     @Autowired
-    public UserInfoController(ContextUserHolder contextUserHolder, UserService userService, RelationService relationService, UserValidator userValidator, IndicatorService indicatorService) {
+    public UserInfoController(ContextUserHolder contextUserHolder, UserService userService, RelationService relationService, UserValidator userValidator, IndicatorService indicatorService, AsynchronousService asynchronousService) {
         this.contextUserHolder = contextUserHolder;
         this.userService = userService;
         this.relationService = relationService;
         this.userValidator = userValidator;
         this.indicatorService = indicatorService;
+        this.asynchronousService = asynchronousService;
     }
 
     @RequestMapping(value = "/info", method = RequestMethod.GET)
@@ -84,6 +87,6 @@ public class UserInfoController {
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
     public void logout() {
         AppUser appUser = this.getCurrentUser();
-        this.indicatorService.switchIndicator(appUser, false);
+        this.asynchronousService.switchAppUserIndicator(appUser, false);
     }
 }
