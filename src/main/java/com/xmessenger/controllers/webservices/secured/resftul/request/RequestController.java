@@ -33,7 +33,7 @@ public class RequestController {
         this.chattingService = chattingService;
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     public List<Request> getRequests() {
         AppUser user = this.contextUserHolder.getContextUser();
         return this.requestService.retrieveRequests(user);
