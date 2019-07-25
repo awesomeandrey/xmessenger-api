@@ -5,7 +5,9 @@ import com.xmessenger.controllers.security.jwt.filters.JwtAuthenticationFilter;
 import com.xmessenger.controllers.security.jwt.filters.JwtAuthorizationFilter;
 import com.xmessenger.controllers.security.jwt.core.TokenProvider;
 import com.xmessenger.controllers.security.user.details.UserDetailsServiceImpl;
+import com.xmessenger.model.database.entities.enums.Role;
 import com.xmessenger.model.services.async.AsynchronousService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.http.HttpStatus;
@@ -36,6 +38,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final static String API_BASE_PATH_PATTERN = API_BASE_PATH.concat("/**");
     private final static String ADMIN_BASE_PATH_PATTERN = ADMIN_API_BASE_PATH.concat("/**");
+
+    @Value("${credentials.admin.username}")
+    private String ADMIN_USERNAME;
+
+    @Value("${credentials.admin.password}")
+    private String ADMIN_PASSWORD;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -106,6 +114,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         auth
                 .userDetailsService(this.userDetailsService())
                 .passwordEncoder(this.passwordEncoder());
+        auth
+                .inMemoryAuthentication()
+                .passwordEncoder(this.passwordEncoder())
+                .withUser(this.ADMIN_USERNAME)
+                .password(this.passwordEncoder().encode(this.ADMIN_PASSWORD))
+                .roles(Role.ROLE_ADMIN.getAuthority().replaceFirst("ROLE_", "")); // ROLE_ADMIN cannot start with ROLE_ (it is automatically added);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
