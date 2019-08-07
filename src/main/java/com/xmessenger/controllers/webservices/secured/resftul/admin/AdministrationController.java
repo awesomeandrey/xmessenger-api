@@ -2,7 +2,6 @@ package com.xmessenger.controllers.webservices.secured.resftul.admin;
 
 import com.xmessenger.configs.WebSecurityConfig;
 import com.xmessenger.controllers.security.user.details.ContextUserHolder;
-import com.xmessenger.controllers.webservices.config.exceptions.BadRequestException;
 import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.database.entities.core.Indicator;
 import com.xmessenger.model.services.core.user.credentials.CredentialsService;
@@ -49,39 +48,27 @@ public class AdministrationController {
 
     @RequestMapping(value = "/updateUser", method = RequestMethod.PUT)
     public void changeUserProfileInfo(@RequestBody AppUser appUser) {
-        try {
-            AppUser persistedUser = this.lookupUserAndValidate(appUser);
-            this.userService.changeProfileInfo(persistedUser, appUser);
-        } catch (Exception ex) {
-            throw new BadRequestException(ex);
-        }
+        AppUser persistedUser = this.lookupUserAndValidate(appUser);
+        this.userService.changeProfileInfo(persistedUser, appUser);
     }
 
     @RequestMapping(value = "/deleteUser", method = RequestMethod.DELETE)
     public void deleteUser(@RequestBody AppUser appUser) {
-        try {
-            appUser = this.lookupUserAndValidate(appUser);
-            this.requestService.deleteRequestsAll(appUser);
-            this.chattingService.deleteChatsAll(appUser);
-            this.userService.deleteUser(appUser);
-        } catch (IllegalArgumentException ex) {
-            throw new BadRequestException(ex);
-        }
+        appUser = this.lookupUserAndValidate(appUser);
+        this.requestService.deleteRequestsAll(appUser);
+        this.chattingService.deleteChatsAll(appUser);
+        this.userService.deleteUser(appUser);
     }
 
     @RequestMapping(value = "/resetUser", method = RequestMethod.PUT)
     public RawCredentials resetUserPassword(@RequestBody AppUser appUser) {
-        try {
-            appUser = this.lookupUserAndValidate(appUser);
-            if (appUser.isExternal()) {
-                throw new UnsupportedOperationException("Externally logged users don't change password.");
-            }
-            String randomPassword = this.credentialsService.generateRandomPassword(8);
-            appUser = this.userService.changePassword(appUser, randomPassword);
-            return new RawCredentials(appUser.getUsername(), null, randomPassword);
-        } catch (Exception ex) {
-            throw new BadRequestException(ex);
+        appUser = this.lookupUserAndValidate(appUser);
+        if (appUser.isExternal()) {
+            throw new UnsupportedOperationException("Externally logged users don't change password.");
         }
+        String randomPassword = this.credentialsService.generateRandomPassword(8);
+        appUser = this.userService.changePassword(appUser, randomPassword);
+        return new RawCredentials(appUser.getUsername(), null, randomPassword);
     }
 
     private AppUser lookupUserAndValidate(AppUser appUser) {
