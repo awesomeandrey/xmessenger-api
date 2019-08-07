@@ -44,7 +44,8 @@ public class RequestService {
      * @return List of friendship request.
      */
     public List<Request> retrieveRequests(AppUser user) {
-        return this.requestRepository.findByRecipientAndApprovedIsFalse(user);
+//        return this.requestRepository.findByRecipientAndApprovedIsFalse(user);
+        return this.requestRepository.findTop6ByRecipientAndApprovedIsFalse(user);
     }
 
     /**
