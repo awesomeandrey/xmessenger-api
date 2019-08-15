@@ -18,15 +18,6 @@ public class MessageService {
         this.messageRepository = messageRepository;
     }
 
-    public Map<Integer, Date> groupLastMessageDateByRelations(List<Relation> relations) {
-        Map<Integer, Date> dateByRelationMap = new HashMap<>();
-        if (!relations.isEmpty()) {
-            List<Object[]> aggregationResult = this.messageRepository.aggregateMessagesDateByRelations(relations);
-            aggregationResult.forEach(objects -> dateByRelationMap.put((Integer) objects[0], (Date) objects[1]));
-        }
-        return dateByRelationMap;
-    }
-
     public List<Message> getMessagesByRelation(Relation relation) {
         return this.messageRepository.findTop20ByRelationOrderByDateDesc(relation);
     }

@@ -4,6 +4,8 @@ import com.xmessenger.model.database.entities.core.Relation;
 import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.database.repositories.core.RelationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -34,6 +36,10 @@ public class RelationService {
         return fellowsMap;
     }
 
+    public Page<Object[]> aggregateUserRelationsByLastMessageDate(AppUser appUser, Pageable pageable) {
+        return this.relationRepository.aggregateUserRelationsByLastMessageDate(appUser, pageable);
+    }
+
     public Relation lookupRelation(Integer relationId) {
         if (relationId == null) return null;
         return this.relationRepository.findOne(relationId);
@@ -51,7 +57,7 @@ public class RelationService {
     }
 
     public boolean hasRelation(AppUser user1, AppUser user2) {
-        return this.relationRepository.getRelationByUserReferences(user1.getId(), user2.getId()) != null;
+        return this.relationRepository.getRelationByUserReferences(user1, user2) != null;
     }
 
     public void deleteRelation(Relation relation) {

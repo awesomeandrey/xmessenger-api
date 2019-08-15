@@ -5,6 +5,9 @@ import com.xmessenger.model.database.entities.core.Relation;
 import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.services.core.chatter.decorators.Chat;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,21 +56,16 @@ public class ChattingService {
         this.relationService.deleteRelations(relations);
     }
 
-    public Map<Integer, Chat> retrieveChats(AppUser runningUser) {
-        Map<Integer, Relation> relationsMap = this.relationService.getUserRelationsMap(runningUser);
-        Map<Integer, Date> latestMessageDateByRelation = this.messageService.groupLastMessageDateByRelations(
-                new ArrayList<>(relationsMap.values())
-        );
-        Map<Integer, Chat> chatsMap = new HashMap<>();
-        relationsMap.values().forEach((relation) -> {
-            Chat chatEntity = new Chat(relation);
-            chatEntity.setFellow(this.relationService.getFellowFromRelation(runningUser, relation));
-            if (latestMessageDateByRelation.containsKey(relation.getId())) {
-                chatEntity.setLatestMessageDate(latestMessageDateByRelation.get(relation.getId()));
-            }
-            chatsMap.put(chatEntity.getId(), chatEntity);
+    public Page<Chat> retrieveChats(AppUser runningUser, Pageable pageable) {
+        List<Chat> userChats = new ArrayList<>();
+        this.relationService.aggregateUserRelationsByLastMessageDate(runningUser, pageable).forEach(objects -> {
+            Relation relation = (Relation) objects[0];
+            Chat chatItem = new Chat(relation);
+            chatItem.setFellow(this.relationService.getFellowFromRelation(runningUser, relation));
+            chatItem.setLatestMessageDate((Date) objects[1]);
+            userChats.add(chatItem);
         });
-        return chatsMap;
+        return new PageImpl(userChats);
     }
 
     public Message postMessage(Message message) {

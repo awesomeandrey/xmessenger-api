@@ -10,10 +10,11 @@ import com.xmessenger.controllers.webservices.open.websockets.events.ChatClearEv
 import com.xmessenger.controllers.webservices.open.websockets.events.ChatDeleteEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.rest.core.event.AfterCreateEvent;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -31,9 +32,9 @@ public class ChattingController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public List<Chat> retrieveChats() {
-        AppUser user = this.contextUserHolder.getContextUser();
-        return new ArrayList<>(this.chattingService.retrieveChats(user).values());
+    public Page<Chat> retrieveChats(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size) {
+        AppUser contextUser = this.contextUserHolder.getContextUser();
+        return this.chattingService.retrieveChats(contextUser, new PageRequest(page, size));
     }
 
     @RequestMapping(value = "/{chatId}/messages", method = RequestMethod.GET)
