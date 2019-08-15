@@ -36,8 +36,14 @@ public class RelationService {
         return fellowsMap;
     }
 
-    public Page<Object[]> aggregateUserRelationsByLastMessageDate(AppUser appUser, Pageable pageable) {
+    public List<Object[]> aggregateUserRelationsByLastMessageDate(AppUser appUser, Pageable pageable) {
+        // Potentially, crop query applying 'OFFSET' + 'LIMIT' techniques;
         return this.relationRepository.aggregateUserRelationsByLastMessageDate(appUser, pageable);
+    }
+
+    public AppUser getFellowFromRelation(AppUser runningUser, Relation relation) {
+        AppUser user1 = relation.getUserOne(), user2 = relation.getUserTwo();
+        return user1.getId().equals(runningUser.getId()) ? user2 : user1;
     }
 
     public Relation lookupRelation(Integer relationId) {
@@ -56,6 +62,10 @@ public class RelationService {
         return this.relationRepository.save(relation);
     }
 
+    public Long countUserRelations(AppUser runningUser) {
+        return this.relationRepository.countByUserOneOrUserTwo(runningUser, runningUser);
+    }
+
     public boolean hasRelation(AppUser user1, AppUser user2) {
         return this.relationRepository.getRelationByUserReferences(user1, user2) != null;
     }
@@ -68,11 +78,6 @@ public class RelationService {
 
     public void deleteRelations(List<Relation> relationsToDelete) {
         this.relationRepository.delete(relationsToDelete);
-    }
-
-    public AppUser getFellowFromRelation(AppUser runningUser, Relation relation) {
-        AppUser user1 = relation.getUserOne(), user2 = relation.getUserTwo();
-        return user1.getId().equals(runningUser.getId()) ? user2 : user1;
     }
 
     //******************************************************************************************************************

@@ -65,7 +65,7 @@ public class ChattingService {
             chatItem.setLatestMessageDate((Date) objects[1]);
             userChats.add(chatItem);
         });
-        return new PageImpl(userChats);
+        return new PageImpl(userChats, pageable, this.relationService.countUserRelations(runningUser));
     }
 
     public Message postMessage(Message message) {
