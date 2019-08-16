@@ -51,6 +51,10 @@ public class RelationService {
         return this.relationRepository.findOne(relationId);
     }
 
+    public Relation lookupRelation(Relation relation) {
+        return this.lookupRelation(relation.getId());
+    }
+
     public Relation createRelation(AppUser user1, AppUser user2) {
         Relation relation = new Relation(user1, user2);
         if (!this.isValid(relation)) {

@@ -26,7 +26,7 @@ public class ChattingService {
     }
 
     public boolean hasAuthorityToOperateWithChat(AppUser authorizedUser, Chat chat) {
-        Relation relation = this.relationService.lookupRelation(chat.getId());
+        Relation relation = this.relationService.lookupRelation(chat.getRelation());
         if (relation == null) return false;
         if (relation.getUserOne().equals(authorizedUser)) return true;
         if (relation.getUserTwo().equals(authorizedUser)) return true;
@@ -40,7 +40,7 @@ public class ChattingService {
 
     public Chat clearChat(AppUser runningUser, Chat chatToClear) {
         this.messageService.deleteMessagesByRelation(chatToClear.getRelation());
-        return this.retrieveChat(runningUser, chatToClear.getId());
+        return this.retrieveChat(runningUser, chatToClear.getChatId());
     }
 
     public Chat deleteChat(AppUser runningUser, Chat chatToDelete) {
@@ -62,7 +62,7 @@ public class ChattingService {
             Relation relation = (Relation) objects[0];
             Chat chatItem = new Chat(relation);
             chatItem.setFellow(this.relationService.getFellowFromRelation(runningUser, relation));
-            chatItem.setLatestMessageDate((Date) objects[1]);
+            chatItem.setLastActivityDate((Date) objects[1]);
             userChats.add(chatItem);
         });
         return new PageImpl(userChats, pageable, this.relationService.countUserRelations(runningUser));

@@ -7,21 +7,28 @@ import com.xmessenger.model.database.entities.core.AppUser;
 import java.util.Date;
 
 public class Chat {
-    @JsonIgnore
-    private Relation relation;
+    private Integer chatId;
+    private Date lastActivityDate;
     private AppUser fellow;
-    private Date latestMessageDate;
-    private AppUser updatedBy;
+    private AppUser lastUpdatedBy;
+    private AppUser startedBy;
 
-    public Integer getId() {
-        return this.relation.getId();
+    public Integer getChatId() {
+        return this.chatId;
     }
 
-    public void setId(Integer id) {
-        if (this.relation == null) {
-            this.relation = new Relation();
+    public void setChatId(Integer chatId) {
+        this.chatId = chatId;
+    }
+
+    public Date getLastActivityDate() {
+        return this.lastActivityDate;
+    }
+
+    public void setLastActivityDate(Date lastActivityDate) {
+        if (lastActivityDate != null) {
+            this.lastActivityDate = lastActivityDate;
         }
-        this.relation.setId(id);
     }
 
     public AppUser getFellow() {
@@ -32,52 +39,40 @@ public class Chat {
         this.fellow = fellow;
     }
 
+    public AppUser getLastUpdatedBy() {
+        return this.lastUpdatedBy;
+    }
+
+    public void setLastUpdatedBy(AppUser lastUpdatedBy) {
+        this.lastUpdatedBy = lastUpdatedBy;
+    }
+
     public AppUser getStartedBy() {
-        return this.relation.getUserOne();
+        return this.startedBy;
     }
 
-    public Date getLatestMessageDate() {
-        return this.latestMessageDate;
+    public void setStartedBy(AppUser startedBy) {
+        this.startedBy = startedBy;
     }
 
-    public void setLatestMessageDate(Date latestMessageDate) {
-        this.latestMessageDate = latestMessageDate;
-    }
-
+    @JsonIgnore
     public Relation getRelation() {
-        return this.relation;
-    }
-
-    public void setRelation(Relation relation) {
-        this.relation = relation;
-    }
-
-    public AppUser getUpdatedBy() {
-        return this.updatedBy;
-    }
-
-    public void setUpdatedBy(AppUser updatedBy) {
-        this.updatedBy = updatedBy;
+        Relation relation = new Relation();
+        relation.setId(this.chatId);
+        return relation;
     }
 
     public Chat() {
     }
 
     public Chat(Integer relationId) {
-        this.setId(relationId);
+        this();
+        this.chatId = relationId;
     }
 
     public Chat(Relation relation) {
-        this.relation = relation;
-    }
-
-    @Override
-    public String toString() {
-        return "Chat{" +
-                "relation=" + relation +
-                ", fellow=" + fellow +
-                ", latestMessageDate=" + latestMessageDate +
-                ", updatedBy=" + updatedBy +
-                '}';
+        this(relation.getId());
+        this.lastActivityDate = relation.getDate();
+        this.startedBy = relation.getUserOne();
     }
 }

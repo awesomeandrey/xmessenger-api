@@ -55,7 +55,7 @@ public class ChattingController {
     public void clearChat(@PathVariable("chatId") Integer chatId) {
         AppUser user = this.contextUserHolder.getContextUser();
         Chat clearedChat = this.chattingService.clearChat(user, new Chat(chatId));
-        clearedChat.setUpdatedBy(user);
+        clearedChat.setLastUpdatedBy(user);
         this.publisher.publishEvent(new ChatClearEvent(this, clearedChat));
     }
 
@@ -63,7 +63,7 @@ public class ChattingController {
     public void deleteChat(@PathVariable("chatId") Integer chatId) {
         AppUser user = this.contextUserHolder.getContextUser();
         Chat deletedChat = this.chattingService.deleteChat(user, new Chat(chatId));
-        deletedChat.setUpdatedBy(user);
+        deletedChat.setLastUpdatedBy(user);
         this.publisher.publishEvent(new ChatDeleteEvent(this, deletedChat));
     }
 }
