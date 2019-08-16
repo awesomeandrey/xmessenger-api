@@ -59,6 +59,7 @@ public class RelationService {
         if (this.hasRelation(user1, user2)) {
             throw new IllegalArgumentException("The relation already exists.");
         }
+        relation.setDate(new Date());
         return this.relationRepository.save(relation);
     }
 

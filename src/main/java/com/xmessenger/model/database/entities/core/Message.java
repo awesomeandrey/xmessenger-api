@@ -24,7 +24,7 @@ public class Message {
     @Column(name = "body")
     private String body;
 
-    @Column(name = "date")
+    @Column(name = "created_date")
     private Date date;
 
     public Integer getId() {

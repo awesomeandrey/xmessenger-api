@@ -3,6 +3,7 @@ package com.xmessenger.model.database.entities.core;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.Objects;
 
 @javax.persistence.Entity
@@ -23,6 +24,9 @@ public class Relation {
     @JoinColumn(name = "user_two_id")
     @JsonIgnore
     private AppUser userTwo;
+
+    @Column(name = "created_date")
+    private Date date;
 
     public Integer getId() {
         return this.id;
@@ -46,6 +50,14 @@ public class Relation {
 
     public void setUserTwo(AppUser userTwo) {
         this.userTwo = userTwo;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public Relation() {

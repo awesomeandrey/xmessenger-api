@@ -22,7 +22,7 @@ public interface RelationRepository extends PagingAndSortingRepository<Relation,
     @Query(value = "select relation, (select max(date) from Message message where message.relation = relation) as last_message_date " +
             "from Relation relation " +
             "where relation.userOne = ?1 or relation.userTwo = ?1 " +
-            "order by last_message_date asc")
+            "order by last_message_date, relation.date asc")
     List<Object[]> aggregateUserRelationsByLastMessageDate(AppUser appUser, Pageable pageable);
 
     Long countByUserOneOrUserTwo(AppUser sameUser1, AppUser sameUser2);
