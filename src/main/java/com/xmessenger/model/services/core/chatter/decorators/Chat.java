@@ -8,9 +8,10 @@ import java.util.Date;
 
 public class Chat {
     private Integer chatId;
-    private Date lastActivityDate;
+    private Date lastActivityDate; // Inert value (generated at runtime, non-persistent);
+    private Date createdDate;
     private AppUser fellow;
-    private AppUser lastUpdatedBy;
+    private AppUser lastUpdatedBy; // Inert value (generated at runtime, non-persistent);
     private AppUser startedBy;
 
     public Integer getChatId() {
@@ -29,6 +30,14 @@ public class Chat {
         if (lastActivityDate != null) {
             this.lastActivityDate = lastActivityDate;
         }
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
     }
 
     public AppUser getFellow() {
@@ -72,7 +81,18 @@ public class Chat {
 
     public Chat(Relation relation) {
         this(relation.getId());
-        this.lastActivityDate = relation.getDate();
+        this.createdDate = relation.getCreatedDate();
         this.startedBy = relation.getUserOne();
+    }
+
+    @Override
+    public String toString() {
+        return "Chat{" +
+                "chatId=" + chatId +
+                ", lastActivityDate=" + lastActivityDate +
+                ", fellow=" + fellow.getId() +
+                ", lastUpdatedBy=" + lastUpdatedBy.getId() +
+                ", startedBy=" + startedBy.getId() +
+                '}';
     }
 }

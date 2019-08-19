@@ -26,7 +26,7 @@ public class Relation {
     private AppUser userTwo;
 
     @Column(name = "created_date")
-    private Date date;
+    private Date createdDate;
 
     public Integer getId() {
         return this.id;
@@ -52,12 +52,12 @@ public class Relation {
         this.userTwo = userTwo;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getCreatedDate() {
+        return createdDate;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
     }
 
     public Relation() {
@@ -74,6 +74,7 @@ public class Relation {
                 "id=" + id +
                 ", userOne=" + userOne +
                 ", userTwo=" + userTwo +
+                ", createdDate=" + createdDate +
                 '}';
     }
 

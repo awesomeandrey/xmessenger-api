@@ -4,7 +4,6 @@ import com.xmessenger.model.database.entities.core.Relation;
 import com.xmessenger.model.database.entities.core.AppUser;
 import com.xmessenger.model.database.repositories.core.RelationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -63,7 +62,7 @@ public class RelationService {
         if (this.hasRelation(user1, user2)) {
             throw new IllegalArgumentException("The relation already exists.");
         }
-        relation.setDate(new Date());
+        relation.setCreatedDate(new Date());
         return this.relationRepository.save(relation);
     }
 
