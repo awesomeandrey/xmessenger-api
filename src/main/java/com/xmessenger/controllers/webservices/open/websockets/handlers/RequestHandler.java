@@ -21,14 +21,14 @@ public class RequestHandler {
     @HandleAfterCreate
     public void sendRequest(Request request) {
         this.websocket.convertAndSend(
-                TOPICS_PREFIX + "/request/send", request
+                TOPICS_PREFIX + "/requests/send", request
         );
     }
 
     @HandleAfterDelete
     public void processRequest(Request request) {
         this.websocket.convertAndSend(
-                TOPICS_PREFIX + "/request/process", request
+                TOPICS_PREFIX + "/requests/process", request
         );
     }
 }

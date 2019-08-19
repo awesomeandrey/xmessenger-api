@@ -22,7 +22,7 @@ public class ChatClearHandler implements ApplicationListener<ChatClearEvent> {
     public void onApplicationEvent(ChatClearEvent chatClearEvent) {
         Chat chat = chatClearEvent.getChat();
         this.websocket.convertAndSend(
-                TOPICS_PREFIX + "/chat/clear", chat
+                TOPICS_PREFIX + "/chats/clear", chat
         );
     }
 }

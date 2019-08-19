@@ -22,7 +22,7 @@ public class ChatDeleteHandler implements ApplicationListener<ChatDeleteEvent> {
     public void onApplicationEvent(ChatDeleteEvent chatDeleteEvent) {
         Chat chat = chatDeleteEvent.getChat();
         this.websocket.convertAndSend(
-                TOPICS_PREFIX + "/chat/delete", chat
+                TOPICS_PREFIX + "/chats/delete", chat
         );
     }
 }

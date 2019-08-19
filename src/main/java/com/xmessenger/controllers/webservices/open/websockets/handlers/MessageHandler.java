@@ -22,7 +22,7 @@ public class MessageHandler {
     @HandleAfterCreate
     public void sendMessage(Message message) {
         this.websocket.convertAndSend(
-                TOPICS_PREFIX + "/message/send", message
+                TOPICS_PREFIX + "/messages/send", message
         );
     }
 }
