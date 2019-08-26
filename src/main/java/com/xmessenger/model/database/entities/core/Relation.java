@@ -72,8 +72,8 @@ public class Relation {
     public String toString() {
         return "Relation{" +
                 "id=" + id +
-                ", userOne=" + userOne +
-                ", userTwo=" + userTwo +
+                ", userOne=" + userOne.getName() +
+                ", userTwo=" + userTwo.getName() +
                 ", createdDate=" + createdDate +
                 '}';
     }

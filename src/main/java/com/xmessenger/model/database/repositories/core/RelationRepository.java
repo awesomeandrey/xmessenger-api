@@ -2,7 +2,6 @@ package com.xmessenger.model.database.repositories.core;
 
 import com.xmessenger.model.database.entities.core.Relation;
 import com.xmessenger.model.database.entities.core.AppUser;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -22,7 +21,7 @@ public interface RelationRepository extends PagingAndSortingRepository<Relation,
     @Query(value = "select relation, (select max(date) from Message message where message.relation = relation) as last_message_date " +
             "from Relation relation " +
             "where relation.userOne = ?1 or relation.userTwo = ?1 " +
-            "order by last_message_date, relation.createdDate asc")
+            "order by last_message_date desc nulls last, relation.createdDate asc")
     List<Object[]> aggregateUserRelationsByLastMessageDate(AppUser appUser, Pageable pageable);
 
     Long countByUserOneOrUserTwo(AppUser sameUser1, AppUser sameUser2);

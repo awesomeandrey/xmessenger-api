@@ -36,7 +36,6 @@ public class RelationService {
     }
 
     public List<Object[]> aggregateUserRelationsByLastMessageDate(AppUser appUser, Pageable pageable) {
-        // Potentially, crop query applying 'OFFSET' + 'LIMIT' techniques;
         return this.relationRepository.aggregateUserRelationsByLastMessageDate(appUser, pageable);
     }
 
