@@ -60,6 +60,9 @@ public class AdministrationController {
     @RequestMapping(value = "/deleteUser", method = RequestMethod.DELETE)
     public void deleteUser(@RequestBody AppUser appUser) {
         appUser = this.lookupUserAndValidate(appUser);
+        if (appUser.getId().equals(this.contextUserHolder.getContextUserId())) {
+            throw new UnsupportedOperationException("Admin cannot delete himself.");
+        }
         this.requestService.deleteRequestsAll(appUser);
         this.chattingService.deleteChatsAll(appUser);
         this.userService.deleteUser(appUser);
@@ -80,8 +83,6 @@ public class AdministrationController {
         AppUser foundUser = this.userService.lookupUser(appUser);
         if (foundUser == null) {
             throw new UserDAO.UserNotFoundException(appUser);
-        } else if (foundUser.getId().equals(this.contextUserHolder.getContextUserId())) {
-            throw new UnsupportedOperationException("Admin cannot perform operations on himself.");
         }
         return foundUser;
     }
