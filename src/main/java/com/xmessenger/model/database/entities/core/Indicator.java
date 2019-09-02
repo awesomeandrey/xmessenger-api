@@ -11,7 +11,7 @@ public class Indicator {
     @Id
     private Integer id;
     private boolean active;
-    private String datestamp; // JSON encoded datestamp;
+    private String dateStamp; // JSON encoded dateStamp;
 
     public Integer getId() {
         return id;
@@ -29,17 +29,17 @@ public class Indicator {
         this.active = active;
     }
 
-    public String getDatestamp() {
-        return datestamp;
+    public String getDateStamp() {
+        return dateStamp;
     }
 
-    public void setDatestamp(String datestamp) {
-        this.datestamp = datestamp;
+    public void setDateStamp(String dateStamp) {
+        this.dateStamp = dateStamp;
     }
 
     public Indicator() {
         this.active = false;
-        this.datestamp = new Date().toInstant().toString();
+        this.dateStamp = new Date().toInstant().toString();
     }
 
     public Indicator(AppUser user) {
@@ -67,6 +67,6 @@ public class Indicator {
 
     @Override
     public String toString() {
-        return "Indicator change: " + this.id + " -> " + this.active + " -> " + this.datestamp;
+        return "Indicator change: " + this.id + " -> " + this.active + " -> " + this.dateStamp;
     }
 }

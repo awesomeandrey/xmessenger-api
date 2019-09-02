@@ -46,6 +46,11 @@ public class AdministrationController {
         return this.indicatorService.getIndicators();
     }
 
+    @RequestMapping(value = "/findUser", method = RequestMethod.GET)
+    public AppUser lookupUser(@RequestBody AppUser appUser) {
+        return this.lookupUserAndValidate(appUser);
+    }
+
     @RequestMapping(value = "/updateUser", method = RequestMethod.PUT)
     public void changeUserProfileInfo(@RequestBody AppUser appUser) {
         AppUser persistedUser = this.lookupUserAndValidate(appUser);
